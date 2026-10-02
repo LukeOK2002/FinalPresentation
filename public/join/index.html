@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0f15">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <title>Live · Thesis presentation</title>
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/tsd.css">
+  <link rel="stylesheet" href="join.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="brand-live">Live</span><span id="talk-title"></span></div>
+    <div class="conn" id="conn" data-status="connecting"><i></i><span>Connecting…</span></div>
+  </header>
+
+  <main>
+    <section id="view-wait" class="view is-active" aria-live="polite">
+      <div class="wait-card">
+        <div class="pulse" aria-hidden="true"><span></span><span></span><span></span></div>
+        <h1>You're in</h1>
+        <p>Eyes on the screen for now. The interactive part opens here automatically when we get to it. Keep this page open.</p>
+      </div>
+    </section>
+
+    <section id="view-tsd" class="view" hidden>
+      <div class="card">
+        <div class="eyebrow">Live simulation</div>
+        <h1>Chance, or a TSD signal?</h1>
+        <p class="lede">Each tap draws two random 6-bp flanks. ‘TA’ in <em>both</em> is a TSD signal that happened by chance. Tap as often as you like.</p>
+        <div id="sim"></div>
+      </div>
+      <div class="card">
+        <div id="pooled"></div>
+        <p class="mine" id="mine">You: <b>0</b> rounds · <b>0</b> TSD signals</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <script src="../config.js"></script>
+  <script type="module" src="join.js"></script>
+</body>
+</html>

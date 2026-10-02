@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>Thesis presentation</title>
+  <link rel="stylesheet" href="lib/reveal/reveal.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/tsd.css">
+  <link rel="stylesheet" href="css/deck.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ===================== Title ===================== -->
+      <section id="title">
+        <div class="title-grid">
+          <div class="title-main">
+            <div class="eyebrow">Thesis presentation · University College Cork</div>
+            <h1>Your thesis title goes here</h1>
+            <p class="byline">Your name · Supervisor · Date</p>
+          </div>
+          <aside class="join-card">
+            <div class="qr" data-qr></div>
+            <div class="join-text">
+              <strong>Join on your phone</strong>
+              <span>Scan, then keep the page open. It unlocks when we get to the live part.</span>
+              <span class="join-url" data-join-url></span>
+            </div>
+          </aside>
+        </div>
+        <aside class="notes">
+          Invite everyone to scan the QR now. The phone page stays on a "waiting" card until the live
+          simulation slide, so it won't distract during the talk.
+        </aside>
+      </section>
+
+      <!-- ============ Live simulation: TA on both flanks by chance ============ -->
+      <!-- data-unlock="tsd": landing here (in ?present mode) opens the simulator on every phone -->
+      <section id="tsd" data-unlock="tsd">
+        <header class="slide-head">
+          <div>
+            <div class="eyebrow">Live simulation · the whole room</div>
+            <h2>How often does chance alone give a TSD signal?</h2>
+          </div>
+          <div class="mini-join">
+            <div class="qr qr--mini" data-qr></div>
+            <span>Join<br><b data-join-url></b></span>
+          </div>
+        </header>
+        <div id="deck-sim" class="deck-sim"></div>
+        <div class="tsd-grid">
+          <div id="deck-pooled" class="deck-pooled"></div>
+        </div>
+        <aside class="notes">
+          Each round draws two random 6-bp flanks. Any TA dinucleotide lights up yellow; TA in both
+          flanks = a "TSD signal" produced by chance. Everyone's rounds are pooled, and the yellow line
+          should settle near the 9.66% background rate, inside the shaded chance band.
+          Keys: R = run a round, A = auto-run (fallback if phones can't connect).
+          Model: bases are drawn with A = T ≈ 26.0%, C = G ≈ 24.0%, which is what makes
+          P(TA in both 6-bp flanks) exactly 9.66% (uniform bases would give 8.37%).
+        </aside>
+      </section>
+
+      <!-- ===================== End ===================== -->
+      <section id="end" class="end-slide">
+        <h2>Thank you</h2>
+        <p class="byline">Questions?</p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- presenter-only status, bottom-left -->
+  <div id="live-pill" class="live-pill" hidden><i></i><span></span></div>
+
+  <!-- presenter password: masked input, never window.prompt (it would show on the projector) -->
+  <div id="pw-overlay" class="pw-overlay" hidden>
+    <form class="pw-card">
+      <h3>Presenter mode</h3>
+      <p>Enter the presenter password to drive the phones from this deck.</p>
+      <input type="password" name="pw" autocomplete="current-password" placeholder="Password" required>
+      <p class="pw-error" aria-live="polite"></p>
+      <div class="pw-actions">
+        <button type="submit" class="btn-primary">Connect</button>
+        <button type="button" class="btn-ghost" data-skip>Run without live sync</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="lib/reveal/reveal.js"></script>
+  <script src="lib/reveal/plugin/notes.js"></script>
+  <script type="module" src="js/deck.js"></script>
+</body>
+</html>

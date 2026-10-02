@@ -1,0 +1,29 @@
+/* Design tokens shared by the slides, phone page and control page.
+   Colour has fixed meanings — keep them:
+     --yellow  'TA' dinucleotides and 2/2 (TSD signal) results
+     --blue    0/2 or 1/2 results
+   Everything else is neutral, so those two always stand out. */
+
+:root {
+  --yellow: #f9be00;
+  --blue: #187fc3;
+  --on-yellow: #1d1600;
+
+  --bg: #0a0f15;
+  --surface: #111821;
+  --surface-2: #19222d;
+  --surface-3: #222d3a;
+  --hairline: #263240;
+
+  --text: #eef2f6;
+  --text-2: #a9b5c2;
+  --muted: #6f7d8c;
+
+  --font: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Roboto, Arial, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  color-scheme: dark;
+}
