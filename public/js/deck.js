@@ -76,6 +76,7 @@ function recordRound(round) {
 }
 
 /* ---------------- presenter password overlay ---------------- */
+const resetBtn = document.getElementById("reset-all"); // big red reset, end slide
 const overlay = document.getElementById("pw-overlay");
 const overlayForm = overlay.querySelector("form");
 const overlayError = overlay.querySelector(".pw-error");
@@ -159,6 +160,7 @@ function onMessage(m) {
     pooled.setHistory(m.points);
   } else if (m.t === "auth") {
     authed = m.ok;
+    resetBtn.hidden = !m.ok;
     if (m.ok) {
       hideOverlay();
       sendSlide();
@@ -183,7 +185,7 @@ if (!RECEIVER) {
     onMessage,
     onStatus(s) {
       status = s;
-      if (s !== "live") { authed = false; inflight = []; } // unknown if those arrived: drop
+      if (s !== "live") { authed = false; inflight = []; resetBtn.hidden = true; } // unknown if those arrived: drop
       if (!server) render();
       if (s === "offline" && !overlay.hidden) {
         overlayError.textContent = "Can't reach the live server. You can still run the deck offline.";
@@ -203,6 +205,39 @@ Reveal.on("slidechanged", sendSlide);
 
 if (PRESENT && !RECEIVER && !storedPw()) showOverlay();
 updatePill();
+
+/* ---------------- big red reset (end slide) ----------------
+   Click once to arm, again within 4 s to confirm (no browser dialog on the projector).
+   Resets every result, closes the simulator on all phones, and jumps back to the title. */
+let armTimer = null;
+
+resetBtn.addEventListener("click", () => {
+  if (!authed) return;
+  if (!resetBtn.classList.contains("is-armed")) {
+    resetBtn.classList.add("is-armed");
+    resetBtn.textContent = "Click again to reset everything";
+    armTimer = setTimeout(disarm, 4000);
+    return;
+  }
+  clearTimeout(armTimer);
+  stopAuto();
+  live.send({ t: "reset", scope: "all" });
+  local.n = 0; local.k = 0; inflight = []; outbox = [];
+  pooled.setHistory([[0, 0]]);
+  render();
+  resetBtn.classList.remove("is-armed");
+  resetBtn.classList.add("is-done");
+  resetBtn.textContent = "Reset ✓";
+  setTimeout(() => {
+    disarm();
+    Reveal.slide(0);
+  }, 1200);
+});
+
+function disarm() {
+  resetBtn.classList.remove("is-armed", "is-done");
+  resetBtn.textContent = "Reset presentation";
+}
 
 /* ---------------- keys ---------------- */
 const onSimSlide = () => Reveal.getCurrentSlide().id === "tsd";

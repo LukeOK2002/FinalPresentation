@@ -126,8 +126,11 @@ The small pill bottom-left of the deck (present mode only) shows `Live · N phon
       networks block `*.workers.dev`. Open `/join/` on a phone on eduroam *and* on
       mobile data. If eduroam blocks it, ask the audience to switch to mobile data
       for that slide; the auto-run (**A**) is your fallback either way.
-- [ ] Rehearse with a few friends' phones, then **Reset results** on `/control/`
-      right before the talk (rehearsal rounds otherwise stay in the tally).
+- [ ] Rehearse with a few friends' phones, then click the big red **Reset
+      presentation** button on the final slide (twice: once to arm, once to
+      confirm). It clears every result, sends phones back to the waiting card
+      and jumps to the title slide. It only appears in `?present` mode after the
+      password. `/control/` has the same reset.
 - [ ] Keep a PDF fallback: open `https://…/?print-pdf` in Chrome → Print → Save as PDF.
 - [ ] If you change a phone-page file on the morning of the talk, phones that
       already loaded the old page just need a refresh.
