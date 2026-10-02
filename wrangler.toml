@@ -4,6 +4,8 @@
 name = "thesis-live"
 main = "src/worker.js"
 compatibility_date = "2025-09-01"
+workers_dev = true    # serve on the free <name>.<subdomain>.workers.dev address
+preview_urls = false  # no per-upload preview links
 
 [assets]
 directory = "./public"
