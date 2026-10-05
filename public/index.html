@@ -205,16 +205,23 @@
           <p data-a="t2" data-sub-step="2">New consensus sequences built by multiple alignment</p>
           <p data-a="t3" data-sub-step="3">Already discovered sequences masked, so they aren’t rediscovered</p>
           <p data-a="t4" data-sub-step="4">REPrise was also used, which works a little differently</p>
+          <p data-a="t5" data-sub-step="5">Both tools search commonly reoccurring k-mers to find repeats</p>
+          <p data-a="t6" data-sub-step="6">RepeatModeler counts <em>exact</em> k-mer occurrences</p>
+          <p data-a="t7" data-sub-step="7">Whereas REPrise counts inexact k-mer occurrences</p>
         </div>
         <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
           <!-- genome with three related TE copies -->
-          <line class="te-host" x1="160" y1="640" x2="1440" y2="640"/>
-          <line class="rm-seg" x1="330" y1="640" x2="450" y2="640" style="stroke:#f9be00"/><line class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#ffdc6d"/><line class="rm-seg" x1="1110" y1="640" x2="1230" y2="640" style="stroke:#ffeba9"/>
+          <g data-a="genome"><line class="te-host" x1="160" y1="640" x2="1440" y2="640"/>
+          <line class="rm-seg" x1="330" y1="640" x2="450" y2="640" style="stroke:#f9be00"/><line class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#ffdc6d"/><line class="rm-seg" x1="1110" y1="640" x2="1230" y2="640" style="stroke:#ffeba9"/></g>
           <!-- masked (black) once discovered -->
           <line data-a="mA" class="rm-mask" x1="330" y1="640" x2="450" y2="640"/><line data-a="mB" class="rm-mask" x1="740" y1="640" x2="860" y2="640"/><line data-a="mC" class="rm-mask" x1="1110" y1="640" x2="1230" y2="640"/>
           <!-- copies lifted out and lined up -->
           <line data-a="cA" class="rm-seg" x1="330" y1="640" x2="450" y2="640" style="stroke:#f9be00"/><line data-a="cB" class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#ffdc6d"/><line data-a="cC" class="rm-seg" x1="1110" y1="640" x2="1230" y2="640" style="stroke:#ffeba9"/>
           <line data-a="cons" class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#f9be00"/>
+          <!-- k-mer counts: exact (RepeatModeler) vs inexact, 1 mismatch (REPrise) -->
+          <rect data-a="e0" class="kbar" x="620" y="460" width="433" height="40"/><rect data-a="x0" class="kbar kbar-x" x="1053" y="460" width="323" height="40"/><rect data-a="e1" class="kbar" x="620" y="546" width="370" height="40"/><rect data-a="x1" class="kbar kbar-x" x="990" y="546" width="184" height="40"/><rect data-a="e2" class="kbar" x="620" y="632" width="182" height="40"/><rect data-a="x2" class="kbar kbar-x" x="802" y="632" width="238" height="40"/><rect data-a="e3" class="kbar" x="620" y="718" width="96" height="40"/><rect data-a="x3" class="kbar kbar-x" x="716" y="718" width="124" height="40"/>
+          <text data-a="lbl0" class="kmer" x="596" y="480">TTATA</text><text data-a="n0a" class="kmer kn" x="446" y="480">T<tspan class="kdiff">A</tspan>ATA</text><text data-a="n0b" class="kmer kn" x="296" y="480">TTAT<tspan class="kdiff">T</tspan></text><text data-a="lbl1" class="kmer" x="596" y="566">TCGCA</text><text data-a="n1a" class="kmer kn" x="446" y="566">T<tspan class="kdiff">G</tspan>GCA</text><text data-a="n1b" class="kmer kn" x="296" y="566">TCGC<tspan class="kdiff">C</tspan></text><text data-a="lbl2" class="kmer" x="596" y="652">CGTAG</text><text data-a="n2a" class="kmer kn" x="446" y="652">C<tspan class="kdiff">T</tspan>TAG</text><text data-a="n2b" class="kmer kn" x="296" y="652">CGTA<tspan class="kdiff">A</tspan></text><text data-a="lbl3" class="kmer" x="596" y="738">GCGCG</text><text data-a="n3a" class="kmer kn" x="446" y="738">GCG<tspan class="kdiff">T</tspan>G</text><text data-a="n3b" class="kmer kn" x="296" y="738">GCGC<tspan class="kdiff">C</tspan></text>
+          <text data-a="ce0" class="kcount" x="1069" y="480">722</text><text data-a="ci0" class="kcount" x="1393" y="480">1,261</text><text data-a="ce1" class="kcount" x="1006" y="566">617</text><text data-a="ci1" class="kcount" x="1190" y="566">923</text><text data-a="ce2" class="kcount" x="818" y="652">304</text><text data-a="ci2" class="kcount" x="1057" y="652">701</text><text data-a="ce3" class="kcount" x="732" y="738">160</text><text data-a="ci3" class="kcount" x="856" y="738">367</text>
           <line data-a="scan" class="te-sweep" x1="160" y1="600" x2="160" y2="680"/>
         </svg>
         <div class="scene-label rm-label" data-a="consLabel" style="left:884px;top:390px">New consensus</div>
@@ -222,10 +229,15 @@
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
         <aside class="notes">
           Click 1: RepeatModeler scans the genome; the three related copies are lifted out and lined up.
           Click 2: a new consensus is built from their alignment. Click 3: discovered copies are masked
-          (black) so later rounds find something new. Click 4: REPrise.
+          (black) so later rounds find something new. Click 4: REPrise. Click 5: k-mers. Click 6: exact counts (RepeatModeler).
+          Click 7: inexact counts (REPrise): each k-mer also counts its 1-mismatch neighbours (yellow base = the difference).
+          Neighbour counts are illustrative.
         </aside>
       </section>
 

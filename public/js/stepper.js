@@ -6,15 +6,16 @@
    to the end state of the stage you land on.
 
    Timeline entries: [name, change, start ms, duration ms, easing]
-   where change sets any of { op, tx, ty, sc } (opacity, translate px, scale). */
+   where change sets any of { op, tx, ty, sc, sx } (opacity, translate px, scale,
+   horizontal-only scale). */
 
-const BASE = { op: 1, tx: 0, ty: 0, sc: 1 };
+const BASE = { op: 1, tx: 0, ty: 0, sc: 1, sx: 1 };
 export const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 export const EASE_IN_OUT = "cubic-bezier(0.65, 0, 0.35, 1)";
 export const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 export const LINEAR = "linear";
 
-const tf = (s) => `translate(${s.tx}px, ${s.ty}px) scale(${s.sc})`;
+const tf = (s) => `translate(${s.tx}px, ${s.ty}px) scale(${s.sc * s.sx}, ${s.sc})`;
 
 /**
  * @param {HTMLElement} slide
@@ -60,7 +61,7 @@ export function createStepper(slide, initial, timelines) {
       Object.assign(cur[id], change);
       const t = (tracks[id] ||= { opacity: [], transform: [] });
       if ("op" in change) t.opacity.push({ at, dur, ease, from: before.op, to: cur[id].op });
-      if ("tx" in change || "ty" in change || "sc" in change) {
+      if ("tx" in change || "ty" in change || "sc" in change || "sx" in change) {
         t.transform.push({ at, dur, ease, from: tf(before), to: tf(cur[id]) });
       }
     }

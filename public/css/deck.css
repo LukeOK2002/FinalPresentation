@@ -253,3 +253,13 @@ html, body { background: var(--bg); }
 .rm-seg { stroke-width: 14; }
 .rm-mask { stroke: #000; stroke-width: 15; }
 .rm-label { font-size: 22px; color: var(--text-2); margin-top: -0.6em; }
+
+/* ---- k-mer counts ---- */
+.te-text em { font-style: italic; }
+.kmer { fill: var(--text); font: 700 34px var(--mono); text-anchor: end; dominant-baseline: central; }
+.kmer.kn { fill: var(--text-2); font-size: 28px; font-weight: 500; }
+.kdiff { fill: var(--yellow); font-weight: 800; }
+.kbar { fill: var(--yellow); }
+.kbar-x { fill: #ffdc6d; }
+.te-scene .kbar { transform-origin: left center; }
+.kcount { fill: var(--text); font: 600 26px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
