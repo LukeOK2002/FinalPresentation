@@ -25,6 +25,7 @@
    server -> client
      {t:"state", epoch, open, slide, view, n, k, c1, c0, devices, cap}
                                view = { title, sub } for the phones to mirror
+                               presenter = an authenticated deck is connected right now
                                n = rounds, k = 2/2 rounds, c1 = 1/2, c0 = 0/2
      {t:"hist", epoch, points} [[n, k], ...] running totals for the convergence chart
      {t:"ack", epoch, n, k, count}  to the sender after a sim/batch: the totals now
@@ -153,6 +154,7 @@ export class Room extends DurableObject {
         att.authed = ok;
         ws.serializeAttachment(att);
         this.send(ws, { t: "auth", ok, reason: ok ? null : "wrong-password" });
+        this.scheduleBroadcast(); // presenter online/offline changed
         break;
       }
       case "slide": {
@@ -252,7 +254,15 @@ export class Room extends DurableObject {
 
   stateMsg() {
     const { epoch, open, slide, view, n, k, c1, c0 } = this.s;
-    return { t: "state", epoch, open, slide, view: view ?? null, n, k, c1, c0, devices: this.live("audience").length, cap: this.cap() };
+    return { t: "state", epoch, open, slide, view: view ?? null, presenter: this.presenterOnline(), n, k, c1, c0, devices: this.live("audience").length, cap: this.cap() };
+  }
+
+  /** True while an authenticated deck is connected (so phones don't act on a stale slide). */
+  presenterOnline() {
+    return this.live("staff").some((ws) => {
+      const a = ws.deserializeAttachment() || {};
+      return a.role === "screen" && a.authed === true;
+    });
   }
 
   histMsg() {

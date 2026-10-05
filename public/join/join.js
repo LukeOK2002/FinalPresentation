@@ -1,8 +1,8 @@
 /* Phone page. Waits on a card until the presenter reaches the simulation slide,
    then opens the simulator. Rounds are sent to the room and pooled.
 
-   Fail-open: if the room can't be reached (or is full), the simulator opens
-   anyway and the numbers shown are this phone's own rounds. */
+   If the room can't be reached (or is full), the phone says so and offers the
+   simulator behind a button; the numbers shown are then this phone's own rounds. */
 
 import { createTsdSim } from "../js/tsd-widget.js";
 import { createPooledPanel } from "../js/tsd-chart.js";
@@ -60,18 +60,39 @@ function show(view) {
 }
 
 /* What the phone shows:
-     simulator  while the presenter is on the TSD simulation slide (or the room is unreachable)
+     simulator  while a connected presenter is on the TSD simulation slide
      mirror     otherwise: the presenter's slide title + current centred text
-     wait       before the presenter has started */
+     wait       before the presenter has connected
+   If the room can't be reached, the phone says so and offers the simulator
+   (local rounds only) behind a button, instead of jumping straight to it. */
+let manualSim = false;
 function decide() {
-  const failOpen = status === "offline" || status === "full" || status === "replaced";
-  const onSim = server && server.open.tsd && server.slide === "tsd";
-  const view = server && server.view;
-  if (failOpen || onSim) show("tsd");
-  else if (view && view.title) { renderMirror(view); show("mirror"); }
-  else show("wait");
+  const cantReach = status === "offline" || status === "full" || status === "replaced";
+  const presenting = status === "live" && server && server.presenter;
+  if (cantReach) {
+    setWait("Can't reach the room", "Your phone can't connect right now; it will keep trying. You can still try the simulation on your own.", true);
+    show(manualSim ? "tsd" : "wait");
+  } else if (!presenting) {
+    manualSim = false;
+    setWait("You're in", "Eyes on the screen for now. This page follows the slides once the talk starts. Keep it open.", false);
+    // a brief presenter drop-out shouldn't yank the simulator away mid-round
+    show(current === "tsd" && server && server.slide === "tsd" ? "tsd" : "wait");
+  } else {
+    manualSim = false;
+    const view = server.view;
+    if (server.open.tsd && server.slide === "tsd") show("tsd");
+    else if (view && view.title) { renderMirror(view); show("mirror"); }
+    else show("wait");
+  }
   render();
 }
+
+function setWait(title, text, offerSim) {
+  $("wait-title").textContent = title;
+  $("wait-text").textContent = text;
+  $("open-sim").hidden = !offerSim;
+}
+$("open-sim").addEventListener("click", () => { manualSim = true; decide(); });
 
 let shownView = "";
 function renderMirror(view) {

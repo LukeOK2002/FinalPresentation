@@ -158,3 +158,6 @@ abbr.acr {
 .acr-name { font-size: 20px; font-weight: 700; color: var(--text); border-left: 4px solid var(--yellow); padding-left: 10px; }
 .acr-def { margin: 10px 0 0; font-size: 17px; line-height: 1.45; color: var(--text); }
 .acr-hint { margin-top: 10px; font-size: 13px; color: var(--muted); }
+
+.open-sim { margin-top: 20px; padding: 12px 18px; border: 0; border-radius: 999px; background: var(--text); color: var(--bg); font: 700 16px var(--font); cursor: pointer; }
+.open-sim[hidden] { display: none; }
