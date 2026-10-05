@@ -15,13 +15,16 @@
                                re-checks the TA count itself. ~1 round/s per device,
                                with a small burst allowance for bunched-up wifi.
      {t:"auth", pw}            screen/control: unlock presenter actions
-     {t:"slide", id, unlock}   presenter: current slide; `unlock` opens that phone section
+     {t:"slide", id, unlock, title, sub}
+                               presenter: current slide; `unlock` opens that phone section;
+                               title/sub are the text phones mirror
      {t:"open", key, value}    presenter: open/close a phone section by hand
      {t:"batch", pairs}        presenter: auto-run rounds, [[a,b], ...]
      {t:"reset", scope}        presenter: "results" (pooled counts) | "all" (+ close sections)
 
    server -> client
-     {t:"state", epoch, open, slide, n, k, c1, c0, devices, cap}
+     {t:"state", epoch, open, slide, view, n, k, c1, c0, devices, cap}
+                               view = { title, sub } for the phones to mirror
                                n = rounds, k = 2/2 rounds, c1 = 1/2, c0 = 0/2
      {t:"hist", epoch, points} [[n, k], ...] running totals for the convergence chart
      {t:"ack", epoch, n, k, count}  to the sender after a sim/batch: the totals now
@@ -50,6 +53,7 @@ const blank = (epoch = 1) => ({
   epoch,
   open: Object.fromEntries(SECTIONS.map((s) => [s, false])),
   slide: null,
+  view: null,
   n: 0, k: 0, c1: 0, c0: 0,
   hist: [[0, 0]],
 });
@@ -154,6 +158,8 @@ export class Room extends DurableObject {
       case "slide": {
         if (!presenter) return;
         this.s.slide = typeof m.id === "string" ? m.id.slice(0, 64) : null;
+        const text = (v) => (typeof v === "string" ? v.slice(0, 300) : "");
+        this.s.view = { title: text(m.title), sub: text(m.sub) };
         if (SECTIONS.includes(m.unlock)) this.s.open[m.unlock] = true;
         this.changed();
         break;
@@ -167,7 +173,7 @@ export class Room extends DurableObject {
       case "reset": {
         if (!presenter) return;
         const next = blank(this.s.epoch + 1);
-        if (m.scope !== "all") { next.open = this.s.open; next.slide = this.s.slide; }
+        if (m.scope !== "all") { next.open = this.s.open; next.slide = this.s.slide; next.view = this.s.view; }
         this.s = next;
         this.buckets.clear();
         this.changed();
@@ -245,8 +251,8 @@ export class Room extends DurableObject {
   }
 
   stateMsg() {
-    const { epoch, open, slide, n, k, c1, c0 } = this.s;
-    return { t: "state", epoch, open, slide, n, k, c1, c0, devices: this.live("audience").length, cap: this.cap() };
+    const { epoch, open, slide, view, n, k, c1, c0 } = this.s;
+    return { t: "state", epoch, open, slide, view: view ?? null, n, k, c1, c0, devices: this.live("audience").length, cap: this.cap() };
   }
 
   histMsg() {

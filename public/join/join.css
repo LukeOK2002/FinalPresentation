@@ -104,3 +104,57 @@ main { max-width: 520px; margin: 0 auto; }
   .view.is-entering, .view.is-entering .card, .pulse span { animation: none; }
   .pulse span:first-child { opacity: 0.6; transform: scale(0.8); }
 }
+
+/* ---- mirror of the presenter's slide ---- */
+.mirror {
+  min-height: calc(100dvh - 140px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+  padding: 8px 4px 40px;
+  text-align: center;
+}
+#m-title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(32px, 9vw, 44px);
+  line-height: 1.12;
+  color: var(--text);
+}
+#m-sub {
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: clamp(21px, 5.8vw, 26px);
+  line-height: 1.4;
+  color: #fff;
+}
+#m-sub:empty { display: none; }
+
+/* ---- acronyms: tap to expand ---- */
+abbr.acr {
+  text-decoration: underline;
+  text-decoration-color: var(--yellow);
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.16em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.acr-sheet {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 20;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: var(--surface-3);
+  box-shadow: inset 0 0 0 1px var(--hairline), 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+.acr-sheet[hidden] { display: none; }
+.acr-name { font-size: 20px; font-weight: 700; color: var(--text); border-left: 4px solid var(--yellow); padding-left: 10px; }
+.acr-def { margin: 10px 0 0; font-size: 17px; line-height: 1.45; color: var(--text); }
+.acr-hint { margin-top: 10px; font-size: 13px; color: var(--muted); }

@@ -42,42 +42,89 @@
       <section id="te-intro" class="te-intro">
         <h2>What are transposable elements</h2>
         <div class="te-text">
-          <p data-te="t0">Transposable Elements (TEs) are genetic sequences capable of copying themselves and spreading throughout the genome</p>
-          <p data-te="t1">Either by creating an RNA intermediate (retrotransposition)...</p>
-          <p data-te="t2">Or by excising itself (transposition)</p>
+          <p data-a="t0" data-sub-step="0">Transposable Elements (TEs) are genetic sequences capable of copying themselves and spreading throughout the genome</p>
+          <p data-a="t1" data-sub-step="1">Either by creating an RNA intermediate (retrotransposition)...</p>
+          <p data-a="t2" data-sub-step="2">Or by excising itself (transposition)</p>
         </div>
         <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
           <!-- host genome with the TE in place -->
-          <g data-te="genome">
+          <g data-a="genome">
             <line class="te-host" x1="260" y1="650" x2="640" y2="650"/>
             <line class="te-te" x1="640" y1="650" x2="960" y2="650"/>
             <line class="te-host" x1="960" y1="650" x2="1340" y2="650"/>
           </g>
-          <g data-te="labels">
+          <g data-a="labels">
             <text class="te-label" x="800" y="704">Transposable element</text>
             <text class="te-label" x="450" y="704">Host genome</text>
             <text class="te-label" x="1150" y="704">Host genome</text>
           </g>
           <!-- target sites: continuous grey lines drawn as two halves that split apart -->
-          <line data-te="s1L" class="te-host" x1="320" y1="650" x2="800" y2="650"/>
-          <line data-te="s1R" class="te-host" x1="800" y1="650" x2="1280" y2="650"/>
-          <line data-te="s2L" class="te-host" x1="320" y1="650" x2="800" y2="650"/>
-          <line data-te="s2R" class="te-host" x1="800" y1="650" x2="1280" y2="650"/>
+          <line data-a="s1L" class="te-host" x1="320" y1="650" x2="800" y2="650"/>
+          <line data-a="s1R" class="te-host" x1="800" y1="650" x2="1280" y2="650"/>
+          <line data-a="s2L" class="te-host" x1="320" y1="650" x2="800" y2="650"/>
+          <line data-a="s2R" class="te-host" x1="800" y1="650" x2="1280" y2="650"/>
           <!-- the mobile copy: RNA intermediate (line + dot), later the excised TE (with end circles) -->
-          <g data-te="rna">
+          <g data-a="rna">
             <line class="te-te" x1="640" y1="530" x2="960" y2="530"/>
-            <circle data-te="rnaDot" class="te-dot" cx="640" cy="530" r="13"/>
-            <circle data-te="cL" class="te-dot" cx="640" cy="530" r="17"/>
-            <circle data-te="cR" class="te-dot" cx="960" cy="530" r="17"/>
+            <circle data-a="rnaDot" class="te-dot" cx="640" cy="530" r="13"/>
+            <circle data-a="cL" class="te-dot" cx="640" cy="530" r="17"/>
+            <circle data-a="cR" class="te-dot" cx="960" cy="530" r="17"/>
           </g>
           <!-- the circle that passes over the TE (reads it into RNA) -->
-          <circle data-te="poly" class="te-poly" cx="800" cy="650" r="34"/>
+          <circle data-a="poly" class="te-poly" cx="800" cy="650" r="34"/>
         </svg>
-        <span class="fragment te-step" data-te-step="1"></span>
-        <span class="fragment te-step" data-te-step="2"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
         <aside class="notes">
           Click 1: retrotransposition (copy via RNA, then paste into a new site).
           Click 2: transposition (cut out, then paste into a new site).
+        </aside>
+      </section>
+
+      <!-- ============ What do TEs look like: TSDs, then sequence similarity ============ -->
+      <!-- Each click advances one stage (js/te-look.js); presenter screen only. -->
+      <section id="te-look" class="te-intro">
+        <h2>What do TEs look like?</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">When TEs insert within human DNA, they form target site duplications (TSDs)</p>
+          <p data-a="t1" data-sub-step="1">Staggered cuts created by TE insertion mechanism</p>
+          <p data-a="t2" data-sub-step="2">Staggered cuts filled in, creating TSDs</p>
+          <p data-a="t3" data-sub-step="3">Most importantly, TEs look like other TEs</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+          <!-- target site: upper TCGGATCCAG / lower AGCCTAGGTC. Staggered cut after
+               upper base 7 and lower base 3 leaves GATC / CTAG overhangs. -->
+          <g data-a="origBonds"><line class="dna-bond" x1="716" y1="582" x2="716" y2="608"/><line class="dna-bond" x1="772" y1="582" x2="772" y2="608"/><line class="dna-bond" x1="828" y1="582" x2="828" y2="608"/><line class="dna-bond" x1="884" y1="582" x2="884" y2="608"/></g>
+          <g data-a="L">
+            <text class="dna-base" x="548" y="560">T</text><text class="dna-base" x="604" y="560">C</text><text class="dna-base" x="660" y="560">G</text><text class="dna-base" x="716" y="560">G</text><text class="dna-base" x="772" y="560">A</text><text class="dna-base" x="828" y="560">T</text><text class="dna-base" x="884" y="560">C</text><text class="dna-base" x="548" y="630">A</text><text class="dna-base" x="604" y="630">G</text><text class="dna-base" x="660" y="630">C</text><line class="dna-bond" x1="548" y1="582" x2="548" y2="608"/><line class="dna-bond" x1="604" y1="582" x2="604" y2="608"/><line class="dna-bond" x1="660" y1="582" x2="660" y2="608"/>
+            <g data-a="fillL0"><line class="dna-bond" x1="716" y1="582" x2="716" y2="608"/><text class="dna-base" x="716" y="630">C</text></g><g data-a="fillL1"><line class="dna-bond" x1="772" y1="582" x2="772" y2="608"/><text class="dna-base" x="772" y="630">T</text></g><g data-a="fillL2"><line class="dna-bond" x1="828" y1="582" x2="828" y2="608"/><text class="dna-base" x="828" y="630">A</text></g><g data-a="fillL3"><line class="dna-bond" x1="884" y1="582" x2="884" y2="608"/><text class="dna-base" x="884" y="630">G</text></g>
+            <g data-a="tsdL"><text class="dna-base tsd" x="716" y="560">G</text><text class="dna-base tsd" x="716" y="630">C</text><text class="dna-base tsd" x="772" y="560">A</text><text class="dna-base tsd" x="772" y="630">T</text><text class="dna-base tsd" x="828" y="560">T</text><text class="dna-base tsd" x="828" y="630">A</text><text class="dna-base tsd" x="884" y="560">C</text><text class="dna-base tsd" x="884" y="630">G</text></g>
+          </g>
+          <g data-a="R">
+            <text class="dna-base" x="940" y="560">C</text><text class="dna-base" x="996" y="560">A</text><text class="dna-base" x="1052" y="560">G</text><text class="dna-base" x="716" y="630">C</text><text class="dna-base" x="772" y="630">T</text><text class="dna-base" x="828" y="630">A</text><text class="dna-base" x="884" y="630">G</text><text class="dna-base" x="940" y="630">G</text><text class="dna-base" x="996" y="630">T</text><text class="dna-base" x="1052" y="630">C</text><line class="dna-bond" x1="940" y1="582" x2="940" y2="608"/><line class="dna-bond" x1="996" y1="582" x2="996" y2="608"/><line class="dna-bond" x1="1052" y1="582" x2="1052" y2="608"/>
+            <g data-a="fillR0"><line class="dna-bond" x1="716" y1="582" x2="716" y2="608"/><text class="dna-base" x="716" y="560">G</text></g><g data-a="fillR1"><line class="dna-bond" x1="772" y1="582" x2="772" y2="608"/><text class="dna-base" x="772" y="560">A</text></g><g data-a="fillR2"><line class="dna-bond" x1="828" y1="582" x2="828" y2="608"/><text class="dna-base" x="828" y="560">T</text></g><g data-a="fillR3"><line class="dna-bond" x1="884" y1="582" x2="884" y2="608"/><text class="dna-base" x="884" y="560">C</text></g>
+            <g data-a="tsdR"><text class="dna-base tsd" x="716" y="560">G</text><text class="dna-base tsd" x="716" y="630">C</text><text class="dna-base tsd" x="772" y="560">A</text><text class="dna-base tsd" x="772" y="630">T</text><text class="dna-base tsd" x="828" y="560">T</text><text class="dna-base tsd" x="828" y="630">A</text><text class="dna-base tsd" x="884" y="560">C</text><text class="dna-base tsd" x="884" y="630">G</text></g>
+          </g>
+          <!-- the TE: a plain yellow block, no bases -->
+          <rect data-a="block" class="te-block" x="700" y="532" width="200" height="126" rx="10"/>
+          <!-- stage 3: sequence similarity -->
+          <line data-a="known" class="te-te" x1="560" y1="540" x2="1040" y2="540"/>
+          <line data-a="putative" class="te-te te-te--light" x1="560" y1="640" x2="1040" y2="640"/>
+          <line data-a="sweep" class="te-sweep" x1="540" y1="490" x2="540" y2="690"/>
+        </svg>
+        <!-- HTML labels (so acronyms get the yellow underline) -->
+        <div class="scene-label tsd-label" data-a="tsdLabelL" style="left:588px;top:478px">TSD</div>
+        <div class="scene-label tsd-label" data-a="tsdLabelR" style="left:1012px;top:478px">TSD</div>
+        <div class="scene-label line-label" data-a="knownLabel" style="right:1088px;top:540px">Known TE</div>
+        <div class="scene-label line-label" data-a="putLabel" style="right:1088px;top:640px">Putative TE?</div>
+        <div class="scene-label line-label" data-a="confLabel" style="right:1088px;top:640px">Confirmed TE ✅</div>
+        <div class="scene-label identity" data-a="identity" style="left:800px;top:470px">95% identity</div>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Click 1: staggered cut, TE inserts. Click 2: overhangs filled in, the duplicated bases
+          (GATC / CTAG) turn blue = TSDs. Click 3: TEs are recognised by similarity to known TEs.
         </aside>
       </section>
 
@@ -111,7 +158,7 @@
       <!-- ===================== End ===================== -->
       <section id="end" class="end-slide">
         <h2>Thank you</h2>
-        <p class="byline">Questions?</p>
+        <p class="byline" data-sub-step="0">Questions?</p>
         <!-- presenter only (?present + password): wipes the rehearsal so the real talk starts clean -->
         <button type="button" id="reset-all" class="reset-btn" hidden>Reset presentation</button>
       </section>

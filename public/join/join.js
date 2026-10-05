@@ -7,6 +7,7 @@
 import { createTsdSim } from "../js/tsd-widget.js";
 import { createPooledPanel } from "../js/tsd-chart.js";
 import { connectLive } from "../js/live.js";
+import { ACRONYMS, markAcronyms } from "../js/acronyms.js";
 
 const $ = (id) => document.getElementById(id);
 document.getElementById("talk-title").textContent = (window.LIVE_CONFIG && window.LIVE_CONFIG.talkTitle) || "";
@@ -49,7 +50,7 @@ let current = "wait";
 function show(view) {
   if (view === current) return;
   current = view;
-  for (const v of ["wait", "tsd"]) {
+  for (const v of ["wait", "mirror", "tsd"]) {
     const el = $(`view-${v}`);
     el.hidden = v !== view;
     el.classList.toggle("is-entering", v === view);
@@ -58,11 +59,44 @@ function show(view) {
   if (view === "tsd" && navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(40);
 }
 
+/* What the phone shows:
+     simulator  while the presenter is on the TSD simulation slide (or the room is unreachable)
+     mirror     otherwise: the presenter's slide title + current centred text
+     wait       before the presenter has started */
 function decide() {
   const failOpen = status === "offline" || status === "full" || status === "replaced";
-  show(failOpen || (server && server.open.tsd) ? "tsd" : "wait");
+  const onSim = server && server.open.tsd && server.slide === "tsd";
+  const view = server && server.view;
+  if (failOpen || onSim) show("tsd");
+  else if (view && view.title) { renderMirror(view); show("mirror"); }
+  else show("wait");
   render();
 }
+
+let shownView = "";
+function renderMirror(view) {
+  const key = view.title + "\n" + view.sub;
+  if (key === shownView) return;
+  shownView = key;
+  $("m-title").textContent = view.title;
+  $("m-sub").textContent = view.sub;
+  markAcronyms($("view-mirror"));
+}
+
+/* ---- acronyms: tap to expand ---- */
+const sheet = $("acr-sheet");
+document.addEventListener("click", (e) => {
+  const abbr = e.target.closest("abbr.acr");
+  if (abbr && ACRONYMS[abbr.dataset.acr]) {
+    const a = ACRONYMS[abbr.dataset.acr];
+    sheet.querySelector(".acr-name").textContent = `${abbr.dataset.acr}: ${a.name}`;
+    sheet.querySelector(".acr-def").textContent = a.def;
+    sheet.hidden = false;
+  } else {
+    sheet.hidden = true;
+  }
+});
+markAcronyms($("view-tsd"));
 
 /* ---- connection ---- */
 const conn = $("conn");

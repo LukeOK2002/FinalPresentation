@@ -14,6 +14,8 @@ import { connectLive } from "./live.js";
 import { hasTA, simulateRound } from "./tsd-model.js";
 import { renderJoinCodes } from "./qr.js";
 import { initTeIntro } from "./te-intro.js";
+import { initTeLook } from "./te-look.js";
+import { markAcronyms } from "./acronyms.js";
 
 const params = new URLSearchParams(location.search);
 const PRESENT = params.has("present");
@@ -37,7 +39,9 @@ await Reveal.initialize({
 });
 
 renderJoinCodes();
+markAcronyms(document.querySelector(".reveal .slides"));
 initTeIntro();
+initTeLook();
 
 /* ---------------- tallies ----------------
    local:   every round this screen has run (shown when the room is unreachable)
@@ -121,10 +125,22 @@ function updatePill() {
   pill.querySelector("span").textContent = auto ? `${text} · AUTO` : text;
 }
 
+/* What phones mirror: the slide title and the current centred text. A slide's
+   centred lines carry data-sub-step="N"; the one shown is the last N <= clicks so far. */
+function phoneView(s) {
+  const title = (s.querySelector("h1, h2")?.textContent || "").trim();
+  const step = s.querySelectorAll(".anim-step.visible").length;
+  let sub = "";
+  for (const el of s.querySelectorAll("[data-sub-step]")) {
+    if (+el.dataset.subStep <= step) sub = el.textContent.trim();
+  }
+  return { title, sub };
+}
+
 function sendSlide() {
   if (!authed) return;
   const s = Reveal.getCurrentSlide();
-  live.send({ t: "slide", id: s.id || null, unlock: s.dataset.unlock || null });
+  live.send({ t: "slide", id: s.id || null, unlock: s.dataset.unlock || null, ...phoneView(s) });
 }
 
 function flush() {
@@ -204,6 +220,8 @@ if (!RECEIVER) {
 }
 
 Reveal.on("slidechanged", sendSlide);
+Reveal.on("fragmentshown", sendSlide);
+Reveal.on("fragmenthidden", sendSlide);
 
 if (PRESENT && !RECEIVER && !storedPw()) showOverlay();
 updatePill();
