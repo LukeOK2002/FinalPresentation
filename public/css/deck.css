@@ -16,8 +16,10 @@ html, body { background: var(--bg); }
   box-sizing: border-box;
 }
 .reveal h1, .reveal h2, .reveal h3 { margin: 0; font-family: var(--font); color: var(--text); letter-spacing: -0.015em; }
-.reveal h1 { font-size: 76px; line-height: 1.04; font-weight: 750; }
-.reveal h2 { font-size: 44px; line-height: 1.1; font-weight: 700; }
+/* slide titles use the display serif */
+.reveal h1, .reveal h2 { font-family: var(--display); font-weight: 400; letter-spacing: -0.01em; }
+.reveal h1 { font-size: 66px; line-height: 1.08; }
+.reveal h2 { font-size: 48px; line-height: 1.1; }
 .reveal p { margin: 0; }
 .eyebrow {
   font-size: 18px;
@@ -32,7 +34,7 @@ html, body { background: var(--bg); }
 
 /* ---- title ---- */
 .title-grid { height: 100%; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 80px; }
-.title-main h1 { max-width: 15ch; }
+.title-main h1 { max-width: 22ch; }
 .join-card {
   display: flex;
   flex-direction: column;
