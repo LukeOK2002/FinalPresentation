@@ -200,19 +200,18 @@
       <section id="te-discover" class="te-intro">
         <h2>Discovering new TE families with REPrise and RepeatModeler</h2>
         <div class="te-text">
-          <p data-a="t0" data-sub-step="0">RepeatModeler can be used to model repeat families</p>
-          <p data-a="t1" data-sub-step="1">RepeatModeler finds sequences which are similar to each other within the genome</p>
-          <p data-a="t2" data-sub-step="2">New consensus sequences built by multiple alignment</p>
-          <p data-a="t3" data-sub-step="3">Already discovered sequences masked, so they aren’t rediscovered</p>
-          <p data-a="t4" data-sub-step="4">REPrise was also used, which works a little differently</p>
-          <p data-a="t5" data-sub-step="5">Both tools search commonly reoccurring k-mers to find repeats</p>
-          <p data-a="t6" data-sub-step="6">RepeatModeler counts <em>exact</em> k-mer occurrences</p>
-          <p data-a="t7" data-sub-step="7">Whereas REPrise counts inexact k-mer occurrences</p>
+          <p data-a="t0" data-sub-step="0">Both tools search commonly reoccurring k-mers to find repeats</p>
+          <p data-a="t1" data-sub-step="1">RepeatModeler counts <em>exact</em> k-mer occurrences</p>
+          <p data-a="t2" data-sub-step="2">Whereas REPrise counts inexact k-mer occurrences</p>
+          <p data-a="t3" data-sub-step="3">These two tools can be used to model repeat families</p>
+          <p data-a="t4" data-sub-step="4">By finding sequences which are similar to each other within the genome</p>
+          <p data-a="t5" data-sub-step="5">New consensus sequences built by multiple alignment</p>
+          <p data-a="t6" data-sub-step="6">Already discovered sequences masked, so they aren’t rediscovered</p>
         </div>
         <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
           <!-- genome with three related TE copies -->
-          <g data-a="genome"><line class="te-host" x1="160" y1="640" x2="1440" y2="640"/>
-          <line class="rm-seg" x1="330" y1="640" x2="450" y2="640" style="stroke:#f9be00"/><line class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#ffdc6d"/><line class="rm-seg" x1="1110" y1="640" x2="1230" y2="640" style="stroke:#ffeba9"/></g>
+          <g data-a="genome"><line data-a="gline" class="te-host" x1="160" y1="640" x2="1440" y2="640"/>
+          <line data-a="segA" class="rm-seg" x1="330" y1="640" x2="450" y2="640" style="stroke:#f9be00"/><line data-a="segB" class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#ffdc6d"/><line data-a="segC" class="rm-seg" x1="1110" y1="640" x2="1230" y2="640" style="stroke:#ffeba9"/></g>
           <!-- masked (black) once discovered -->
           <line data-a="mA" class="rm-mask" x1="330" y1="640" x2="450" y2="640"/><line data-a="mB" class="rm-mask" x1="740" y1="640" x2="860" y2="640"/><line data-a="mC" class="rm-mask" x1="1110" y1="640" x2="1230" y2="640"/>
           <!-- copies lifted out and lined up -->
@@ -231,13 +230,12 @@
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
-        <span class="fragment anim-step"></span>
         <aside class="notes">
-          Click 1: RepeatModeler scans the genome; the three related copies are lifted out and lined up.
-          Click 2: a new consensus is built from their alignment. Click 3: discovered copies are masked
-          (black) so later rounds find something new. Click 4: REPrise. Click 5: k-mers. Click 6: exact counts (RepeatModeler).
-          Click 7: inexact counts (REPrise): each k-mer also counts its 1-mismatch neighbours (grey base = the difference).
-          Neighbour counts are illustrative.
+          Start: both tools look for frequently recurring k-mers. Click 1: exact counts (RepeatModeler).
+          Click 2: inexact counts (REPrise): each k-mer also counts its 1-mismatch neighbours (grey base =
+          the difference); neighbour counts are illustrative. Click 3: a scan of the genome reveals three
+          related copies. Click 4: the copies are lifted out and lined up. Click 5: a new consensus is built.
+          Click 6: discovered copies are masked (black) so they aren't rediscovered.
         </aside>
       </section>
 
