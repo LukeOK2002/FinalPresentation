@@ -239,3 +239,12 @@ html, body { background: var(--bg); }
 .big-q div:first-child { font-size: 92px; }
 .big-q div:last-child { font-size: 56px; }
 .layer { position: absolute; inset: 0; pointer-events: none; }
+
+/* ---- slide 2: mutations over time ---- */
+.mut-base { fill: var(--yellow); font: 700 40px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.mut-grey { fill: #8a94a3; }
+.time-track { stroke: var(--surface-3); stroke-width: 8; stroke-linecap: round; }
+.time-fill { stroke: var(--text-2); stroke-width: 8; }
+.time-tick { stroke: var(--muted); stroke-width: 2; }
+.time-lbl { fill: var(--text-2); font: 500 20px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; }
+.time-unit { text-anchor: start; }

@@ -89,7 +89,8 @@
           <p data-a="t0" data-sub-step="0">When TEs insert within human DNA, they form target site duplications (TSDs)</p>
           <p data-a="t1" data-sub-step="1">Staggered cuts created by TE insertion mechanism</p>
           <p data-a="t2" data-sub-step="2">Staggered cuts filled in, creating TSDs</p>
-          <p data-a="t3" data-sub-step="3">Most importantly, TEs look like other TEs</p>
+          <p data-a="t3" data-sub-step="3">Following insertion, the TEs passively acquire mutations</p>
+          <p data-a="t4" data-sub-step="4">Most importantly, TEs look like other TEs</p>
         </div>
         <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
           <!-- target site: upper TCGGATCCAG / lower AGCCTAGGTC. Staggered cut after
@@ -107,7 +108,18 @@
           </g>
           <!-- the TE: a plain yellow block, no bases -->
           <rect data-a="block" class="te-block" x="700" y="532" width="200" height="126" rx="10"/>
-          <!-- stage 3: sequence similarity -->
+          <!-- stage 3: a TE copy accumulating mutations over 50 My -->
+          <g data-a="seq"><text class="mut-base" x="380" y="590">G</text><text class="mut-base" x="436" y="590">C</text><text class="mut-base" x="492" y="590">G</text><text class="mut-base" x="604" y="590">G</text><text class="mut-base" x="660" y="590">C</text><text class="mut-base" x="716" y="590">A</text><text class="mut-base" x="828" y="590">C</text><text class="mut-base" x="884" y="590">C</text><text class="mut-base" x="940" y="590">A</text><text class="mut-base" x="1052" y="590">T</text><text class="mut-base" x="1108" y="590">G</text><text class="mut-base" x="1220" y="590">A</text></g>
+          <text data-a="my0" class="mut-base" x="548" y="590">T</text><text data-a="my1" class="mut-base" x="772" y="590">G</text><text data-a="my2" class="mut-base" x="996" y="590">G</text><text data-a="my3" class="mut-base" x="1164" y="590">C</text>
+          <text data-a="mg0" class="mut-base mut-grey" x="548" y="590">C</text><text data-a="mg1" class="mut-base mut-grey" x="772" y="590">A</text><text data-a="mg2" class="mut-base mut-grey" x="996" y="590">A</text><text data-a="mg3" class="mut-base mut-grey" x="1164" y="590">T</text>
+          <g data-a="timeBar">
+            <line class="time-track" x1="352" y1="690" x2="1248" y2="690"/>
+            <line class="time-tick" x1="352.0" y1="682" x2="352.0" y2="698"/><text class="time-lbl" x="352.0" y="726">0</text><line class="time-tick" x1="531.2" y1="682" x2="531.2" y2="698"/><text class="time-lbl" x="531.2" y="726">10</text><line class="time-tick" x1="710.4" y1="682" x2="710.4" y2="698"/><text class="time-lbl" x="710.4" y="726">20</text><line class="time-tick" x1="889.6" y1="682" x2="889.6" y2="698"/><text class="time-lbl" x="889.6" y="726">30</text><line class="time-tick" x1="1068.8" y1="682" x2="1068.8" y2="698"/><text class="time-lbl" x="1068.8" y="726">40</text><line class="time-tick" x1="1248.0" y1="682" x2="1248.0" y2="698"/><text class="time-lbl" x="1248.0" y="726">50</text>
+            <text class="time-lbl time-unit" x="1272" y="726">million years</text>
+          </g>
+          <clipPath id="timeClip"><rect x="352" y="684" width="896" height="12"/></clipPath>
+          <g clip-path="url(#timeClip)"><line data-a="timeFill" class="time-fill" x1="-544" y1="690" x2="352" y2="690"/></g>
+          <!-- stage 4: sequence similarity -->
           <line data-a="known" class="te-te" x1="560" y1="540" x2="1040" y2="540"/>
           <line data-a="putative" class="te-te te-te--light" x1="560" y1="640" x2="1040" y2="640"/>
           <line data-a="sweep" class="te-sweep" x1="540" y1="490" x2="540" y2="690"/>
@@ -122,9 +134,11 @@
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
         <aside class="notes">
           Click 1: staggered cut, TE inserts. Click 2: overhangs filled in, the duplicated bases
-          (GATC / CTAG) turn blue = TSDs. Click 3: TEs are recognised by similarity to known TEs.
+          (GATC / CTAG) turn blue = TSDs. Click 3: the TE copy picks up mutations (grey) over 50 My.
+          Click 4: TEs are recognised by similarity to known TEs.
         </aside>
       </section>
 

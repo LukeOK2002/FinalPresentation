@@ -2,16 +2,25 @@
 
    Click 1: staggered cut; the two halves pull apart and the TE (yellow block) drops in
    Click 2: overhangs filled in base by base; the duplicated bases turn blue = TSDs
-   Click 3: DNA fades; a known TE and a putative TE are compared (white line sweeps),
+   Click 3: DNA fades; a TE copy (yellow) picks up mutations (grey) at a steady
+            rate over 50 million years
+   Click 4: a known TE and a putative TE are compared (white line sweeps),
             "95% identity" appears and the putative TE becomes confirmed */
 
 import { createStepper, EASE, EASE_IN_OUT, SPRING } from "./stepper.js";
 
-const PULL = 212; // each half moves this far: leaves a 200-px gap for the TE between the overhangs
+const PULL = 212;
+const MUTATIONS = [10, 22, 35, 46]; // million years at which each of the 4 bases mutates (matches markup)
+const SPAN = 50;                    // million years shown
+const BAR = 896;                    // time bar length (px)
+const T0 = 1500, RUN = 5200;        // when the clock starts / how long 50 My takes on screen // each half moves this far: leaves a 200-px gap for the TE between the overhangs
 
 const hidden = { op: 0 };
 const INITIAL = {
-  t0: { op: 1 }, t1: { op: 0, ty: 12 }, t2: { op: 0, ty: 12 }, t3: { op: 0, ty: 12 },
+  t0: { op: 1 }, t1: { op: 0, ty: 12 }, t2: { op: 0, ty: 12 }, t3: { op: 0, ty: 12 }, t4: { op: 0, ty: 12 },
+  seq: { op: 0, ty: 10 }, timeBar: hidden, timeFill: hidden,
+  my0: { op: 0, ty: 10 }, my1: { op: 0, ty: 10 }, my2: { op: 0, ty: 10 }, my3: { op: 0, ty: 10 },
+  mg0: { op: 0, sc: 1.3 }, mg1: { op: 0, sc: 1.3 }, mg2: { op: 0, sc: 1.3 }, mg3: { op: 0, sc: 1.3 },
   block: { op: 0, ty: -220 },
   fillL0: hidden, fillL1: hidden, fillL2: hidden, fillL3: hidden,
   fillR0: hidden, fillR1: hidden, fillR2: hidden, fillR3: hidden,
@@ -47,13 +56,25 @@ const TIMELINES = [
     ["tsdLabelL", { op: 1, ty: 0 }, 3000, 500],
     ["tsdLabelR", { op: 1, ty: 0 }, 3000, 500],
   ],
-  [ // 3 · TEs look like other TEs
+  [ // 3 · passive mutation over 50 My
     ...swap("t2", "t3"),
     ["L", { op: 0 }, 0, 600],
     ["R", { op: 0 }, 0, 600],
     ["block", { op: 0 }, 0, 600],
     ["tsdLabelL", { op: 0 }, 0, 400],
     ["tsdLabelR", { op: 0 }, 0, 400],
+    ...["seq", "my0", "my1", "my2", "my3"].map((id) => [id, { op: 1, ty: 0 }, 700, 600]),
+    ["timeBar", { op: 1 }, 1000, 500],
+    ["timeFill", { op: 1 }, T0, 1],
+    ["timeFill", { tx: BAR }, T0, RUN, "linear"],
+    ...MUTATIONS.flatMap((my, k) => {
+      const t = T0 + (RUN * my) / SPAN;
+      return [[`my${k}`, { op: 0 }, t, 350], [`mg${k}`, { op: 1, sc: 1 }, t, 450, SPRING]];
+    }),
+  ],
+  [ // 4 · TEs look like other TEs
+    ...swap("t3", "t4"),
+    ...["seq", "mg0", "mg1", "mg2", "mg3", "timeBar", "timeFill"].map((id) => [id, { op: 0 }, 0, 600]),
     ["known", { op: 1 }, 800, 600],
     ["knownLabel", { op: 1 }, 800, 600],
     ["putative", { op: 1 }, 1500, 900],
