@@ -15,7 +15,7 @@ import { hasTA, simulateRound } from "./tsd-model.js";
 import { renderJoinCodes } from "./qr.js";
 import { initTeIntro } from "./te-intro.js";
 import { initTeLook } from "./te-look.js";
-import { markAcronyms } from "./acronyms.js";
+import { initTeFamilies } from "./te-families.js";
 
 const params = new URLSearchParams(location.search);
 const PRESENT = params.has("present");
@@ -39,9 +39,9 @@ await Reveal.initialize({
 });
 
 renderJoinCodes();
-markAcronyms(document.querySelector(".reveal .slides"));
 initTeIntro();
 initTeLook();
+initTeFamilies();
 
 /* ---------------- tallies ----------------
    local:   every round this screen has run (shown when the room is unreachable)
@@ -128,8 +128,12 @@ function updatePill() {
 /* What phones mirror: the slide title and the current centred text. A slide's
    centred lines carry data-sub-step="N"; the one shown is the last N <= clicks so far. */
 function phoneView(s) {
-  const title = (s.querySelector("h1, h2")?.textContent || "").trim();
   const step = s.querySelectorAll(".anim-step.visible").length;
+  // a slide can swap its phone title from a given click on: data-title-step="N"
+  let title = (s.querySelector("h1, h2")?.textContent || "").trim();
+  for (const el of s.querySelectorAll("[data-title-step]")) {
+    if (+el.dataset.titleStep <= step) title = el.textContent.trim();
+  }
   let sub = "";
   for (const el of s.querySelectorAll("[data-sub-step]")) {
     if (+el.dataset.subStep <= step) sub = el.textContent.trim();

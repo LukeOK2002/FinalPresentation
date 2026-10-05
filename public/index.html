@@ -128,6 +128,59 @@
         </aside>
       </section>
 
+      <!-- ============ TE families: consensus sequences, Dfam ============ -->
+      <!-- Each click advances one stage (js/te-families.js); presenter screen only. -->
+      <section id="te-families" class="te-intro">
+        <h2 data-a="title">TEs are split into different families</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">A family is defined by its consensus sequence</p>
+          <p data-a="t1" data-sub-step="1">Consensus sequences use each position’s most common base</p>
+          <p data-a="t2" data-sub-step="2">These families are catalogued in TE databases, such as Dfam</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+          <g data-a="fams"><line class="fam-line" x1="160" y1="600" x2="360" y2="600" style="stroke:#f9be00"/><line class="fam-line" x1="430" y1="600" x2="630" y2="600" style="stroke:#f93500"/><line class="fam-line" x1="700" y1="600" x2="900" y2="600" style="stroke:#f90081"/><line class="fam-line" x1="970" y1="600" x2="1170" y2="600" style="stroke:#006ff9"/><line class="fam-line" x1="1240" y1="600" x2="1440" y2="600" style="stroke:#00f93b"/></g>
+          <!-- column marker that walks across while the consensus is built -->
+          <rect data-a="colMark" class="col-mark" x="534" y="440" width="52" height="360" rx="10"/>
+          <g data-a="copies"><text class="seq-base" x="560" y="470">A</text><text class="seq-base" x="620" y="470">T</text><text class="seq-base" x="680" y="470">A</text><text class="seq-base" x="740" y="470">G</text><text class="seq-base" x="800" y="470">C</text><text class="seq-base" x="860" y="470">G</text><text class="seq-base" x="920" y="470">C</text><text class="seq-base" x="980" y="470">G</text><text class="seq-base" x="1040" y="470">A</text><text class="seq-base" x="560" y="522">A</text><text class="seq-base" x="620" y="522">T</text><text class="seq-base" x="680" y="522">A</text><text class="seq-base" x="740" y="522">G</text><text class="seq-base" x="800" y="522">C</text><text class="seq-base" x="860" y="522">G</text><text class="seq-base" x="920" y="522">C</text><text class="seq-base" x="980" y="522">G</text><text class="seq-base" x="1040" y="522">C</text><text class="seq-base" x="560" y="574">T</text><text class="seq-base" x="620" y="574">T</text><text class="seq-base" x="680" y="574">A</text><text class="seq-base" x="740" y="574">G</text><text class="seq-base" x="800" y="574">T</text><text class="seq-base" x="860" y="574">C</text><text class="seq-base" x="920" y="574">G</text><text class="seq-base" x="980" y="574">G</text><text class="seq-base" x="1040" y="574">A</text><text class="seq-base" x="560" y="626">A</text><text class="seq-base" x="620" y="626">T</text><text class="seq-base" x="680" y="626">A</text><text class="seq-base" x="740" y="626">G</text><text class="seq-base" x="800" y="626">T</text><text class="seq-base" x="860" y="626">C</text><text class="seq-base" x="920" y="626">G</text><text class="seq-base" x="980" y="626">G</text><text class="seq-base" x="1040" y="626">A</text><text class="seq-base" x="560" y="678">A</text><text class="seq-base" x="620" y="678">T</text><text class="seq-base" x="680" y="678">A</text><text class="seq-base" x="740" y="678">G</text><text class="seq-base" x="800" y="678">C</text><text class="seq-base" x="860" y="678">C</text><text class="seq-base" x="920" y="678">G</text><text class="seq-base" x="980" y="678">G</text><text class="seq-base" x="1040" y="678">A</text></g>
+          <text data-a="h0_0" class="seq-base seq-hit" x="560" y="470">A</text><text data-a="h0_1" class="seq-base seq-hit" x="620" y="470">T</text><text data-a="h0_2" class="seq-base seq-hit" x="680" y="470">A</text><text data-a="h0_3" class="seq-base seq-hit" x="740" y="470">G</text><text data-a="h0_4" class="seq-base seq-hit" x="800" y="470">C</text><text data-a="h0_7" class="seq-base seq-hit" x="980" y="470">G</text><text data-a="h0_8" class="seq-base seq-hit" x="1040" y="470">A</text><text data-a="h1_0" class="seq-base seq-hit" x="560" y="522">A</text><text data-a="h1_1" class="seq-base seq-hit" x="620" y="522">T</text><text data-a="h1_2" class="seq-base seq-hit" x="680" y="522">A</text><text data-a="h1_3" class="seq-base seq-hit" x="740" y="522">G</text><text data-a="h1_4" class="seq-base seq-hit" x="800" y="522">C</text><text data-a="h1_7" class="seq-base seq-hit" x="980" y="522">G</text><text data-a="h2_1" class="seq-base seq-hit" x="620" y="574">T</text><text data-a="h2_2" class="seq-base seq-hit" x="680" y="574">A</text><text data-a="h2_3" class="seq-base seq-hit" x="740" y="574">G</text><text data-a="h2_5" class="seq-base seq-hit" x="860" y="574">C</text><text data-a="h2_6" class="seq-base seq-hit" x="920" y="574">G</text><text data-a="h2_7" class="seq-base seq-hit" x="980" y="574">G</text><text data-a="h2_8" class="seq-base seq-hit" x="1040" y="574">A</text><text data-a="h3_0" class="seq-base seq-hit" x="560" y="626">A</text><text data-a="h3_1" class="seq-base seq-hit" x="620" y="626">T</text><text data-a="h3_2" class="seq-base seq-hit" x="680" y="626">A</text><text data-a="h3_3" class="seq-base seq-hit" x="740" y="626">G</text><text data-a="h3_5" class="seq-base seq-hit" x="860" y="626">C</text><text data-a="h3_6" class="seq-base seq-hit" x="920" y="626">G</text><text data-a="h3_7" class="seq-base seq-hit" x="980" y="626">G</text><text data-a="h3_8" class="seq-base seq-hit" x="1040" y="626">A</text><text data-a="h4_0" class="seq-base seq-hit" x="560" y="678">A</text><text data-a="h4_1" class="seq-base seq-hit" x="620" y="678">T</text><text data-a="h4_2" class="seq-base seq-hit" x="680" y="678">A</text><text data-a="h4_3" class="seq-base seq-hit" x="740" y="678">G</text><text data-a="h4_4" class="seq-base seq-hit" x="800" y="678">C</text><text data-a="h4_5" class="seq-base seq-hit" x="860" y="678">C</text><text data-a="h4_6" class="seq-base seq-hit" x="920" y="678">G</text><text data-a="h4_7" class="seq-base seq-hit" x="980" y="678">G</text><text data-a="h4_8" class="seq-base seq-hit" x="1040" y="678">A</text>
+          <text data-a="c0" class="seq-base seq-cons" x="560" y="770">A</text><text data-a="c1" class="seq-base seq-cons" x="620" y="770">T</text><text data-a="c2" class="seq-base seq-cons" x="680" y="770">A</text><text data-a="c3" class="seq-base seq-cons" x="740" y="770">G</text><text data-a="c4" class="seq-base seq-cons" x="800" y="770">C</text><text data-a="c5" class="seq-base seq-cons" x="860" y="770">C</text><text data-a="c6" class="seq-base seq-cons" x="920" y="770">G</text><text data-a="c7" class="seq-base seq-cons" x="980" y="770">G</text><text data-a="c8" class="seq-base seq-cons" x="1040" y="770">A</text>
+          <line data-a="consRule" class="cons-rule" x1="530" y1="732" x2="1070" y2="732"/>
+        </svg>
+        <div class="layer" data-a="famLabels"><div class="scene-label fam-label" style="left:260px;top:628px">AluYc</div><div class="scene-label fam-label" style="left:530px;top:628px">L1M5</div><div class="scene-label fam-label" style="left:800px;top:628px">MADE1</div><div class="scene-label fam-label" style="left:1070px;top:628px">GokuERV</div><div class="scene-label fam-label" style="left:1340px;top:628px">Charlie10</div></div>
+        <div class="scene-label seq-label" data-a="copiesLabel" style="right:1100px;top:574px">TE copies</div>
+        <div class="scene-label seq-label" data-a="consLabel" style="right:1100px;top:770px">Consensus</div>
+        <!-- Dfam "Browse" view (real entries from dfam.org) -->
+        <div class="dfam" data-a="dfam">
+          <div class="dfam-bar"><b>Dfam</b><span>Browse families</span><span class="dfam-url">dfam.org/browse</span></div>
+          <table>
+            <thead><tr><th>Accession</th><th>Name</th><th>Classification</th><th>Clades</th><th>Description</th><th>Length</th></tr></thead>
+            <tbody>
+              <tr data-a="row0"><td class="acc">DF000000001</td><td class="nm">MIR</td><td>SINE/MIR</td><td>Mammalia</td><td class="desc">MIR is a pan-mammalian SINE with a 5′ end derived from a tRNA…</td><td class="len">262</td></tr>
+              <tr data-a="row1"><td class="acc">DF000000008</td><td class="nm">L1M5_orf2</td><td>LINE/L1</td><td>Theria</td><td class="desc">Present in eutherians.</td><td class="len">3,294</td></tr>
+              <tr data-a="row2"><td class="acc">DF000000057</td><td class="nm">AluYc</td><td>SINE/Alu</td><td>Hominoidea</td><td class="desc">Alu elements derive from a pair of internally-deleted 7SL RNA monomers…</td><td class="len">299</td></tr>
+              <tr data-a="row3"><td class="acc">DF000000081</td><td class="nm">Charlie10</td><td>DNA/hAT-Charlie</td><td>Eutheria</td><td class="desc">Charlie10 is a full-length hAT-Charlie DNA transposon.</td><td class="len">2,822</td></tr>
+              <tr data-a="row4"><td class="acc">DF000000188</td><td class="nm">HERVK</td><td>LTR/ERVK</td><td>Catarrhini</td><td class="desc">gag (~156–2297), protease (~2063–3082), pol (~3037–5785) and env…</td><td class="len">7,536</td></tr>
+              <tr data-a="row5"><td class="acc">DF000000225</td><td class="nm">L1HS_3end</td><td>LINE/L1</td><td>Homininae</td><td class="desc">Currently active in human genome.</td><td class="len">902</td></tr>
+              <tr data-a="row6"><td class="acc">DF000000629</td><td class="nm">MADE1</td><td>DNA/TcMar-Mariner</td><td>Simiiformes</td><td class="desc">Resembles an internal deletion product of Mariner1; has 37 bp TIRs and a TA target site.</td><td class="len">80</td></tr>
+              <tr data-a="row7"><td class="acc">DF000000818</td><td class="nm">THE1B</td><td>LTR/ERVL-MaLR</td><td>Haplorrhini</td><td class="desc">An LTR of the THE1B retrovirus-like MaLR element. Has 5 bp TSDs…</td><td class="len">364</td></tr>
+              <tr data-a="row8"><td class="acc">DF000000876</td><td class="nm">MER5A</td><td>DNA/hAT-Charlie</td><td>Eutheria</td><td class="desc">MER5A has 14 bp TIRs and 8 bp TSDs…</td><td class="len">189</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="big-q">
+          <div data-a="q1" data-title-step="3">But, is this database complete?</div>
+          <div data-a="q2" data-sub-step="3">Are there TE families that have yet to be discovered?</div>
+        </div>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Click 1: five copies; the consensus is built column by column from each position's most common base
+          (ATAGCCGGA). Click 2: Dfam browse view (real entries). Click 3: the open question.
+          GokuERV is not in Dfam, so it is not in the table.
+        </aside>
+      </section>
+
       <!-- ============ Live simulation: TA on both flanks by chance ============ -->
       <!-- data-unlock="tsd": landing here (in ?present mode) opens the simulator on every phone -->
       <section id="tsd" data-unlock="tsd">
