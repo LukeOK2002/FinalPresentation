@@ -13,6 +13,7 @@ import { createPooledPanel } from "./tsd-chart.js";
 import { connectLive } from "./live.js";
 import { hasTA, simulateRound } from "./tsd-model.js";
 import { renderJoinCodes } from "./qr.js";
+import { initTeIntro } from "./te-intro.js";
 
 const params = new URLSearchParams(location.search);
 const PRESENT = params.has("present");
@@ -36,6 +37,7 @@ await Reveal.initialize({
 });
 
 renderJoinCodes();
+initTeIntro();
 
 /* ---------------- tallies ----------------
    local:   every round this screen has run (shown when the room is unreachable)

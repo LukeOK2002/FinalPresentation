@@ -162,3 +162,27 @@ html, body { background: var(--bg); }
 .reset-btn.is-armed { background: #fff; color: #d92d20; animation: armed 0.9s ease-in-out infinite; }
 .reset-btn.is-done { background: #2f7a55; box-shadow: none; animation: none; }
 @keyframes armed { 50% { box-shadow: 0 0 0 14px rgba(217, 45, 32, 0.35); } }
+
+/* ---- intro: what are transposable elements ---- */
+.te-intro { position: relative; }
+.te-text { position: absolute; left: 0; right: 0; top: 230px; height: 200px; pointer-events: none; }
+.te-text p {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1180px;
+  margin-left: -590px !important;
+  text-align: center;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 40px;
+  line-height: 1.35;
+  color: #fff;
+}
+.te-scene { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.te-scene [data-te], .te-scene circle { transform-box: fill-box; transform-origin: center; }
+.te-host { stroke: #5c6773; stroke-width: 16; }
+.te-te { stroke: var(--yellow); stroke-width: 16; }
+.te-dot { fill: var(--yellow); }
+.te-poly { fill: rgba(238, 242, 246, 0.14); stroke: var(--text); stroke-width: 2.5; }
+.te-label { fill: var(--text-2); font: 500 20px var(--font); text-anchor: middle; }
+.te-step { display: none !important; }

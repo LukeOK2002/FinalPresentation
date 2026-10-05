@@ -37,6 +37,50 @@
         </aside>
       </section>
 
+      <!-- ============ Intro: what are transposable elements ============ -->
+      <!-- Each click advances one stage (js/te-intro.js). Going back snaps to the previous stage. -->
+      <section id="te-intro" class="te-intro">
+        <h2>What are transposable elements</h2>
+        <div class="te-text">
+          <p data-te="t0">Transposable Elements (TEs) are genetic sequences capable of copying themselves and spreading throughout the genome</p>
+          <p data-te="t1">Either by creating an RNA intermediate (retrotransposition)...</p>
+          <p data-te="t2">Or by excising itself (transposition)</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+          <!-- host genome with the TE in place -->
+          <g data-te="genome">
+            <line class="te-host" x1="260" y1="650" x2="640" y2="650"/>
+            <line class="te-te" x1="640" y1="650" x2="960" y2="650"/>
+            <line class="te-host" x1="960" y1="650" x2="1340" y2="650"/>
+          </g>
+          <g data-te="labels">
+            <text class="te-label" x="800" y="704">Transposable element</text>
+            <text class="te-label" x="450" y="704">Host genome</text>
+            <text class="te-label" x="1150" y="704">Host genome</text>
+          </g>
+          <!-- target sites: continuous grey lines drawn as two halves that split apart -->
+          <line data-te="s1L" class="te-host" x1="320" y1="650" x2="800" y2="650"/>
+          <line data-te="s1R" class="te-host" x1="800" y1="650" x2="1280" y2="650"/>
+          <line data-te="s2L" class="te-host" x1="320" y1="650" x2="800" y2="650"/>
+          <line data-te="s2R" class="te-host" x1="800" y1="650" x2="1280" y2="650"/>
+          <!-- the mobile copy: RNA intermediate (line + dot), later the excised TE (with end circles) -->
+          <g data-te="rna">
+            <line class="te-te" x1="640" y1="530" x2="960" y2="530"/>
+            <circle data-te="rnaDot" class="te-dot" cx="640" cy="530" r="13"/>
+            <circle data-te="cL" class="te-dot" cx="640" cy="530" r="17"/>
+            <circle data-te="cR" class="te-dot" cx="960" cy="530" r="17"/>
+          </g>
+          <!-- the circle that passes over the TE (reads it into RNA) -->
+          <circle data-te="poly" class="te-poly" cx="800" cy="650" r="34"/>
+        </svg>
+        <span class="fragment te-step" data-te-step="1"></span>
+        <span class="fragment te-step" data-te-step="2"></span>
+        <aside class="notes">
+          Click 1: retrotransposition (copy via RNA, then paste into a new site).
+          Click 2: transposition (cut out, then paste into a new site).
+        </aside>
+      </section>
+
       <!-- ============ Live simulation: TA on both flanks by chance ============ -->
       <!-- data-unlock="tsd": landing here (in ?present mode) opens the simulator on every phone -->
       <section id="tsd" data-unlock="tsd">
