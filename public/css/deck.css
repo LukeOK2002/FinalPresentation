@@ -248,3 +248,8 @@ html, body { background: var(--bg); }
 .time-tick { stroke: var(--muted); stroke-width: 2; }
 .time-lbl { fill: var(--text-2); font: 500 20px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; }
 .time-unit { text-anchor: start; }
+
+/* ---- discovering new families ---- */
+.rm-seg { stroke-width: 14; }
+.rm-mask { stroke: #000; stroke-width: 15; }
+.rm-label { font-size: 22px; color: var(--text-2); margin-top: -0.6em; }

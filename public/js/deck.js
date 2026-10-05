@@ -16,6 +16,7 @@ import { renderJoinCodes } from "./qr.js";
 import { initTeIntro } from "./te-intro.js";
 import { initTeLook } from "./te-look.js";
 import { initTeFamilies } from "./te-families.js";
+import { initTeDiscover } from "./te-discover.js";
 
 const params = new URLSearchParams(location.search);
 const PRESENT = params.has("present");
@@ -42,6 +43,7 @@ renderJoinCodes();
 initTeIntro();
 initTeLook();
 initTeFamilies();
+initTeDiscover();
 
 /* ---------------- tallies ----------------
    local:   every round this screen has run (shown when the room is unreachable)

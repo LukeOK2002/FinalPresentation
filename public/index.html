@@ -195,6 +195,40 @@
         </aside>
       </section>
 
+      <!-- ============ Discovering new TE families: RepeatModeler, then REPrise ============ -->
+      <!-- Each click advances one stage (js/te-discover.js); presenter screen only. -->
+      <section id="te-discover" class="te-intro">
+        <h2>Discovering new TE families with REPrise and RepeatModeler</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">RepeatModeler can be used to model repeat families</p>
+          <p data-a="t1" data-sub-step="1">RepeatModeler finds sequences which are similar to each other within the genome</p>
+          <p data-a="t2" data-sub-step="2">New consensus sequences built by multiple alignment</p>
+          <p data-a="t3" data-sub-step="3">Already discovered sequences masked, so they aren’t rediscovered</p>
+          <p data-a="t4" data-sub-step="4">REPrise was also used, which works a little differently</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+          <!-- genome with three related TE copies -->
+          <line class="te-host" x1="160" y1="640" x2="1440" y2="640"/>
+          <line class="rm-seg" x1="330" y1="640" x2="450" y2="640" style="stroke:#f9be00"/><line class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#ffdc6d"/><line class="rm-seg" x1="1110" y1="640" x2="1230" y2="640" style="stroke:#ffeba9"/>
+          <!-- masked (black) once discovered -->
+          <line data-a="mA" class="rm-mask" x1="330" y1="640" x2="450" y2="640"/><line data-a="mB" class="rm-mask" x1="740" y1="640" x2="860" y2="640"/><line data-a="mC" class="rm-mask" x1="1110" y1="640" x2="1230" y2="640"/>
+          <!-- copies lifted out and lined up -->
+          <line data-a="cA" class="rm-seg" x1="330" y1="640" x2="450" y2="640" style="stroke:#f9be00"/><line data-a="cB" class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#ffdc6d"/><line data-a="cC" class="rm-seg" x1="1110" y1="640" x2="1230" y2="640" style="stroke:#ffeba9"/>
+          <line data-a="cons" class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#f9be00"/>
+          <line data-a="scan" class="te-sweep" x1="160" y1="600" x2="160" y2="680"/>
+        </svg>
+        <div class="scene-label rm-label" data-a="consLabel" style="left:884px;top:390px">New consensus</div>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Click 1: RepeatModeler scans the genome; the three related copies are lifted out and lined up.
+          Click 2: a new consensus is built from their alignment. Click 3: discovered copies are masked
+          (black) so later rounds find something new. Click 4: REPrise.
+        </aside>
+      </section>
+
       <!-- ============ Live simulation: TA on both flanks by chance ============ -->
       <!-- data-unlock="tsd": landing here (in ?present mode) opens the simulator on every phone -->
       <section id="tsd" data-unlock="tsd">
