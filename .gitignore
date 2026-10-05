@@ -2,3 +2,5 @@ node_modules/
 .wrangler/
 .dev.vars
 test-results/
+# licensed font files: deploy them, never commit them
+public/fonts/

@@ -7,7 +7,8 @@
 @font-face {
   font-family: "PP Editorial New";
   src: local("PP Editorial New"), local("PPEditorialNew-Regular"),
-       url("../fonts/PPEditorialNew-Regular.woff2") format("woff2");
+       url("../fonts/PPEditorialNew-Regular.woff2") format("woff2"),
+       url("../fonts/PPEditorialNew-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -15,7 +16,8 @@
 @font-face {
   font-family: "PP Editorial New";
   src: local("PP Editorial New Italic"), local("PPEditorialNew-Italic"),
-       url("../fonts/PPEditorialNew-Italic.woff2") format("woff2");
+       url("../fonts/PPEditorialNew-Italic.woff2") format("woff2"),
+       url("../fonts/PPEditorialNew-Italic.otf") format("opentype");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -37,7 +39,7 @@
   --muted: #6f7d8c;
 
   --font: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Roboto, Arial, sans-serif;
-  /* slide titles; PP Editorial New is a licensed font — drop its .woff2 files into public/fonts/ */
+  /* slide titles; PP Editorial New is a licensed font — drop its .woff2 or .otf files into public/fonts/ (git-ignored) */
   --display: "PP Editorial New", "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
   --mono: "JetBrains Mono", "SF Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
 
