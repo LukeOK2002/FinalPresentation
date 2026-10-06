@@ -258,7 +258,6 @@ html, body { background: var(--bg); }
 .te-text em { font-style: italic; }
 .kmer { fill: var(--text); font: 700 34px var(--mono); text-anchor: end; dominant-baseline: central; }
 .kmer.kn { fill: #fff; font-size: 28px; font-weight: 500; }
-.kdiff { fill: #fff; }
 .kbar { fill: var(--yellow); }
 .kbar-x { fill: #ffdc6d; }
 .te-scene .kbar { transform-origin: left center; }
@@ -285,3 +284,9 @@ html, body { background: var(--bg); }
 .tm-callout text { fill: #fff; text-anchor: start; }
 .tm-callout .tm-num { font-size: 28px; }
 .tm-callout .tm-name { font-size: 22px; font-weight: 400; fill: var(--text-2); }
+
+/* ---- headline result: 0 novel families ---- */
+.novel-slide { text-align: center; }
+.novel-slide .sr-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.novel-num { margin-top: -10px; font: 400 580px/0.9 var(--display); color: var(--yellow); }
+.novel-text { margin-top: 0; font: 400 96px/1.05 var(--display); color: #fff; }

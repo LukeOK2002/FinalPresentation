@@ -30,7 +30,8 @@ RepeatModeler counts vs inexact REPrise counts with 1-mismatch neighbours; genom
 copies aligned; consensus; masking) · te-repeats (non-TE repeats RepeatModeler also
 finds, one quadrant per click: satellite duplications, simple repeats, higher order repeats,
 known TE families) · te-results (treemap, one category per click, area ∝ share;
-newest dark navy, previous ones invert to white; small ones get leader lines) · tsd (live pooled TA-flank simulation) · end (red
+newest dark navy, previous ones invert to white; small ones get leader lines) · te-novel (big yellow "0" + "Novel TE families
+discovered*", static; no expansion of the * on purpose; hidden h2 gives phones the title) · tsd (live pooled TA-flank simulation) · end (red
 presenter-only reset button).
 
 ## Style rules Luke has set
