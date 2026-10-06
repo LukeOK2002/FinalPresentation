@@ -1,5 +1,5 @@
-/* Acronyms are underlined in yellow everywhere; on phones they can be tapped
-   to show what they stand for. Add new ones here. */
+/* Acronyms and software names are underlined in yellow on phones (not on the deck)
+   and can be tapped to show what they are. Add new ones here. */
 
 export const ACRONYMS = {
   TE: {
@@ -9,6 +9,18 @@ export const ACRONYMS = {
   TSD: {
     name: "Target site duplication",
     def: "Short stretch of host DNA copied on both sides of an inserted TE",
+  },
+  RepeatModeler: {
+    name: "de novo repeat discovery software",
+    def: "Finds repeat families by counting exact k-mers that recur across the genome, then builds a consensus sequence for each family",
+  },
+  REPrise: {
+    name: "de novo repeat discovery software",
+    def: "Like RepeatModeler, but counts inexact k-mers (allowing mismatches), so older, more diverged copies are still grouped together",
+  },
+  RepeatMasker: {
+    name: "repeat annotation software",
+    def: "Scans a genome for sequences similar to a library of known repeat families and records where each one lies",
   },
 };
 

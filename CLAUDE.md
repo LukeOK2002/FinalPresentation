@@ -15,7 +15,8 @@ Work on branch `claude/brave-dirac-ntwekn`; commit + push after each change; don
 - `public/index.html`: reveal.js 6 deck, fixed 1600×900 canvas, slides as `<section id>`.
 - Phones (`public/join/`) show ONLY the presenter's slide title + current centred text
   (no animations, for performance). The TSD simulator shows only while the deck is on `#tsd`.
-  Acronyms (TE, TSD) are yellow-underlined + tappable on phones only (`js/acronyms.js`), not on the deck.
+  Acronyms (TE, TSD) and software names (RepeatModeler, REPrise, RepeatMasker) are
+  yellow-underlined + tappable on phones only (`js/acronyms.js`), not on the deck.
 - Animated slides use `js/stepper.js`: elements tagged `data-a="name"`, one hidden
   `<span class="fragment anim-step">` per click, a per-slide module with INITIAL state and
   TIMELINES `[name, {op,tx,ty,sc,sx}, startMs, durMs, ease]`. Going back snaps to end states.
@@ -32,7 +33,8 @@ finds, one quadrant per click: satellite duplications, simple repeats, higher or
 known TE families) · te-results (treemap, one category per click, area ∝ share;
 newest dark navy, previous ones invert to white; small ones get leader lines) · te-novel (big yellow "0" + "Novel TE families
 discovered*", static; no expansion of the * on purpose; hidden h2 gives phones the title) · te-masker (RepeatMasker box over genome; Dfam card
-arcs in via nested x/y groups with sine easings; box sweeps and colours TE hits) · tsd (live pooled TA-flank simulation) · end (red
+arcs in via nested x/y groups with sine easings; box sweeps and colours TE hits) · te-compare (reannotation vs published track;
+white comparison lines; novel intervals circled, "491 loci") · tsd (live pooled TA-flank simulation) · end (red
 presenter-only reset button).
 
 ## Style rules Luke has set
