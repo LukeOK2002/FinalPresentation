@@ -27,7 +27,9 @@ title · te-intro (what are TEs: retro/transposition) · te-look (TSDs, passive 
 50 My, similarity "95% identity") · te-families (5 family lines, consensus built column by
 column, real Dfam table, "is this database complete?") · te-discover (k-mers; exact
 RepeatModeler counts vs inexact REPrise counts with 1-mismatch neighbours; genome scan;
-copies aligned; consensus; masking) · tsd (live pooled TA-flank simulation) · end (red
+copies aligned; consensus; masking) · te-repeats (non-TE repeats RepeatModeler also
+finds, one quadrant per click: satellite duplications, simple repeats, higher order repeats,
+known TE families) · tsd (live pooled TA-flank simulation) · end (red
 presenter-only reset button).
 
 ## Style rules Luke has set

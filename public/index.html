@@ -238,6 +238,31 @@
         </aside>
       </section>
 
+      <!-- ============ Non-TE repeats RepeatModeler also finds ============ -->
+      <!-- Each click fills one quadrant (js/te-repeats.js); presenter screen only. -->
+      <section id="te-repeats" class="te-intro">
+        <h2>But, RepeatModeler also finds repeats which <u class="u-white">aren’t</u> TEs</h2>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+<g data-a="dup"><line class="rep-seg" x1="300" y1="440" x2="380" y2="440" style="stroke:#5c6773"/><line class="rep-seg" x1="380" y1="440" x2="420" y2="440" style="stroke:#00f93b"/><line class="rep-seg" x1="420" y1="440" x2="500" y2="440" style="stroke:#5c6773"/><line class="rep-seg" x1="500" y1="440" x2="540" y2="440" style="stroke:#006ff9"/></g><g data-a="dupCopy"><line class="rep-seg" x1="300" y1="440" x2="380" y2="440" style="stroke:#5c6773"/><line class="rep-seg" x1="380" y1="440" x2="420" y2="440" style="stroke:#00f93b"/><line class="rep-seg" x1="420" y1="440" x2="500" y2="440" style="stroke:#5c6773"/><line class="rep-seg" x1="500" y1="440" x2="540" y2="440" style="stroke:#006ff9"/></g>
+<line data-a="m0" class="rep-seg" x1="944" y1="440" x2="984" y2="440" style="stroke:#006ff9"/><line data-a="m1" class="rep-seg" x1="992" y1="440" x2="1032" y2="440" style="stroke:#006ff9"/><line data-a="m2" class="rep-seg" x1="1040" y1="440" x2="1080" y2="440" style="stroke:#006ff9"/><line data-a="m3" class="rep-seg" x1="1088" y1="440" x2="1128" y2="440" style="stroke:#006ff9"/><line data-a="m4" class="rep-seg" x1="1136" y1="440" x2="1176" y2="440" style="stroke:#006ff9"/><line data-a="m5" class="rep-seg" x1="1184" y1="440" x2="1224" y2="440" style="stroke:#006ff9"/><line data-a="m6" class="rep-seg" x1="1232" y1="440" x2="1272" y2="440" style="stroke:#006ff9"/><line data-a="m7" class="rep-seg" x1="1280" y1="440" x2="1320" y2="440" style="stroke:#006ff9"/><line data-a="m8" class="rep-seg" x1="1328" y1="440" x2="1368" y2="440" style="stroke:#006ff9"/><line data-a="m9" class="rep-seg" x1="1376" y1="440" x2="1416" y2="440" style="stroke:#006ff9"/>
+<g data-a="tri0"><line class="rep-seg" x1="171" y1="730" x2="207" y2="730" style="stroke:#006ff9"/><line class="rep-seg" x1="213" y1="730" x2="249" y2="730" style="stroke:#f93500"/><line class="rep-seg" x1="255" y1="730" x2="291" y2="730" style="stroke:#00f93b"/></g><g data-a="tri1"><line class="rep-seg" x1="297" y1="730" x2="333" y2="730" style="stroke:#006ff9"/><line class="rep-seg" x1="339" y1="730" x2="375" y2="730" style="stroke:#f93500"/><line class="rep-seg" x1="381" y1="730" x2="417" y2="730" style="stroke:#00f93b"/></g><g data-a="tri2"><line class="rep-seg" x1="423" y1="730" x2="459" y2="730" style="stroke:#006ff9"/><line class="rep-seg" x1="465" y1="730" x2="501" y2="730" style="stroke:#f93500"/><line class="rep-seg" x1="507" y1="730" x2="543" y2="730" style="stroke:#00f93b"/></g><g data-a="tri3"><line class="rep-seg" x1="549" y1="730" x2="585" y2="730" style="stroke:#006ff9"/><line class="rep-seg" x1="591" y1="730" x2="627" y2="730" style="stroke:#f93500"/><line class="rep-seg" x1="633" y1="730" x2="669" y2="730" style="stroke:#00f93b"/></g>
+<line data-a="flankL" class="rep-seg" x1="960" y1="730" x2="1180" y2="730" style="stroke:#5c6773"/><line data-a="flankR" class="rep-seg" x1="1180" y1="730" x2="1400" y2="730" style="stroke:#5c6773"/><line data-a="te" class="rep-seg" x1="1100" y1="730" x2="1260" y2="730" style="stroke:#f9be00"/>
+        </svg>
+        <div class="q-text" data-a="q1t" data-sub-step="1" style="left:420px;top:320px">Such as satellite duplications</div>
+        <div class="q-text" data-a="q2t" data-sub-step="2" style="left:1180px;top:320px">Simple repeats</div>
+        <div class="q-text" data-a="q3t" data-sub-step="3" style="left:420px;top:610px">Higher order repeats</div>
+        <div class="q-text" data-a="q4t" data-sub-step="4" style="left:1180px;top:610px">Already known TE families</div>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Quadrants fill in reading order. Click 1: a stretch (grey/green/grey/blue) duplicates onto its own end.
+          Click 2: a blue monomer extends monomer by monomer. Click 3: a blue/red/green trimer extends trimer by trimer.
+          Click 4: a known TE (yellow) between grey host flanks.
+        </aside>
+      </section>
+
       <!-- ============ Live simulation: TA on both flanks by chance ============ -->
       <!-- data-unlock="tsd": landing here (in ?present mode) opens the simulator on every phone -->
       <section id="tsd" data-unlock="tsd">
