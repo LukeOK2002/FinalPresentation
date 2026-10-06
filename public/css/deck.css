@@ -305,3 +305,19 @@ html, body { background: var(--bg); }
 .cmp-label { right: 1110px; margin-top: -0.6em; font-weight: 500; color: var(--text-2); }
 .cmp-line { stroke: #fff; stroke-width: 3; }
 .cmp-ring { fill: none; stroke: #fff; stroke-width: 3; }
+
+/* ---- MADE1/2 investigation ---- */
+.mi-copy { stroke-width: 10; }
+.mi-seq { stroke-width: 16; }
+.mi-label { fill: var(--text-2); font: 500 26px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+.mi-end { text-anchor: end; }
+.mi-mid { text-anchor: middle; font-size: 22px; }
+.mi-core { fill: #ff8c1a; }
+.mi-bracket { fill: none; stroke: var(--text-2); stroke-width: 2; }
+.mi-sweep { stroke: #fff; stroke-width: 2; }
+.mi-score { fill: var(--text-2); font: 500 26px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+.mi-score tspan { fill: #fff; font-weight: 700; }
+.mi-check { font-size: 40px; dominant-baseline: central; }
+.mi-edge { stroke: var(--text-2); stroke-width: 2; }
+.mi-node { fill: #1c2735; stroke: var(--text-2); stroke-width: 2; }
+.mi-node-on { fill: #f9be00; stroke: #f9be00; stroke-width: 2; }

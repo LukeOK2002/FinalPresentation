@@ -34,7 +34,8 @@ known TE families) · te-results (treemap, one category per click, area ∝ shar
 newest dark navy, previous ones invert to white; small ones get leader lines) · te-novel (big yellow "0" + "Novel TE families
 discovered*", static; no expansion of the * on purpose; hidden h2 gives phones the title) · te-masker (RepeatMasker box over genome; Dfam card
 arcs in via nested x/y groups with sine easings; box sweeps and colours TE hits) · te-compare (reannotation vs published track;
-white comparison lines; novel intervals circled, "491 loci") · tsd (live pooled TA-flank simulation) · end (red
+white comparison lines; novel intervals circled, "491 loci") · te-made (MADE1/2: TIR/core diagram → 71 → 378
+copies grid → shuffle test, orthology, profile HMM, each with ✅ → all but one confirmed; scene built in JS) · tsd (live pooled TA-flank simulation) · end (red
 presenter-only reset button).
 
 ## Style rules Luke has set
@@ -43,6 +44,8 @@ presenter-only reset button).
 - Colours: #f9be00 yellow = TEs / TA / 2-of-2; #187fc3 blue = TSDs / 0-1 of 2; host genome
   dark grey #5c6773. Follow colours Luke specifies exactly.
 - Each click = one text change + its animation plays automatically.
+- Stepper gotcha: segments on the same element+property (op, or any of tx/ty/sc/sx) must not
+  overlap in time, or WAAPI throws "Offsets must be monotonically non-decreasing".
 - Flag (don't silently change) wording/science issues; fix obvious typos and say so.
 
 ## Testing

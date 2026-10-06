@@ -362,6 +362,37 @@
         </aside>
       </section>
 
+      <!-- ============ MADE1/2 investigation ============ -->
+      <!-- Each click advances one stage (js/te-made.js builds the scene); presenter screen only. -->
+      <section id="te-made" class="te-intro">
+        <h2>MADE1/2 investigation</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">One of these unannotated families was MADE1/MADE2</p>
+          <p data-a="t1" data-sub-step="1">It’s a short, 80 bp family composed of two palindromic repeats</p>
+          <p data-a="t2" data-sub-step="2">RepeatMasker’s search found 71 loci without annotation</p>
+          <p data-a="t3" data-sub-step="3">But a more sensitive BLAST search brought the count up to 378</p>
+          <p data-a="t4" data-sub-step="4">To ensure these loci were genuine, various tests were used</p>
+          <p data-a="t5" data-sub-step="5">Shuffling the sequence 500 times and BLASTing it against the reference sequence</p>
+          <p data-a="t6" data-sub-step="6">Comparing orthologous positions in primates</p>
+          <p data-a="t7" data-sub-step="7">Querying against profile hidden Markov models</p>
+          <p data-a="t8" data-sub-step="8">These tests confirmed all but one locus</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          1: MADE1 = 80 bp, two palindromic (inverted) repeats around a short core. 2: 71 unannotated RepeatMasker hits.
+          3: BLAST raises it to 378. 5: shuffled sequence (500 shuffles) scores ~1 vs 16 for the real locus.
+          6: present at the orthologous position in chimpanzee. 7: matches the profile HMM. 8: all confirmed but one.
+        </aside>
+      </section>
+
       <!-- ============ Live simulation: TA on both flanks by chance ============ -->
       <!-- data-unlock="tsd": landing here (in ?present mode) opens the simulator on every phone -->
       <section id="tsd" data-unlock="tsd">
