@@ -8,7 +8,7 @@
    Click 5: shuffle test: the shuffled locus is diced and reordered; a scan line passes
             over both; bitscores 16 vs 1; ✅ beside the original
    Click 6: orthology: human locus vs chimpanzee locus; scan line; ✅ beside human
-   Click 7: profile HMM: states light up in series above the locus; ✅
+   Click 7: profile HMM (blank layers above and below): the middle states light up in series; ✅
    Click 8: the 378 copies return and one turns grey */
 
 import { createStepper, EASE, EASE_IN_OUT, SPRING } from "./stepper.js";
@@ -67,12 +67,23 @@ function build(svg) {
     `<line data-a="sw2" class="mi-sweep" x1="${SX - 20}" y1="${ROW1 - 50}" x2="${SX - 20}" y2="${ROW2 + 50}"/>` +
     `<text data-a="ck2" class="mi-check" x="1040" y="${ROW1}">✅</text></g>`;
   // profile HMM above a locus
-  const HY = 470, LY = 640, nx = (i) => 680 + i * 48;
-  h += `<g data-a="hm">` + label(640, HY, "Profile HMM", "mi-end") + label(520, LY, "Locus", "mi-end");
-  for (let i = 0; i < NODES - 1; i++) h += `<line class="mi-edge" x1="${nx(i) + 16}" y1="${HY}" x2="${nx(i + 1) - 16}" y2="${HY}"/>`;
-  for (let i = 0; i < NODES; i++) h += `<circle class="mi-node" cx="${nx(i)}" cy="${HY}" r="16"/><circle data-a="hn${i}" class="mi-node-on" cx="${nx(i)}" cy="${HY}" r="16"/>`;
-  h += line(540, 680, LY, GREY, `class="mi-seq"`) + line(680, 920, LY, Y, `class="mi-seq"`) + line(920, 1060, LY, GREY, `class="mi-seq"`) +
-    `<text data-a="ck3" class="mi-check" x="1100" y="${LY}">✅</text></g>`;
+  const HY = 450, LY = 650, nx = (i) => 640 + i * 64;
+  h += `<g data-a="hm">` + label(600, HY, "Profile HMM", "mi-end") + label(470, LY, "Locus", "mi-end");
+  const UY = HY - 62, DY = HY + 62; // blank layers above and below the highlighted row
+  const edge = (x1, y1, x2, y2) => `<line class="mi-edge" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  for (let i = 0; i < NODES; i++) {
+    if (i < NODES - 1) h += edge(nx(i), HY, nx(i + 1), HY);
+    for (const ly of [UY, DY]) {
+      h += edge(nx(i), ly, nx(i), HY);                            // to its own column
+      if (i < NODES - 1) h += edge(nx(i), ly, nx(i + 1), HY);     // and on to the next
+    }
+  }
+  for (let i = 0; i < NODES; i++) {
+    h += `<circle class="mi-node" cx="${nx(i)}" cy="${UY}" r="14"/><circle class="mi-node" cx="${nx(i)}" cy="${DY}" r="14"/>`;
+    h += `<circle class="mi-node" cx="${nx(i)}" cy="${HY}" r="16"/><circle data-a="hn${i}" class="mi-node-on" cx="${nx(i)}" cy="${HY}" r="16"/>`;
+  }
+  h += line(500, 640, LY, GREY, `class="mi-seq"`) + line(640, 960, LY, Y, `class="mi-seq"`) + line(960, 1100, LY, GREY, `class="mi-seq"`) +
+    `<text data-a="ck3" class="mi-check" x="1140" y="${LY}">✅</text></g>`;
   svg.innerHTML = h;
 }
 

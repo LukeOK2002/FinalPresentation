@@ -1,7 +1,7 @@
 /* "Investigating results with RepeatMasker" slide (presenter screen only).
 
    Start:   a grey genome with a navy RepeatMasker box centred above it
-   Click 1: a small Dfam card swings into the box along a 90° arc
+   Click 1: a small Dfam card swings into the box along a 90° arc, then disappears
    Click 2: the box sweeps along the genome, colouring TE-homologous intervals as it passes
    Click 3: text only
 
@@ -10,7 +10,7 @@
 
 import { createStepper, EASE, EASE_IN_OUT } from "./stepper.js";
 
-const ARC = 230, ARC_MS = 1300;
+const ARC = 230, ARC_MS = 750;
 const SWEEP_FROM = -560, SWEEP_TO = 560, SWEEP_MS = 3200, BOX_X = 800;
 const SINE_OUT = "cubic-bezier(0.39, 0.575, 0.565, 1)";
 const SINE_IN = "cubic-bezier(0.47, 0, 0.745, 0.715)";
@@ -36,6 +36,7 @@ const TIMELINES = [
     ["dfamX", { op: 1 }, 500, 400],
     ["dfamX", { tx: 0 }, 1000, ARC_MS, SINE_OUT],
     ["dfamY", { ty: 0 }, 1000, ARC_MS, SINE_IN],
+    ["dfamX", { op: 0 }, 1000 + ARC_MS, 150],             // gone once it is inside
     ["box", { sc: 1.06 }, 1000 + ARC_MS, 180, EASE],
     ["box", { sc: 1 }, 1000 + ARC_MS + 180, 300, EASE],
   ],

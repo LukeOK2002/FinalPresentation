@@ -1,7 +1,7 @@
 /* "How does this reannotation compare to the published annotation?" slide (presenter screen only).
 
    Start:   the RepeatMasker reannotation: a grey genome with yellow repeat intervals
-   Click 1: the line duplicates downwards and loses two intervals: the published annotation
+   Click 1: the published annotation fades in below, already missing two intervals
    Click 2: a white line drops through each reannotated interval to compare the two tracks
    Click 3: the intervals with no published counterpart are circled
 
@@ -12,24 +12,21 @@ import { createStepper, EASE, SPRING } from "./stepper.js";
 
 export const INTERVALS = [[560, 610], [660, 720], [790, 830], [900, 970], [1030, 1070], [1130, 1200], [1260, 1300], [1360, 1420]];
 export const NOVEL = [2, 5];      // not in the published annotation
-const DROP = 180;                  // gap between the two tracks
 
 const swap = (from, to) => [...(from ? [[from, { op: 0, ty: -12 }, 0, 400]] : []), [to, { op: 1, ty: 0 }, 300, 500]];
 
 const INITIAL = {
   t2: { op: 0, ty: 12 }, t3: { op: 0, ty: 12 },
-  pub: { op: 0, ty: -DROP }, pubLabel: { op: 0, tx: -10 },
+  pub: { op: 0 }, pubLabel: { op: 0, tx: -10 },
   ...Object.fromEntries(INTERVALS.map((_, i) => [`v${i}`, { op: 0, sx: 0 }])),
   ...Object.fromEntries(NOVEL.map((i) => [`ring${i}`, { op: 0, sc: 0.6 }])),
 };
 
 const TIMELINES = [
   null,
-  [ // 1 · duplicate the track; two intervals drop out
-    ["pub", { op: 1 }, 0, 300],
-    ["pub", { ty: 0 }, 200, 900, EASE],
-    ["pubLabel", { op: 1, tx: 0 }, 900, 500, EASE],
-    ...NOVEL.map((i, k) => [`px${i}`, { op: 0 }, 1400 + k * 250, 500]),
+  [ // 1 · the published annotation
+    ["pub", { op: 1 }, 0, 700],
+    ["pubLabel", { op: 1, tx: 0 }, 200, 600, EASE],
   ],
   [ // 2 · compare: a white line through each interval
     ...swap(null, "t2"),

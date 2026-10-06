@@ -33,8 +33,8 @@ finds, one quadrant per click: satellite duplications, simple repeats, higher or
 known TE families) · te-results (treemap, one category per click, area ∝ share;
 newest dark navy, previous ones invert to white; small ones get leader lines) · te-novel (big yellow "0" + "Novel TE families
 discovered*", static; no expansion of the * on purpose; hidden h2 gives phones the title) · te-masker (RepeatMasker box over genome; Dfam card
-arcs in via nested x/y groups with sine easings; box sweeps and colours TE hits) · te-compare (reannotation vs published track;
-white comparison lines; novel intervals circled, "491 loci") · te-made (MADE1/2: TIR/core diagram → 71 → 378
+arcs in fast via nested x/y groups with sine easings, then vanishes; box sweeps and colours TE hits) · te-compare (reannotation vs published track;
+white comparison lines; published track fades in already missing them; novel intervals circled, "491 loci") · te-made (MADE1/2: TIR/core diagram → 71 → 378
 copies grid → shuffle test, orthology, profile HMM, each with ✅ → all but one confirmed; scene built in JS) · tsd (live pooled TA-flank simulation) · end (red
 presenter-only reset button).
 
