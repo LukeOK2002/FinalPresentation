@@ -271,3 +271,13 @@ html, body { background: var(--bg); }
   position: absolute; width: 700px; margin-left: -350px; text-align: center; pointer-events: none;
   font: 36px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif; color: #fff;
 }
+
+/* ---- de novo results: pachinko ---- */
+.te-text--high { top: 140px; }
+.pk-key { position: absolute; left: 0; right: 0; top: 196px; text-align: center; font: 22px "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--text-2); pointer-events: none; }
+.pk-key i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #fff; vertical-align: 1px; }
+.pk-peg { fill: #5c6773; }
+.pk-bucket { fill: none; stroke: #5c6773; stroke-width: 3; }
+.pk-balls { position: absolute; inset: 0; width: 1600px; height: 900px; pointer-events: none; }
+.pk-label { position: absolute; top: 790px; transform: translateX(-50%); text-align: center; font: 17px/1.2 "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--text-2); white-space: normal; }
+.pk-label b { display: block; min-height: 30px; font-size: 24px; font-weight: 700; color: #fff; }

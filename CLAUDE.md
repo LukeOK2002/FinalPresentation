@@ -29,7 +29,8 @@ column, real Dfam table, "is this database complete?") · te-discover (k-mers; e
 RepeatModeler counts vs inexact REPrise counts with 1-mismatch neighbours; genome scan;
 copies aligned; consensus; masking) · te-repeats (non-TE repeats RepeatModeler also
 finds, one quadrant per click: satellite duplications, simple repeats, higher order repeats,
-known TE families) · tsd (live pooled TA-flank simulation) · end (red
+known TE families) · te-results (pachinko drop on canvas, 1 ball = 100 families,
+buckets sized to counts; paths precomputed, no physics) · tsd (live pooled TA-flank simulation) · end (red
 presenter-only reset button).
 
 ## Style rules Luke has set

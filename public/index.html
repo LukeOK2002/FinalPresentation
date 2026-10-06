@@ -263,6 +263,25 @@
         </aside>
       </section>
 
+      <!-- ============ De novo discovery results: pachinko drop ============ -->
+      <!-- One click drops the balls (js/te-results.js); presenter screen only. -->
+      <section id="te-results" class="te-intro">
+        <h2>De novo discovery results</h2>
+        <div class="te-text te-text--high">
+          <p data-sub-step="0">29,124 families identified by RepeatModeler and REPrise</p>
+        </div>
+        <div class="pk-key"><i></i> = 100 families</div>
+        <svg class="te-scene pk-board" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <canvas class="pk-balls" width="1600" height="900" aria-hidden="true"></canvas>
+        <div class="layer pk-labels"></div>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Click 1: each ball is 100 families (291 balls). Buckets are sized to their counts.
+          Segmental duplication 21,431 · Known TE 4,960 · Gene-derived 1,123 · Tandem / local cluster 593 ·
+          Satellite 454 · Too short 339 · Too few copies 222.
+        </aside>
+      </section>
+
       <!-- ============ Live simulation: TA on both flanks by chance ============ -->
       <!-- data-unlock="tsd": landing here (in ?present mode) opens the simulator on every phone -->
       <section id="tsd" data-unlock="tsd">
