@@ -290,3 +290,13 @@ html, body { background: var(--bg); }
 .novel-slide .sr-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .novel-num { margin-top: -10px; font: 400 580px/0.9 var(--display); color: var(--yellow); }
 .novel-text { margin-top: 0; font: 400 96px/1.05 var(--display); color: #fff; }
+
+/* ---- RepeatMasker ---- */
+.rm-box { fill: #1d3461; stroke: #fff; stroke-width: 2.5; }
+.rm-box-label { fill: #fff; font: 600 34px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.rm-beam { fill: rgba(255, 255, 255, 0.12); }
+.rm-hit { stroke-width: 16; }
+.te-scene .rm-hit { transform-origin: left center; }
+.dfam-card { fill: #3a4452; stroke: rgba(255, 255, 255, 0.35); stroke-width: 1.5; }
+.dfam-card-label { fill: #fff; font: 700 24px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.dfam-card-row { stroke: #c3cad3; stroke-width: 4; stroke-linecap: round; }
