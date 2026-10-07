@@ -22,7 +22,9 @@ const SET2 = [
   [["Observed", 378, 0.0582], ["Known copies", 1298, 0.0462]],
   [["Observed", 378, 0.3228], ["Known copies", 1298, 0.2982]],
 ];
-const P1 = ["3.36 × 10⁻¹⁵", "1.09 × 10⁻²⁹"], Z1 = [7.88, 11.33];
+// exponents as a raised, smaller tspan: Unicode superscript digits sit at uneven heights (¹²³ vs ⁴–⁹)
+const sci = (m, e) => `${m} × 10<tspan class="pc-exp" dy="-0.55em">−${e}</tspan>`;
+const P1 = [sci("3.36", 15), sci("1.09", 29)], Z1 = [7.88, 11.33];
 const P2 = ["0.344", "0.374"];
 // distribution curve
 const AX = 300, AW = 1000, ZMIN = -4, ZMAX = 12, AY = 770, PEAK = 290;
