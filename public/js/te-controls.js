@@ -5,10 +5,10 @@
    Click 2: bars fade; the p-values drop onto a null distribution, far out in the tail
    Click 3: observed vs length/chromosome-matched known MADE copies
    Click 4: Fisher's exact test again: p = 0.344 and 0.374
-   Click 5: text only
+   Click 5: bars fade; those p-values land on the same curve, inside its bulk
 
    The curve is a standard normal; each p-value sits at its two-sided z-score
-   (p = 3.36e-15 → z ≈ 7.9, p = 1.09e-29 → z ≈ 11.3). Illustrative. */
+   (p = 3.36e-15 → z ≈ 7.9, p = 1.09e-29 → z ≈ 11.3; p = 0.344 → 0.95, 0.374 → 0.89). Illustrative. */
 
 import { createStepper, EASE, SPRING } from "./stepper.js";
 
@@ -25,11 +25,13 @@ const SET2 = [
 // exponents as a raised, smaller tspan: Unicode superscript digits sit at uneven heights (¹²³ vs ⁴–⁹)
 const sci = (m, e) => `${m} × 10<tspan class="pc-exp" dy="-0.55em">−${e}</tspan>`;
 const P1 = [sci("3.36", 15), sci("1.09", 29)], Z1 = [7.88, 11.33];
-const P2 = ["0.344", "0.374"];
+const P2 = ["0.344", "0.374"], Z2 = [0.946, 0.889]; // two-sided z for p = 0.344 / 0.374
 // distribution curve
 const AX = 300, AW = 1000, ZMIN = -4, ZMAX = 12, AY = 770, PEAK = 290;
 const zx = (z) => AX + ((z - ZMIN) / (ZMAX - ZMIN)) * AW;
 const TARGET = [{ y: 600 }, { y: 540 }]; // where each p-value label lands above its marker
+const TARGET2 = [{ y: 520 }, { y: 430 }]; // known-copy p-values: to the right of the curve
+const LABEL2_DX = 170;                     // label centre, right of its marker
 
 const fmt = (n) => n.toLocaleString("en-IE");
 const pct = (p) => `${(p * 100).toFixed(2)}%`;
@@ -78,6 +80,13 @@ function build(svg) {
       `<circle class="pc-dot" cx="${zx(z)}" cy="${AY}" r="7"/>` +
       `<text class="pc-tag" x="${zx(z)}" y="${TARGET[i].y - 32}">${GROUPS[i].name}</text></g>`;
   });
+  Z2.forEach((z, i) => {
+    // the two markers almost coincide, so each runs up and then right to a label beside the curve
+    const x = zx(z) + (i ? 4 : -4), ty = TARGET2[i].y;
+    h += `<g data-a="mk${i + 2}"><polyline class="pc-marker" points="${x},${AY} ${x},${ty} ${zx(z) + 70},${ty}"/>` +
+      `<circle class="pc-dot" cx="${x}" cy="${AY}" r="7"/>` +
+      `<text class="pc-tag" x="${zx(z) + LABEL2_DX + 150}" y="${ty + 2}">${GROUPS[i].name}</text></g>`;
+  });
   h += `<g data-a="set2">${bars(SET2, "b")}</g>` + fisher("b", P2);
   svg.innerHTML = h;
 }
@@ -89,7 +98,7 @@ const pFrom = (i) => GROUPS[i].y + 30; // label's y before it moves
 const INITIAL = {
   ...Object.fromEntries([1, 2, 3].map((k) => [`t${k}`, { op: 0, ty: 12 }])),
   ak0: { op: 0, tx: -12 }, ak1: { op: 0, tx: -12 }, ap0: { op: 0, sc: 0.7 }, ap1: { op: 0, sc: 0.7 },
-  curve: hidden, mk0: hidden, mk1: hidden,
+  curve: hidden, mk0: hidden, mk1: hidden, mk2: hidden, mk3: hidden,
   set2: hidden, bk0: { op: 0, tx: -12 }, bk1: { op: 0, tx: -12 }, bp0: { op: 0, sc: 0.7 }, bp1: { op: 0, sc: 0.7 },
   ...Object.fromEntries([0, 1].flatMap((g) => [0, 1].map((r) => [`bs${g}${r}`, { sx: 0 }]))),
   ...Object.fromEntries([0, 1].flatMap((g) => [0, 1].map((r) => [`bb${g}${r}`, hidden]))),
@@ -127,7 +136,15 @@ const TIMELINES = [
       ["bp" + i, { op: 1, sc: 1 }, 700 + i * 500, 500, SPRING],
     ]),
   ],
-  [...swap("t2", "t3")],
+  [ // 5 · onto the null distribution: well inside the bulk this time
+    ...swap("t2", "t3"),
+    ["set2", { op: 0 }, 0, 600], ["bk0", { op: 0 }, 0, 500], ["bk1", { op: 0 }, 0, 500],
+    ["curve", { op: 1 }, 700, 700],
+    ...[0, 1].flatMap((i) => [
+      ["bp" + i, { tx: zx(Z2[i]) + LABEL2_DX - PX, ty: TARGET2[i].y - pFrom(i) }, 1300 + i * 300, 1100, EASE],
+      ["mk" + (i + 2), { op: 1 }, 2200 + i * 300, 500],
+    ]),
+  ],
 ];
 
 export function initTeControls() {

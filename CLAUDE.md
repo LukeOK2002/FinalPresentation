@@ -38,7 +38,8 @@ white comparison lines; published track fades in already missing them; novel int
 copies grid → shuffle test, orthology, profile HMM, each with ✅ → all but one confirmed; scene built in JS) · te-tsdcheck (TA target-site cut/insert/fill →
 TA either side → unclear boundary shift → 6 bp window → results bars 5.82% / 32.28%, blue pulses) · tsd (live pooled TA-flank simulation; presenter clicks the QR to run 1,000
 rounds at once) · te-controls (observed vs background bars → Fisher p-values → z-curve; then vs known
-copies, p = 0.344 / 0.374) · end (red
+copies, p = 0.344 / 0.374, also placed on the curve) · te-missed (RMBlast fixed SW threshold 225: score
+trace while scanning; short copy fails; GC % picks matrix; 1→60 kb GC window; 48% vs 45% matrix → 214 vs 231) · end (red
 presenter-only reset button).
 
 ## Style rules Luke has set

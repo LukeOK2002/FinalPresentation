@@ -472,6 +472,35 @@
         </aside>
       </section>
 
+      <!-- ============ Why were these copies missed? ============ -->
+      <!-- Each click advances one stage (js/te-missed.js builds the scene); presenter screen only. -->
+      <section id="te-missed" class="te-intro">
+        <h2>But why were these copies missed in the first place?</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">A permissive BLAST search found these copies, but RepeatMasker didn’t? Why?</p>
+          <p data-a="t1" data-sub-step="1">For this, I had to delve into RepeatMasker’s documentation</p>
+          <p data-a="t2" data-sub-step="2">As it turns out, RepeatMasker’s RMBlast engine requires copies to pass a fixed score threshold to be annotated</p>
+          <p data-a="t3" data-sub-step="3">However, short elements have fewer total bases, making it harder for them to reach this fixed threshold</p>
+          <p data-a="t4" data-sub-step="4">Detection is also dependent on the GC % of the surrounding sequence</p>
+          <p data-a="t5" data-sub-step="5">Using GC % to select the scoring matrix used</p>
+          <p data-a="t6" data-sub-step="6">RepeatMasker calculates GC % in 56–60 kb batches</p>
+          <p data-a="t7" data-sub-step="7">This can flip detection outcomes</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          2: RMBlast needs a Smith–Waterman score ≥ 225. 3: short elements top out below it. 5: GC% picks the scoring matrix.
+          6: GC is measured over 56–60 kb batches, so the local GC can differ. 7: same copy, 48% GC (60 kb) matrix → 214, missed;
+          45% GC (1 kb) matrix → 231, detected. Score traces and matrix values are illustrative.
+        </aside>
+      </section>
+
 
       <!-- ===================== End ===================== -->
       <section id="end" class="end-slide">

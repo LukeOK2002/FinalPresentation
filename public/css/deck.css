@@ -352,8 +352,9 @@ html, body { background: var(--bg); }
 .pc-tail { fill: rgba(255, 255, 255, 0.12); }
 .pc-axis { stroke: var(--text-2); stroke-width: 2; }
 .pc-tick { fill: var(--text-2); font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; }
-.pc-marker { stroke: #f9be00; stroke-width: 2.5; stroke-dasharray: 6 5; }
+.pc-marker { fill: none; stroke: #f9be00; stroke-width: 2.5; stroke-dasharray: 6 5; }
 .pc-dot { fill: #f9be00; }
+.pc-tag { dominant-baseline: central; }
 .pc-tag { fill: var(--text-2); font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; }
 
 /* simulation slide: bigger QR; click it (presenter) to run 1,000 rounds */
@@ -365,3 +366,28 @@ html, body { background: var(--bg); }
   background: var(--yellow); color: var(--on-yellow); font: 700 18px var(--font); white-space: nowrap; pointer-events: none;
   animation: qr-burst 1100ms var(--ease-out) forwards; }
 @keyframes qr-burst { 0% { opacity: 0; transform: translate(-50%, -30%); } 20% { opacity: 1; transform: translate(-50%, -50%); } 100% { opacity: 0; transform: translate(-50%, -120%); } }
+
+/* ---- why were copies missed ---- */
+.ms-seq { stroke-width: 16; }
+.ms-axis { stroke: var(--text-2); stroke-width: 2; }
+.ms-thresh { stroke: #fff; stroke-width: 2; stroke-dasharray: 8 7; }
+.ms-tick { fill: var(--text-2); font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ms-end { text-anchor: end; }
+.ms-trace { stroke: #f9be00; stroke-width: 4; stroke-linecap: round; }
+.ms-box { fill: #fff; font: 600 26px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ms-out { fill: var(--text-2); font: 600 24px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ms-yes { fill: #f9be00; }
+.ms-sweep { stroke: #fff; stroke-width: 2; }
+.ms-gc { fill: #fff; font: 700 30px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ms-win { fill: var(--text-2); font: 500 24px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ms-bracket { fill: none; stroke: var(--text-2); stroke-width: 2; }
+.ms-mtitle { fill: #fff; font: 600 26px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ms-mhead { fill: var(--text-2); font: 700 22px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.ms-cell.ms-pos { fill: #f9be00; }
+.ms-cell.ms-mid { fill: #2a3441; }
+.ms-cell.ms-neg { fill: #1c2735; }
+.ms-val { fill: #fff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+.ms-val-pos { fill: #1d1600; }
+.ms-hl { fill: none; stroke: #fff; stroke-width: 4; }
+.ms-side { fill: #fff; font: 600 26px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ms-score { fill: #fff; font: 700 32px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }

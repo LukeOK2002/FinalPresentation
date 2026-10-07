@@ -144,7 +144,7 @@ const TIMELINES = [
   ],
   [ // 7 · the blue parts pulse once
     ...swap("t5", "t6"),
-    ...[0, 1].flatMap((i) => [[`bp${i}`, { op: 0.5 }, 700, 250], [`bp${i}`, { op: 0 }, 950, 600]]),
+    ...[0, 1].flatMap((i) => [[`bp${i}`, { op: 0.5 }, 700, 900, EASE_IN_OUT], [`bp${i}`, { op: 0 }, 1600, 1600, EASE_IN_OUT]]),
   ],
   [...swap("t6", "t7")],
 ];
