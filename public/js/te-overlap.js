@@ -2,7 +2,7 @@
 
    Click 1: two white circles, area ∝ loci found (HMMER 5,935,649; RMBlast 3,837,511)
    Click 2: they slide together until 99.56% of the RMBlast circle lies inside HMMER's;
-            the overlap inverts colour (mix-blend-mode: difference)
+            the overlap inverts to the background navy
    Click 3: zoom in on the thin RMBlast-only crescent (0.44%)
    Click 4: zoom back out; the HMMER-only part is highlighted */
 
@@ -33,9 +33,15 @@ function build(svg) {
     `<defs><mask id="ov-hmmer-only"><rect x="0" y="0" width="1600" height="900" fill="#fff"/><circle cx="${RX}" cy="${CY}" r="${RR}" fill="#000"/></mask>` +
     `<linearGradient id="ov-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.27" stop-color="#000"/><stop offset="0.32" stop-color="#fff"/></linearGradient>` +
     `<mask id="ov-stage" maskUnits="userSpaceOnUse" x="-300" y="0" width="2200" height="1200"><rect x="-300" y="0" width="2200" height="1200" fill="url(#ov-fade)"/></mask></defs>` +
-    // isolated stage: a background-coloured backdrop makes the inverted overlap match the page,
-    // and the mask keeps the zoomed circles below the centred text
-    `<g mask="url(#ov-stage)"><rect class="ov-bg" x="-300" y="0" width="2200" height="1200"/><g data-a="venn"><circle data-a="cH" class="ov-c" cx="${HX}" cy="${CY}" r="${RH}"/><circle data-a="cR" class="ov-c" cx="${RX}" cy="${CY}" r="${RR}"/></g></g>` +
+    // the mask keeps the zoomed circles below the centred text. The overlap is drawn explicitly
+    // (the RMBlast circle in background navy, clipped to the HMMER circle) rather than blended,
+    // so it is exactly the background colour on every screen
+    `<clipPath id="ov-hclip"><circle cx="${HX}" cy="${CY}" r="${RH}"/></clipPath>` +
+    `<g mask="url(#ov-stage)"><g data-a="venn">` +
+    `<g data-a="cR" style="transform-box:view-box;transform-origin:${RX}px ${CY}px"><circle class="ov-c" cx="${RX}" cy="${CY}" r="${RR}"/></g>` +
+    `<g data-a="cH" style="transform-box:view-box;transform-origin:${HX}px ${CY}px"><circle class="ov-c" cx="${HX}" cy="${CY}" r="${RH}"/>` +
+    `<g clip-path="url(#ov-hclip)"><circle data-a="xR" class="ov-x" cx="${RX}" cy="${CY}" r="${RR}"/></g></g>` +
+    `</g></g>` +
     `<circle data-a="hOnly" class="ov-hi" cx="${HX}" cy="${CY}" r="${RH}" mask="url(#ov-hmmer-only)"/>` +
     `<g data-a="lH">${T(HX - RH - 24, CY - 18, "HMMER (pHMM)", "ov-name ov-end")}${T(HX - RH - 24, CY + 20, fmt(H), "ov-n ov-end")}</g>` +
     `<g data-a="lR">${T(RX + RR + 24, CY - 18, "RMBlast (consensus)", "ov-name")}${T(RX + RR + 24, CY + 20, fmt(R), "ov-n")}</g>` +
@@ -49,6 +55,7 @@ const hidden = { op: 0 };
 const INITIAL = {
   ...Object.fromEntries([0, 1, 2, 3].map((k) => [`t${k}`, { op: 0, ty: 12 }])),
   cH: { op: 0, sc: 0.3, tx: H0 - HX }, cR: { op: 0, sc: 0.3, tx: R0 - RX },
+  xR: { tx: (R0 - RX) - (H0 - HX) },          // overlap disc, in the HMMER circle's frame
   lH: { op: 0, tx: H0 - HX }, lR: { op: 0, tx: R0 - RX },
   hOnly: hidden, zLbl: hidden, hLbl: hidden,
 };
@@ -64,6 +71,7 @@ const TIMELINES = [
     ...swap("t0", "t1"),
     ["cH", { tx: 0 }, 600, 1600, EASE_IN_OUT], ["lH", { tx: 0 }, 600, 1600, EASE_IN_OUT],
     ["cR", { tx: 0 }, 600, 1600, EASE_IN_OUT], ["lR", { tx: 0 }, 600, 1600, EASE_IN_OUT],
+    ["xR", { tx: 0 }, 600, 1600, EASE_IN_OUT],
   ],
   [ // 3 · zoom onto the RMBlast-only sliver
     ...swap("t1", "t2"),

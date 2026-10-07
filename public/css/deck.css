@@ -453,14 +453,14 @@ html, body { background: var(--bg); }
 #te-engines [data-a="boxA"], #te-engines [data-a="boxB"] { transform-box: view-box; transform-origin: 800px 560px; }
 
 /* ---- comparing search results ---- */
-.ov-c { fill: #fff; mix-blend-mode: difference; }
+.ov-c { fill: #fff; }
+.ov-x { fill: var(--bg); }
 #te-overlap [data-a="venn"] { transform-box: view-box; transform-origin: 0 0; }
 .ov-hi { fill: #f9be00; }
-.ov-bg { fill: var(--bg); }
 .ov-name { fill: var(--text-2); font: 600 26px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
 .ov-n { fill: #fff; font: 700 34px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
 .ov-end { text-anchor: end; }
-.ov-zoom { fill: #f9be00; }
+.ov-zoom { fill: #fff; }
 .ov-yel { fill: #f9be00; }
 
 /* ---- comparing results by divergence ---- */
