@@ -447,6 +447,7 @@ html, body { background: var(--bg); }
 .en-cog { fill: #c3cad3; }
 .en-cog-hole { fill: #2a3441; }
 .en-engine-lbl { fill: #fff; font: 700 32px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.en-engine-kind { fill: #c3cad3; font: 500 22px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
 .en-dfam-n { fill: #f9be00; font: 700 28px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
 /* scale the two RepeatMasker boxes about the big box's centre, whatever their engines are doing */
 #te-engines [data-a="boxA"], #te-engines [data-a="boxB"] { transform-box: view-box; transform-origin: 800px 560px; }

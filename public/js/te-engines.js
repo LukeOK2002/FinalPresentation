@@ -38,8 +38,9 @@ function cog(cx, cy) {
   }).join(" ");
   return `<polygon class="en-cog" points="${pts}"/><circle class="en-cog-hole" cx="${cx}" cy="${cy}" r="8"/>`;
 }
-const engine = (id, label) => `<g data-a="${id}"><rect class="en-engine" x="${SLOT.x + 10}" y="${SLOT.y + 9}" width="${SLOT.w - 20}" height="${SLOT.h - 18}" rx="12"/>` +
-  cog(SLOT.x + 62, SLOT.y + SLOT.h / 2) + T(SLOT.x + 190, SLOT.y + SLOT.h / 2, label, "en-engine-lbl") + `</g>`;
+const engine = (id, label, kind) => `<g data-a="${id}"><rect class="en-engine" x="${SLOT.x + 10}" y="${SLOT.y + 9}" width="${SLOT.w - 20}" height="${SLOT.h - 18}" rx="12"/>` +
+  cog(SLOT.x + 62, SLOT.y + SLOT.h / 2) + T(SLOT.x + 190, SLOT.y + SLOT.h / 2 - 15, label, "en-engine-lbl") +
+  T(SLOT.x + 190, SLOT.y + SLOT.h / 2 + 22, `(${kind})`, "en-engine-kind") + `</g>`;
 const rmBox = (id, inner) => `<g data-a="${id}"><rect class="en-box" x="${BOX.x}" y="${BOX.y}" width="${BOX.w}" height="${BOX.h}" rx="20"/>` +
   T(BCX, BOX.y + 46, "RepeatMasker", "en-box-lbl") +
   `<rect class="en-slot" x="${SLOT.x}" y="${SLOT.y}" width="${SLOT.w}" height="${SLOT.h}" rx="14"/>${inner}</g>`;
@@ -71,8 +72,8 @@ function build(svg) {
     h += `<g data-a="feed${s}"><rect class="dfam-card" x="745" y="335" width="110" height="110" rx="16"/>${T(800, 362, "Dfam", "dfam-card-label")}${T(800, 410, "1,143", "en-dfam-n")}</g>`;
   }
   h += `<g data-a="genome"><line class="en-seq" x1="200" y1="640" x2="1400" y2="640" style="stroke:${GREY}"/>${T(180, 640, "Genome", "en-lbl en-end")}</g>`;
-  h += rmBox("boxA", engine("engA", "RMBlast"));                  // the duplicate, RMBlast
-  h += rmBox("boxB", engine("eng1", "RMBlast") + engine("eng2", "HMMER"));
+  h += rmBox("boxA", engine("engA", "RMBlast", "consensus"));                  // the duplicate, RMBlast
+  h += rmBox("boxB", engine("eng1", "RMBlast", "consensus") + engine("eng2", "HMMER", "pHMM"));
   svg.innerHTML = h;
 }
 
