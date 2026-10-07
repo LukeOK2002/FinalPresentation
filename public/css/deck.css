@@ -462,3 +462,17 @@ html, body { background: var(--bg); }
 .ov-end { text-anchor: end; }
 .ov-zoom { fill: #f9be00; }
 .ov-yel { fill: #f9be00; }
+
+/* ---- comparing results by divergence ---- */
+.dv-axis { stroke: var(--text-2); stroke-width: 2; }
+.dv-grid { stroke: rgba(255, 255, 255, 0.08); stroke-width: 1.5; }
+.dv-tick { fill: var(--text-2); font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.dv-end { text-anchor: end; }
+.dv-label { fill: #fff; font: 600 24px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.dv-pt { fill: #f9be00; stroke: #0a0f15; stroke-width: 3; }
+.dv-fit { stroke: #fff; stroke-width: 3.5; stroke-linecap: round; }
+.dv-box { fill: rgba(17, 24, 33, 0.92); stroke: var(--hairline); stroke-width: 1.5; }
+.dv-eq { fill: #fff; font: 600 24px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+.dv-exp { font-size: 0.65em; }
+.dv-fv { fill: var(--text-2); font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+.dv-r2 { fill: #f9be00; font: 700 26px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }

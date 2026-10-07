@@ -29,6 +29,7 @@ import { initTeMissed } from "./te-missed.js";
 import { initTePhmm } from "./te-phmm.js";
 import { initTeEngines } from "./te-engines.js";
 import { initTeOverlap } from "./te-overlap.js";
+import { initTeDiverge } from "./te-diverge.js";
 
 const params = new URLSearchParams(location.search);
 const PRESENT = params.has("present");
@@ -67,6 +68,7 @@ initTeMissed();
 initTePhmm();
 initTeEngines();
 initTeOverlap();
+initTeDiverge();
 
 /* ---------------- tallies ----------------
    local:   every round this screen has run (shown when the room is unreachable)

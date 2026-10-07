@@ -571,6 +571,29 @@
         </aside>
       </section>
 
+      <!-- ============ Comparing results by divergence ============ -->
+      <!-- Each click builds the graph a step further (js/te-diverge.js); presenter screen only. -->
+      <section id="te-diverge" class="te-intro">
+        <h2>Comparing results by divergence</h2>
+        <div class="te-text">
+          <p data-a="t1" data-sub-step="1">HMMER-detected loci also detected by RMBlast, by divergence</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Points: % of HMMER loci (per 5% Kimura bin, plotted at the bin midpoint) also detected by RMBlast.
+          Fit: D(x) = 18.6 + (100.3 − 18.6) / (1 + e^((x − 34.68)/4.66)), R² = 0.9995.
+          x0 is the ceiling–floor midpoint (59.5% detection); the 50% crossing is ~36.9%.
+          The 18.6% floor is a composition floor, not a minimum RMBlast sensitivity.
+          Bins above 50% (n = 718, 261, 816) are excluded from the plot and the fit.
+          Source: EngineGap/results/sensitivity_curve_pool1143.len20both.tsv (pool1143, ≥20 bp both arms);
+          fit from EngineGap/results/enginegap_pool1143_writeup.md, "Fits".
+        </aside>
+      </section>
+
 
       <!-- ===================== End ===================== -->
       <section id="end" class="end-slide">
