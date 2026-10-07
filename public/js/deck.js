@@ -22,6 +22,7 @@ import { initTeResults } from "./te-results.js";
 import { initTeMasker } from "./te-masker.js";
 import { initTeCompare } from "./te-compare.js";
 import { initTeMade } from "./te-made.js";
+import { initTeTsdCheck } from "./te-tsdcheck.js";
 
 const params = new URLSearchParams(location.search);
 const PRESENT = params.has("present");
@@ -54,6 +55,7 @@ initTeResults();
 initTeMasker();
 initTeCompare();
 initTeMade();
+initTeTsdCheck();
 
 /* ---------------- tallies ----------------
    local:   every round this screen has run (shown when the room is unreachable)

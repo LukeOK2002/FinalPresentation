@@ -35,7 +35,8 @@ newest dark navy, previous ones invert to white; small ones get leader lines) ·
 discovered*", static; no expansion of the * on purpose; hidden h2 gives phones the title) · te-masker (RepeatMasker box over genome; Dfam card
 arcs in fast via nested x/y groups with sine easings, then vanishes; box sweeps and colours TE hits) · te-compare (reannotation vs published track;
 white comparison lines; published track fades in already missing them; novel intervals circled, "491 loci") · te-made (MADE1/2: TIR/core diagram → 71 → 378
-copies grid → shuffle test, orthology, profile HMM, each with ✅ → all but one confirmed; scene built in JS) · tsd (live pooled TA-flank simulation) · end (red
+copies grid → shuffle test, orthology, profile HMM, each with ✅ → all but one confirmed; scene built in JS) · te-tsdcheck (TA target-site cut/insert/fill →
+TA either side → unclear boundary shift → 6 bp window → results bars 5.82% / 32.28%, blue pulses) · tsd (live pooled TA-flank simulation) · end (red
 presenter-only reset button).
 
 ## Style rules Luke has set

@@ -393,6 +393,36 @@
         </aside>
       </section>
 
+      <!-- ============ TSD check ============ -->
+      <!-- Each click advances one stage (js/te-tsdcheck.js builds the scene); presenter screen only. -->
+      <section id="te-tsdcheck" class="te-intro">
+        <h2>TSD check</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">MADE1/MADE2 TEs insert at ‘TA’ positions</p>
+          <p data-a="t1" data-sub-step="2">Forming 2 bp ‘TA’ TSDs at either side</p>
+          <p data-a="t2" data-sub-step="3">Searched for ‘TA’ at both sides of the insertion</p>
+          <p data-a="t3" data-sub-step="4">However, in some cases, the element boundaries were unclear</p>
+          <p data-a="t4" data-sub-step="5">So, TSDs were searched for within a 6 bp window upstream/downstream of the insertion</p>
+          <p data-a="t5" data-sub-step="6">Results</p>
+          <p data-a="t6" data-sub-step="7">The majority do <u class="u-white">not</u> have detectable TSDs</p>
+          <p data-a="t7" data-sub-step="8">How do these results compare to background rates?</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          1: staggered cut at TA, MADE inserts. 2: fill-in gives 2 bp TA TSDs. 3: TA checked either side. 4: boundaries can be
+          ambiguous by a base or so. 5: so a 6 bp window was searched. 6: exact 2 bp 5.82% vs 6 bp window 32.28% with TA on both
+          sides. 7: most have no detectable TSDs. 8: compare to background.
+        </aside>
+      </section>
+
       <!-- ============ Live simulation: TA on both flanks by chance ============ -->
       <!-- data-unlock="tsd": landing here (in ?present mode) opens the simulator on every phone -->
       <section id="tsd" data-unlock="tsd">

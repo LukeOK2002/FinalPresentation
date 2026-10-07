@@ -321,3 +321,21 @@ html, body { background: var(--bg); }
 .mi-edge { stroke: var(--text-2); stroke-width: 2; }
 .mi-node { fill: #1c2735; stroke: var(--text-2); stroke-width: 2; }
 .mi-node-on { fill: #f9be00; stroke: #f9be00; stroke-width: 2; }
+
+/* ---- TSD check ---- */
+.te-text u.u-white { text-decoration: underline 3px #fff; text-underline-offset: 0.16em; }
+.tc-block { fill: #f9be00; }
+.tc-pale { fill: #f5dd93; }
+.tc-block-label { fill: #1d1600; font: 700 30px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.tc-ta { fill: #f9be00; }
+.tc-what { fill: #fff; font: 700 56px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.tc-bracket { fill: none; stroke: #fff; stroke-width: 2.5; }
+.tc-win { fill: var(--text-2); font: 500 22px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; }
+.tc-empty { fill: var(--surface-2); }
+.tc-sig { fill: var(--yellow); }
+.tc-bg { fill: var(--blue); }
+.tc-pulse { fill: #fff; }
+.te-scene .tc-sig { transform-origin: left center; }
+.tc-bar-name { fill: var(--text); font: 500 26px "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.tc-bar-val { fill: #fff; font: 700 34px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+.tc-legend { fill: var(--text-2); font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
