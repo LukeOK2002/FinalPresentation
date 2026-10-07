@@ -98,16 +98,16 @@ function build(svg) {
     ZOOM.map(([w, gc], i) => `<g data-a="z${i}">${T(800, 386, `GC window: ${w}`, "ms-win")}${T(800, 530, `GC: ${gc}%`, "ms-gc")}</g>`).join("") + `</g>`;
 
   // click 7: the same alignment scored under each matrix
-  const side = (id, cx, label, elW, M, scores, ok) => {
+  const side = (id, cx, label, elW, M, mTitle, scores, ok) => {
     let s = `<g data-a="${id}">` + T(cx, 360, label, "ms-side") + line(cx - 260, cx + 260, 410, GREY, `class="ms-seq"`) +
       `<line class="ms-seq" x1="${cx - elW / 2}" y1="410" x2="${cx + elW / 2}" y2="410" style="stroke:${PALE}"/>` +
       `<line data-a="${id}El" class="ms-seq" x1="${cx - elW / 2}" y1="410" x2="${cx + elW / 2}" y2="410" style="stroke:${ok ? Y : GREY}"/>` +
-      matrix(`${id}M`, M, cx, 520, 44, "") + highlights(`${id}H`, cx, 520, 44) +
+      matrix(`${id}M`, M, cx, 520, 44, mTitle) + highlights(`${id}H`, cx, 520, 44) +
       scores.map((v, k) => T(cx, 740, `Score: ${v}`, "ms-score", `data-a="${id}S${k}"`)).join("") +
       T(cx, 790, ok ? "231 ≥ 225 · detected ✅" : "214 < 225 · not detected", `ms-out ${ok ? "ms-yes" : ""}`, `data-a="${id}Out"`) + `</g>`;
     return s;
   };
-  h += side("L", 440, "60 kb batch · 48% GC", 8, M48, SC48, false) + side("R", 1160, "1 kb batch · 45% GC", 200, M45, SC45, true);
+  h += side("L", 440, "60 kb batch · 48% GC", 8, M48, "48% GC matrix", SC48, false) + side("R", 1160, "1 kb batch · 45% GC", 200, M45, "45% GC matrix", SC45, true);
   svg.innerHTML = h;
 }
 
