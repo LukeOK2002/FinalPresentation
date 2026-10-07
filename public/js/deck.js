@@ -28,6 +28,7 @@ import { initTeControls } from "./te-controls.js";
 import { initTeMissed } from "./te-missed.js";
 import { initTePhmm } from "./te-phmm.js";
 import { initTeEngines } from "./te-engines.js";
+import { initTeOverlap } from "./te-overlap.js";
 
 const params = new URLSearchParams(location.search);
 const PRESENT = params.has("present");
@@ -65,6 +66,7 @@ initTeControls();
 initTeMissed();
 initTePhmm();
 initTeEngines();
+initTeOverlap();
 
 /* ---------------- tallies ----------------
    local:   every round this screen has run (shown when the room is unreachable)

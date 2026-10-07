@@ -549,6 +549,28 @@
         </aside>
       </section>
 
+      <!-- ============ Comparing search results ============ -->
+      <!-- Each click advances one stage (js/te-overlap.js builds the scene); presenter screen only. -->
+      <section id="te-overlap" class="te-intro">
+        <h2>Comparing search results</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="1">HMMER (pHMM) found 5,935,649 loci, RMBlast (consensus) found 3,837,511</p>
+          <p data-a="t1" data-sub-step="2">99.56% of loci detected by RMBlast were also detected by HMMER</p>
+          <p data-a="t2" data-sub-step="3">0.44% of loci were exclusive to RMBlast</p>
+          <p data-a="t3" data-sub-step="4">19.47% of loci were only detected by HMMER</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Circle areas are proportional to the loci found; the overlap is set so 99.56% of the RMBlast circle lies inside HMMER's.
+          1: HMMER 5,935,649 vs RMBlast 3,837,511. 2: 99.56% of RMBlast loci also found by HMMER. 3: 0.44% RMBlast-only.
+          4: 19.47% HMMER-only.
+        </aside>
+      </section>
+
 
       <!-- ===================== End ===================== -->
       <section id="end" class="end-slide">
