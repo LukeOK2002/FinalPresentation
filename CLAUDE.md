@@ -15,7 +15,7 @@ Work on branch `claude/brave-dirac-ntwekn`; commit + push after each change; don
 - `public/index.html`: reveal.js 6 deck, fixed 1600×900 canvas, slides as `<section id>`.
 - Phones (`public/join/`) show ONLY the presenter's slide title + current centred text
   (no animations, for performance). The TSD simulator shows only while the deck is on `#tsd`.
-  Acronyms (TE, TSD) and software names (RepeatModeler, REPrise, RepeatMasker) are
+  Acronyms (TE, TSD, pHMM) and software names (RepeatModeler, REPrise, RepeatMasker) are
   yellow-underlined + tappable on phones only (`js/acronyms.js`), not on the deck.
 - Animated slides use `js/stepper.js`: elements tagged `data-a="name"`, one hidden
   `<span class="fragment anim-step">` per click, a per-slide module with INITIAL state and
@@ -39,7 +39,8 @@ copies grid → shuffle test, orthology, profile HMM, each with ✅ → all but 
 TA either side → unclear boundary shift → 6 bp window → results bars 5.82% / 32.28%, blue pulses) · tsd (live pooled TA-flank simulation; presenter clicks the QR to run 1,000
 rounds at once) · te-controls (observed vs background bars → Fisher p-values → z-curve; then vs known
 copies, p = 0.344 / 0.374, also placed on the curve) · te-missed (RMBlast fixed SW threshold 225: score
-trace while scanning; short copy fails; GC % picks matrix; 1→60 kb GC window; 48% vs 45% matrix → 214 vs 231) · end (red
+trace while scanning; short copy fails; GC % picks matrix; 1→60 kb GC window; 48% vs 45% matrix → 214 vs 231) · te-phmm (alignment → base/indel probabilities; exact seed vs
+profile on ATCGTCACC; diverged copy: consensus 190 < 225 vs pHMM 30 > 22 bits; flat vs per-family cutoffs) · end (red
 presenter-only reset button).
 
 ## Style rules Luke has set

@@ -501,6 +501,32 @@
         </aside>
       </section>
 
+      <!-- ============ pHMMs for TE detection ============ -->
+      <!-- Each click advances one stage (js/te-phmm.js builds the scene); presenter screen only. -->
+      <section id="te-phmm" class="te-intro">
+        <h2>Using profile hidden Markov models (pHMMs) for TE detection</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">Consensus-based alignment has clear limitations, pHMMs present an alternative</p>
+          <p data-a="t1" data-sub-step="1">Standard consensus sequences encode a position’s most common base, pHMMs encode all base probabilities</p>
+          <p data-a="t2" data-sub-step="2">As well as insertion/deletion probabilities</p>
+          <p data-a="t3" data-sub-step="3">While BLAST needs an exact match to start, pHMMs are more tolerant to divergence</p>
+          <p data-a="t4" data-sub-step="4">Consensus searches use one score cutoff for every family, Dfam pHMMs each have their own calibrated cutoffs</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          1: GCT/GAC/GAC → G 100% · A 67/C 33 · C 67/T 33. 2: + G-C and GATC → A 75/C 25, C 80/T 20, deletion 20% at
+          position 2, insertion 20% between 2 and 3. 3: consensus GAC needs an exact seed and dies at GTC; the pHMM scores it
+          with a small penalty for the unseen T. 4-6: an old diverged copy: consensus 190 < 225 (missed); pHMM 30 bits > 22
+          bits (found); per-family calibrated cutoffs vs one flat cutoff. Scores other than Luke's are illustrative.
+        </aside>
+      </section>
+
 
       <!-- ===================== End ===================== -->
       <section id="end" class="end-slide">

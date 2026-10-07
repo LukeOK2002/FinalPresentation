@@ -10,6 +10,10 @@ export const ACRONYMS = {
     name: "Target site duplication",
     def: "Short stretch of host DNA copied on both sides of an inserted TE",
   },
+  pHMM: {
+    name: "profile hidden Markov model",
+    def: "A statistical model of a TE family that stores the probability of every base, insertion and deletion at each position, rather than a single consensus sequence",
+  },
   RepeatModeler: {
     name: "de novo repeat discovery software",
     def: "Finds repeat families by counting exact k-mers that recur across the genome, then builds a consensus sequence for each family",

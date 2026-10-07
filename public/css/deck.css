@@ -391,3 +391,36 @@ html, body { background: var(--bg); }
 .ms-hl { fill: none; stroke: #fff; stroke-width: 4; }
 .ms-side { fill: #fff; font: 600 26px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
 .ms-score { fill: #fff; font: 700 32px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+
+/* ---- pHMMs ---- */
+.ph-base { fill: #fff; font: 700 44px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.ph-prob { fill: var(--text-2); font: 500 22px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ph-prob.top { fill: #fff; font-weight: 700; }
+.ph-indel { fill: #f9be00; font-weight: 700; }
+.ph-ins { fill: rgba(249, 190, 0, 0.12); stroke: rgba(249, 190, 0, 0.5); stroke-width: 1.5; stroke-dasharray: 5 5; }
+.ph-ptitle { fill: #fff; font: 600 26px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ph-tbase { fill: var(--text); font: 700 32px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.ph-qbox { fill: #1d3461; stroke: #fff; stroke-width: 2; }
+.ph-qbase { fill: #fff; font: 700 26px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.ph-qsmall { fill: var(--text-2); font: 600 16px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.ph-ok { fill: rgba(62, 207, 142, 0.55); stroke: #3ecf8e; stroke-width: 3; }
+.ph-amber { fill: rgba(245, 166, 35, 0.55); stroke: #f5a623; stroke-width: 3; }
+.ph-mark { font-size: 36px; text-anchor: start; dominant-baseline: central; }
+.ph-note { fill: var(--text-2); font: 500 22px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ph-seq { stroke-width: 16; }
+.ph-tick { fill: #5c6773; }
+.ph-small { fill: var(--text-2); font: 18px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ph-end { text-anchor: end; }
+.te-scene .ph-start { text-anchor: start; }
+.ph-edge { stroke: var(--text-2); stroke-width: 2; }
+.ph-node { fill: #1c2735; stroke: #fff; stroke-width: 2; }
+.ph-track { fill: var(--surface-2); }
+.ph-bar { fill: #f9be00; }
+.te-scene .ph-bar { transform-origin: left center; }
+.ph-bar-grey { fill: #5c6773; }
+.ph-bar-green { fill: #3ecf8e; }
+.ph-cut { stroke: #fff; stroke-width: 2.5; stroke-dasharray: 7 6; }
+.ph-val { fill: #fff; font: 700 24px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ph-res { fill: var(--text-2); font: 700 26px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.ph-res-ok { fill: #3ecf8e; }
+.ph-fam { fill: #f9be00; }
