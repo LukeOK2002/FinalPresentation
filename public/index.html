@@ -527,6 +527,28 @@
         </aside>
       </section>
 
+      <!-- ============ Comparing the two search methods ============ -->
+      <!-- Each click advances one stage (js/te-engines.js builds the scene); presenter screen only. -->
+      <section id="te-engines" class="te-intro">
+        <h2>Comparing the two search methods</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">The two search methods’ ability to detect diverged copies were compared</p>
+          <p data-a="t1" data-sub-step="1">Divergence is how different a copy is from its family’s consensus sequence</p>
+          <p data-a="t2" data-sub-step="2">RepeatMasker can use different detection engines</p>
+          <p data-a="t3" data-sub-step="3">Same 1,143 family library used for both</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          1: Kimura divergence: transitions and transversions between a copy and its consensus (example: 10.5%).
+          2: RepeatMasker's engine is swappable: RMBlast → HMMER. 3: the same 1,143-family library goes into both.
+          4: both scan the same genome.
+        </aside>
+      </section>
+
 
       <!-- ===================== End ===================== -->
       <section id="end" class="end-slide">

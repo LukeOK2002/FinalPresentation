@@ -424,3 +424,29 @@ html, body { background: var(--bg); }
 .ph-res { fill: var(--text-2); font: 700 26px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
 .ph-res-ok { fill: #3ecf8e; }
 .ph-fam { fill: #f9be00; }
+
+/* ---- comparing the two search methods ---- */
+.en-seq { stroke-width: 16; }
+.en-lbl { fill: var(--text-2); font: 500 24px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+.en-end { text-anchor: end; }
+.en-mut { fill: #fff; }
+.en-sweep { stroke: #fff; stroke-width: 2; }
+.en-mtitle { fill: #fff; font: 600 24px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.en-mhead { fill: var(--text-2); font: 700 20px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.en-cell.en-c-match { fill: #2a3441; }
+.en-cell.en-c-ts { fill: #187fc3; }
+.en-cell.en-c-tv { fill: #5c6773; }
+.en-cell-lbl { fill: #fff; font: 600 16px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.en-hl { fill: rgba(249, 190, 0, 0.35); stroke: #f9be00; stroke-width: 3; }
+.en-count { fill: var(--text); font: 500 26px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+.en-result { fill: #f9be00; font: 700 40px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+.en-box { fill: #1d3461; stroke: #fff; stroke-width: 3; }
+.en-box-lbl { fill: #fff; font: 600 36px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.en-slot { fill: rgba(0, 0, 0, 0.18); stroke: #c3cad3; stroke-width: 2; stroke-dasharray: 9 7; }
+.en-engine { fill: #2a3441; stroke: #8a94a3; stroke-width: 2; }
+.en-cog { fill: #c3cad3; }
+.en-cog-hole { fill: #2a3441; }
+.en-engine-lbl { fill: #fff; font: 700 32px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.en-dfam-n { fill: #f9be00; font: 700 28px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+/* scale the two RepeatMasker boxes about the big box's centre, whatever their engines are doing */
+#te-engines [data-a="boxA"], #te-engines [data-a="boxB"] { transform-box: view-box; transform-origin: 800px 560px; }

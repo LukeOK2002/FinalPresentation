@@ -40,7 +40,8 @@ TA either side → unclear boundary shift → 6 bp window → results bars 5.82%
 rounds at once) · te-controls (observed vs background bars → Fisher p-values → z-curve; then vs known
 copies, p = 0.344 / 0.374, also placed on the curve) · te-missed (RMBlast fixed SW threshold 225: score
 trace while scanning; short copy fails; GC % picks matrix; 1→60 kb GC window; 48% vs 45% matrix → 214 vs 231) · te-phmm (alignment → base/indel probabilities; exact seed vs
-profile on ATCGTCACC; diverged copy: consensus 190 < 225 vs pHMM 30 > 22 bits; flat vs per-family cutoffs) · end (red
+profile on ATCGTCACC; diverged copy: consensus 190 < 225 vs pHMM 30 > 22 bits; flat vs per-family cutoffs) · te-engines (Kimura divergence matrix → 10.5%; RepeatMasker engine slot RMBlast → HMMER;
+duplicated, Dfam 1,143 fed to both; both scan one genome) · end (red
 presenter-only reset button).
 
 ## Style rules Luke has set
