@@ -445,10 +445,33 @@
           flanks = a "TSD signal" produced by chance. Everyone's rounds are pooled, and the yellow line
           should settle near the 9.66% background rate, inside the shaded chance band.
           Keys: R = run a round, A = auto-run (fallback if phones can't connect).
+          Click the QR code (presenter) to run 1,000 rounds at once.
           Model: bases are drawn with A = T ≈ 26.0%, C = G ≈ 24.0%, which is what makes
           P(TA in both 6-bp flanks) exactly 9.66% (uniform bases would give 8.37%).
         </aside>
       </section>
+      <!-- ============ Positive/negative controls ============ -->
+      <!-- Each click advances one stage (js/te-controls.js builds the scene); presenter screen only. -->
+      <section id="te-controls" class="te-intro">
+        <h2>Positive/negative controls</h2>
+        <div class="te-text">
+          <p data-a="t1" data-sub-step="2">Observed TSD rate shown to be significantly elevated above background</p>
+          <p data-a="t2" data-sub-step="3">Compared rate with length/chromosome matched MADE copies in the published annotation</p>
+          <p data-a="t3" data-sub-step="5">Non-significant difference relative to existing copies</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Start: observed (n = 378) vs background (n = 3,780) TA-both-sides rates. 1: Fisher's exact test, p = 3.36e-15 (2 bp)
+          and 1.09e-29 (6 bp). 2: shown on a null distribution, far in the tail. 3: vs length/chromosome-matched known MADE copies
+          (n = 1,298). 4: p = 0.344 and 0.374. 5: no significant difference from existing copies.
+        </aside>
+      </section>
+
 
       <!-- ===================== End ===================== -->
       <section id="end" class="end-slide">

@@ -6,7 +6,8 @@
    Without ?present it is a plain viewer. If the room can't be reached at all,
    the simulator still works and the chart shows this screen's own rounds.
 
-   Keys on the simulation slide:  R = run one round   A = auto-run on/off */
+   Keys on the simulation slide:  R = run one round   A = auto-run on/off
+   Click the QR code on the simulation slide (presenter) to run 1,000 rounds at once. */
 
 import { createTsdSim } from "./tsd-widget.js";
 import { createPooledPanel } from "./tsd-chart.js";
@@ -23,6 +24,7 @@ import { initTeMasker } from "./te-masker.js";
 import { initTeCompare } from "./te-compare.js";
 import { initTeMade } from "./te-made.js";
 import { initTeTsdCheck } from "./te-tsdcheck.js";
+import { initTeControls } from "./te-controls.js";
 
 const params = new URLSearchParams(location.search);
 const PRESENT = params.has("present");
@@ -56,6 +58,7 @@ initTeMasker();
 initTeCompare();
 initTeMade();
 initTeTsdCheck();
+initTeControls();
 
 /* ---------------- tallies ----------------
    local:   every round this screen has run (shown when the room is unreachable)
@@ -312,3 +315,28 @@ Reveal.addKeyBinding({ keyCode: 65, key: "A", description: "Auto-run simulations
 });
 
 Reveal.on("slidechanged", () => { if (!onSimSlide()) stopAuto(); });
+
+/* Presenter: click the QR code on the simulation slide to run 1,000 rounds at once. */
+const BURST = 1000;
+const simQr = document.querySelector("#tsd [data-qr]");
+if (PRESENT && simQr) {
+  simQr.classList.add("qr--run");
+  simQr.title = `Run ${BURST.toLocaleString("en-IE")} simulations`;
+  simQr.addEventListener("click", () => {
+    let round;
+    for (let i = 0; i < BURST; i++) {
+      round = simulateRound();
+      local.n++;
+      if (round.hits === 2) local.k++;
+      if (server && (authed || status !== "live")) outbox.push([round.a, round.b]);
+    }
+    if (!auto) sim.showInstant(round);
+    render();
+    flush();
+    const tag = document.createElement("span");
+    tag.className = "qr-burst";
+    tag.textContent = `+${BURST.toLocaleString("en-IE")} rounds`;
+    simQr.append(tag);
+    setTimeout(() => tag.remove(), 1200);
+  });
+}

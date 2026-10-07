@@ -51,9 +51,8 @@ html, body { background: var(--bg); }
 .join-text strong { font-size: 24px; color: var(--text); }
 .join-url { font-family: var(--mono); font-size: 15px; color: var(--text); word-break: break-all; }
 
-.qr { width: 260px; height: 260px; padding: 14px; border-radius: 16px; background: #fff; box-sizing: border-box; }
+.qr { position: relative; width: 260px; height: 260px; padding: 14px; border-radius: 16px; background: #fff; box-sizing: border-box; }
 .qr svg { display: block; width: 100%; height: 100%; }
-.qr--mini { width: 92px; height: 92px; padding: 6px; border-radius: 10px; }
 
 /* ---- TSD slide ---- */
 #tsd { display: flex !important; flex-direction: column; gap: 30px; }
@@ -339,3 +338,29 @@ html, body { background: var(--bg); }
 .tc-bar-name { fill: var(--text); font: 500 26px "Helvetica Neue", Helvetica, Arial, sans-serif; }
 .tc-bar-val { fill: #fff; font: 700 34px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
 .tc-legend { fill: var(--text-2); font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+
+/* ---- positive/negative controls ---- */
+.pc-head { fill: var(--text); font: 600 26px "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.pc-name { fill: var(--text); font: 500 24px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: end; dominant-baseline: central; }
+.pc-name tspan { fill: var(--text-2); font-weight: 400; }
+.pc-val { fill: #fff; font: 700 26px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+.pc-bracket { fill: none; stroke: #fff; stroke-width: 2.5; }
+.pc-test { fill: var(--text-2); font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.pc-p { fill: #fff; font: 700 30px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.pc-curve { fill: none; stroke: #fff; stroke-width: 3; }
+.pc-tail { fill: rgba(255, 255, 255, 0.12); }
+.pc-axis { stroke: var(--text-2); stroke-width: 2; }
+.pc-tick { fill: var(--text-2); font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; }
+.pc-marker { stroke: #f9be00; stroke-width: 2.5; stroke-dasharray: 6 5; }
+.pc-dot { fill: #f9be00; }
+.pc-tag { fill: var(--text-2); font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; }
+
+/* simulation slide: bigger QR; click it (presenter) to run 1,000 rounds */
+.qr--mini { width: 168px; height: 168px; padding: 10px; border-radius: 14px; }
+.qr--run { cursor: pointer; transition: transform 160ms var(--ease-out); }
+.qr--run:hover { transform: scale(1.03); }
+.qr--run:active { transform: scale(0.96); }
+.qr-burst { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 6px 12px; border-radius: 999px;
+  background: var(--yellow); color: var(--on-yellow); font: 700 18px var(--font); white-space: nowrap; pointer-events: none;
+  animation: qr-burst 1100ms var(--ease-out) forwards; }
+@keyframes qr-burst { 0% { opacity: 0; transform: translate(-50%, -30%); } 20% { opacity: 1; transform: translate(-50%, -50%); } 100% { opacity: 0; transform: translate(-50%, -120%); } }
