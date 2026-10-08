@@ -173,7 +173,7 @@ function rawGraph(svg) {
 function revealer(slide, draw) {
   const steps = [...slide.querySelectorAll(".anim-step")];
   const AT = [MIDS[0], PAUSE, END];                          // p at the end of stage 0, 1, 2+
-  const DUR = [0, 5000, 5000];
+  const DUR = [0, 10000, 10000];
   const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
   let current = 0, raf = 0;
 
