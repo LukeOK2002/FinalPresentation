@@ -487,3 +487,64 @@ html, body { background: var(--bg); }
 .rw-rmb-dot { fill: #f93500; }
 .rw-hmm-dot { fill: #006ff9; }
 .rw-legend { fill: #fff; font: 600 22px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+
+/* ---- conclusions ---- */
+.cc-list { position: absolute; left: 170px; right: 170px; top: 250px; margin: 0; padding: 0; list-style: none; }
+.cc-list li {
+  position: relative; padding-left: 52px; margin: 0 0 54px;
+  font: 400 36px/1.38 "Helvetica Neue", Helvetica, Arial, sans-serif; color: #fff;
+}
+.cc-list li::before {
+  content: ""; position: absolute; left: 0; top: 0.5em; width: 16px; height: 16px;
+  border-radius: 50%; background: #f9be00;
+}
+
+/* ---- FAQs (after the end) ---- */
+.faq-cards { position: absolute; left: 100px; right: 100px; top: 290px; display: flex; gap: 40px; }
+.faq-card {
+  flex: 1; height: 300px; padding: 36px; border: 0; border-radius: 22px; cursor: pointer;
+  background: #1d3461; color: #fff; text-align: left;
+  font: 600 32px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.18);
+  transition: background 0.18s, color 0.18s, transform 0.18s;
+}
+.faq-card:hover, .faq-card:focus-visible { background: #fff; color: #1d3461; transform: translateY(-4px); outline: none; }
+.faq-panel { position: absolute; inset: 0; }
+.faq-q {
+  position: absolute; left: 160px; right: 160px; top: 168px; text-align: center;
+  font: 600 34px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif; color: #fff;
+}
+.faq-btns { position: absolute; top: 52px; right: 72px; display: flex; gap: 12px; }
+.faq-btn {
+  padding: 12px 22px; border: 0; border-radius: 999px; cursor: pointer;
+  background: #1d3461; color: #fff; font: 600 20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.18); transition: background 0.18s, color 0.18s;
+}
+.faq-btn:hover { background: #fff; color: #1d3461; }
+.fq-cap { fill: #fff; font: 400 30px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.fq-h { fill: #fff; font: 700 30px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.fq-sub { fill: var(--text-2); font: 500 24px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.fq-lbl { fill: var(--text-2); font: 600 22px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+.fq-end { text-anchor: end; }
+.fq-mid { text-anchor: middle; }
+.fq-base { fill: #fff; font: 700 40px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.fq-base.te { fill: #f9be00; }
+.fq-base.n { fill: #8a95a3; }
+.fq-res { fill: #fff; font: 600 28px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.fq-box { fill: #1d3461; stroke: #fff; stroke-width: 2.5; }
+.fq-box-label { fill: #fff; font: 600 28px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+.fq-beam { fill: rgba(255, 255, 255, 0.12); }
+.fq-track { stroke-width: 16; }
+.fq-grey { stroke: #5c6773; }
+.fq-green { stroke: #3fbf6f; }
+.fq-hit { stroke: #f9be00; stroke-width: 16; }
+.fq-scan { stroke: #fff; stroke-width: 3; }
+.fq-axis { stroke: var(--text-2); stroke-width: 2; }
+.fq-curve-g { fill: rgba(92, 103, 115, 0.35); stroke: #9aa4b1; stroke-width: 3; }
+.fq-curve-s { fill: rgba(63, 191, 111, 0.22); stroke: #3fbf6f; stroke-width: 3; }
+.fq-tail-g { fill: rgba(154, 164, 177, 0.45); }
+.fq-tail-s { fill: rgba(63, 191, 111, 0.75); }
+.fq-cut { stroke: #fff; stroke-width: 3; stroke-dasharray: 10 8; }
+.fq-read { fill: #fff; font: 700 28px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+.fq-fam { stroke-width: 14; stroke-linecap: round; }
+.faq-cards[hidden] { display: none; }

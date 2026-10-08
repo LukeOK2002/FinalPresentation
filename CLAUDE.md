@@ -44,8 +44,10 @@ profile on ATCGTCACC; diverged copy: consensus 190 < 225 vs pHMM 30 > 22 bits; f
 duplicated, Dfam 1,143 fed to both; both scan one genome) · te-overlap (area-proportional circles, HMMER 5,935,649 vs
 RMBlast 3,837,511; HMMER circle blue #006ff9, RMBlast red #f93500; overlap drawn in background navy (clipped bg circle); zoom on 0.44% sliver; 19.47% HMMER-only) · te-diverge (first a raw-calls graph per 0.5% bin, RMBlast red #f93500 / HMMER blue #006ff9, drawn
 per frame by a rAF revealer with axes rescaling to the revealed extent, pauses at 25%, click finishes to 50%; then detection graph built per click: axes, x label, 10 bin points, 4PL fit
-drawn L→R with fit box; data from EngineGap pool1143 len20both) · end (red
-presenter-only reset button).
+drawn L→R with fit box; data from EngineGap pool1143 len20both) · te-conclude (3 bullets, one per click) · end (red
+presenter-only reset button) · faq (after the end: 3 navy cards, white on hover; click opens an answer panel
+that auto-plays a WAAPI animation (js/faq.js): soft vs hard masking; HMMER validation vs GARLIC + 0.2% cutoff
+(schematic curves); RepeatModeler families → RepeatMasker → reannotated genome. Phones show the open question).
 
 ## Style rules Luke has set
 - Dark theme. Titles: PP Editorial New (licensed .otf in public/fonts/, git-ignored).

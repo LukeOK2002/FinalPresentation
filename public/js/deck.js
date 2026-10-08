@@ -30,6 +30,8 @@ import { initTePhmm } from "./te-phmm.js";
 import { initTeEngines } from "./te-engines.js";
 import { initTeOverlap } from "./te-overlap.js";
 import { initTeDiverge } from "./te-diverge.js";
+import { initTeConclude } from "./te-conclude.js";
+import { initFaq } from "./faq.js";
 
 const params = new URLSearchParams(location.search);
 const PRESENT = params.has("present");
@@ -69,6 +71,8 @@ initTePhmm();
 initTeEngines();
 initTeOverlap();
 initTeDiverge();
+initTeConclude();
+initFaq();
 
 /* ---------------- tallies ----------------
    local:   every round this screen has run (shown when the room is unreachable)
@@ -165,6 +169,8 @@ function phoneView(s) {
   for (const el of s.querySelectorAll("[data-sub-step]")) {
     if (+el.dataset.subStep <= step) sub = el.textContent.trim();
   }
+  const open = s.querySelector(".is-open[data-phone-sub]"); // FAQ answer on screen
+  if (open) sub = open.dataset.phoneSub;
   return { title, sub };
 }
 
@@ -253,6 +259,7 @@ if (!RECEIVER) {
 Reveal.on("slidechanged", sendSlide);
 Reveal.on("fragmentshown", sendSlide);
 Reveal.on("fragmenthidden", sendSlide);
+document.addEventListener("phone-refresh", sendSlide);
 
 if (PRESENT && !RECEIVER && !storedPw()) showOverlay();
 updatePill();
