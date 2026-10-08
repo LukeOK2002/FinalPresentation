@@ -476,3 +476,12 @@ html, body { background: var(--bg); }
 .dv-exp { font-size: 0.65em; }
 .dv-fv { fill: var(--text-2); font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
 .dv-r2 { fill: #f9be00; font: 700 26px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
+/* te-diverge raw calls graph (rw-) */
+.rw-line { fill: none; stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+.rw-key { stroke-width: 5; stroke-linecap: round; }
+.rw-rmb { stroke: #f93500; }
+.rw-hmm { stroke: #006ff9; }
+.rw-head { stroke: #0a0f15; stroke-width: 3; }
+.rw-rmb-dot { fill: #f93500; }
+.rw-hmm-dot { fill: #006ff9; }
+.rw-legend { fill: #fff; font: 600 22px "Helvetica Neue", Helvetica, Arial, sans-serif; dominant-baseline: central; }
