@@ -42,7 +42,7 @@ copies, p = 0.344 / 0.374, also placed on the curve) · te-missed (RMBlast fixed
 trace while scanning; short copy fails; GC % picks matrix; 1→60 kb GC window; 48% vs 45% matrix → 214 vs 231) · te-phmm (alignment → base/indel probabilities; exact seed vs
 profile on ATCGTCACC; diverged copy: consensus 190 < 225 vs pHMM 30 > 22 bits; flat vs per-family cutoffs) · te-engines (Kimura divergence matrix → 10.5%; RepeatMasker engine slot RMBlast → HMMER;
 duplicated, Dfam 1,143 fed to both; both scan one genome) · te-overlap (area-proportional circles, HMMER 5,935,649 vs
-RMBlast 3,837,511; overlap inverts via mix-blend difference over a bg-coloured backdrop; zoom on 0.44% sliver; 19.47% HMMER-only) · te-diverge (first a raw-calls graph per 0.5% bin, RMBlast red #f93500 / HMMER blue #006ff9, drawn
+RMBlast 3,837,511; HMMER circle blue #006ff9, RMBlast red #f93500; overlap drawn in background navy (clipped bg circle); zoom on 0.44% sliver; 19.47% HMMER-only) · te-diverge (first a raw-calls graph per 0.5% bin, RMBlast red #f93500 / HMMER blue #006ff9, drawn
 per frame by a rAF revealer with axes rescaling to the revealed extent, pauses at 25%, click finishes to 50%; then detection graph built per click: axes, x label, 10 bin points, 4PL fit
 drawn L→R with fit box; data from EngineGap pool1143 len20both) · end (red
 presenter-only reset button).

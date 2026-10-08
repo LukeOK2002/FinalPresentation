@@ -454,6 +454,8 @@ html, body { background: var(--bg); }
 
 /* ---- comparing search results ---- */
 .ov-c { fill: #fff; }
+.ov-rmb { fill: #f93500; }
+.ov-hmm { fill: #006ff9; }
 .ov-x { fill: var(--bg); }
 #te-overlap [data-a="venn"] { transform-box: view-box; transform-origin: 0 0; }
 .ov-hi { fill: #f9be00; }

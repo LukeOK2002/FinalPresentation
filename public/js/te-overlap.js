@@ -38,8 +38,8 @@ function build(svg) {
     // so it is exactly the background colour on every screen
     `<clipPath id="ov-hclip"><circle cx="${HX}" cy="${CY}" r="${RH}"/></clipPath>` +
     `<g mask="url(#ov-stage)"><g data-a="venn">` +
-    `<g data-a="cR" style="transform-box:view-box;transform-origin:${RX}px ${CY}px"><circle class="ov-c" cx="${RX}" cy="${CY}" r="${RR}"/></g>` +
-    `<g data-a="cH" style="transform-box:view-box;transform-origin:${HX}px ${CY}px"><circle class="ov-c" cx="${HX}" cy="${CY}" r="${RH}"/>` +
+    `<g data-a="cR" style="transform-box:view-box;transform-origin:${RX}px ${CY}px"><circle class="ov-c ov-rmb" cx="${RX}" cy="${CY}" r="${RR}"/></g>` +
+    `<g data-a="cH" style="transform-box:view-box;transform-origin:${HX}px ${CY}px"><circle class="ov-c ov-hmm" cx="${HX}" cy="${CY}" r="${RH}"/>` +
     `<g clip-path="url(#ov-hclip)"><circle data-a="xR" class="ov-x" cx="${RX}" cy="${CY}" r="${RR}"/></g></g>` +
     `</g></g>` +
     `<circle data-a="hOnly" class="ov-hi" cx="${HX}" cy="${CY}" r="${RH}" mask="url(#ov-hmmer-only)"/>` +
