@@ -8,6 +8,9 @@
        (curve shapes are schematic)
    3 · reannotation: RepeatModeler family sequences go into RepeatMasker, which sweeps the
        genome and labels each copy with its family
+   4 · liftOver: a human copy is projected through the chain file's aligned blocks onto the
+       chimpanzee genome, where the orthologous copy is found; a copy in an alignment gap fails
+       (block positions are schematic)
 
    Animations are plain WAAPI with fill "forwards"; each element's start state is set inline,
    so cancelling every animation resets the scene. */
@@ -259,8 +262,78 @@ function play3(A) {
   A("c3", [{ opacity: 0 }, { opacity: 1 }], SW_START + SW_MS + 500, 400);
 }
 
+/* ---------------- 4 · liftOver ---------------- */
+const HY = 430, CY = 650;
+const LEN = [230, 290, 270, 260], HS = [200, 470, 820, 1140], CS = [180, 520, 840, 1140]; // aligned blocks
+const CA = [580, 620], CB = [775, 805];                      // copy A (in block 1), copy B (in a gap)
+const toChimp = (x) => CS[1] + (x - HS[1]);
+const CAPS4 = [
+  "Each TE copy has coordinates in the human genome",
+  "liftOver uses a chain file: blocks of whole-genome alignment between two species",
+  "The copy's coordinates are projected through its aligned block",
+  "The chimpanzee carries a copy at the orthologous position",
+  "Copies that fall in an alignment gap can't be lifted over",
+];
+
+function scene4() {
+  let h = CAPS4.map((s, i) => T(800, 820, s, "fq-cap", `data-k="c${i}" ${hide}`)).join("");
+  h += `<g data-k="tracks" ${hide}>` +
+    `<line class="te-host" x1="200" y1="${HY}" x2="1400" y2="${HY}"/><line class="te-host" x1="180" y1="${CY}" x2="1400" y2="${CY}"/>` +
+    T(200, HY - 34, "Human (T2T-CHM13)", "fq-lbl") + T(180, CY + 40, "Chimpanzee", "fq-lbl") + `</g>`;
+  LEN.forEach((L, i) => {
+    h += `<g data-k="blk${i}" ${hide}>` +
+      `<polygon class="fq-ribbon" points="${HS[i]},${HY + 8} ${HS[i] + L},${HY + 8} ${CS[i] + L},${CY - 8} ${CS[i]},${CY - 8}"/>` +
+      `<line class="fq-block" x1="${HS[i]}" y1="${HY}" x2="${HS[i] + L}" y2="${HY}"/>` +
+      `<line class="fq-block" x1="${CS[i]}" y1="${CY}" x2="${CS[i] + L}" y2="${CY}"/></g>`;
+  });
+  h += T(800, HY - 60, "Chain file: aligned blocks", "fq-lbl fq-mid", `data-k="chainL" ${hide}`);
+  // copy A, its projection, and the chimp copy
+  const a0 = toChimp(CA[0]), a1 = toChimp(CA[1]);
+  h += `<polygon data-k="projA" class="fq-proj" points="${CA[0]},${HY + 8} ${CA[1]},${HY + 8} ${a1},${CY - 8} ${a0},${CY - 8}" ` +
+    `style="transform-box:fill-box;transform-origin:center top;transform:scaleY(0)"/>`;
+  h += `<line data-k="copyA" class="fq-hit" x1="${CA[0]}" y1="${HY}" x2="${CA[1]}" y2="${HY}" ${hide}/>` +
+    T((CA[0] + CA[1]) / 2, HY - 30, "Human copy", "fq-lbl fq-mid", `data-k="copyAL" ${hide}`);
+  h += `<rect data-k="tgtA" class="fq-target" x="${a0 - 8}" y="${CY - 18}" width="${a1 - a0 + 16}" height="36" rx="6" ${hide}/>`;
+  h += `<line data-k="chimpA" class="fq-hit" x1="${a0}" y1="${CY}" x2="${a1}" y2="${CY}" style="opacity:0;transform-box:fill-box;transform-origin:center"/>`;
+  h += T((a0 + a1) / 2, CY + 48, "✅  Orthologous copy", "fq-res", `data-k="okA" ${hide}`);
+  // copy B falls between blocks 1 and 2
+  h += `<polygon data-k="projB" class="fq-proj" points="${CB[0]},${HY + 8} ${CB[1]},${HY + 8} ${CB[1]},${(HY + CY) / 2} ${CB[0]},${(HY + CY) / 2}" ` +
+    `style="transform-box:fill-box;transform-origin:center top;transform:scaleY(0)"/>`;
+  h += `<line data-k="copyB" class="fq-hit" x1="${CB[0]}" y1="${HY}" x2="${CB[1]}" y2="${HY}" ${hide}/>`;
+  h += T((CB[0] + CB[1]) / 2 + 30, (HY + CY) / 2 + 34, "❌  No aligned block", "fq-res", `data-k="noB" style="opacity:0;text-anchor:start"`);
+  return h;
+}
+
+function play4(A) {
+  const at = (k, t, d = 500) => A(k, [{ opacity: 0 }, { opacity: 1 }], t, d);
+  const out = (k, t, d = 300, to = 0) => A(k, [{ opacity: 1 }, { opacity: to }], t, d);
+  at("c0", 0); at("tracks", 100, 600);
+  at("copyA", 800, 400); at("copyAL", 900, 400);
+  // chain blocks
+  out("c0", 2400); at("c1", 2600, 400);
+  LEN.forEach((_, i) => at(`blk${i}`, 2800 + i * 300, 500));
+  at("chainL", 3000, 400);
+  // projection
+  out("c1", 5000); at("c2", 5200, 400);
+  out("chainL", 5000, 400); out("copyAL", 5000, 400);
+  [0, 2, 3].forEach((i) => out(`blk${i}`, 5200, 500, 0.3));
+  A("projA", [{ transform: "scaleY(0)" }, { transform: "scaleY(1)" }], 5500, 1000, IN_OUT);
+  at("tgtA", 6400, 300);
+  // the chimp copy
+  out("c2", 7400); at("c3", 7600, 400);
+  A("chimpA", [{ opacity: 0, transform: "scale(1)" }, { opacity: 1, transform: "scale(1.5)" }, { opacity: 1, transform: "scale(1)" }], 7700, 700, IN_OUT);
+  at("okA", 8200, 500);
+  // a copy in a gap
+  out("c3", 10200); at("c4", 10400, 400);
+  [0, 2, 3].forEach((i) => A(`blk${i}`, [{ opacity: 0.3 }, { opacity: 1 }], 10200, 500));
+  at("copyB", 10600, 400);
+  A("projB", [{ transform: "scaleY(0)", opacity: 1 }, { transform: "scaleY(1)", opacity: 1 }], 11100, 800, IN_OUT);
+  A("projB", [{ transform: "scaleY(1)", opacity: 1 }, { transform: "scaleY(1)", opacity: 0 }], 12000, 600);
+  at("noB", 12100, 500);
+}
+
 /* ---------------- panels ---------------- */
-const SCENES = { 1: [scene1, play1], 2: [scene2, play2], 3: [scene3, play3] };
+const SCENES = { 1: [scene1, play1], 2: [scene2, play2], 3: [scene3, play3], 4: [scene4, play4] };
 
 export function initFaq() {
   const slide = document.getElementById("faq");
