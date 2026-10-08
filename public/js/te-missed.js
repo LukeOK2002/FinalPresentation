@@ -114,7 +114,7 @@ function build(svg) {
 /* ---- timelines ---- */
 const hidden = { op: 0 };
 const swap = (from, to) => [[from, { op: 0, ty: -12 }, 0, 400], [to, { op: 1, ty: 0 }, 300, 500]];
-const traceIn = (id, el, scanAt) => el.steps.map((_, i) => [`${id}${i}`, { op: 1 }, scanAt + (SCAN_MS * (el.x + (i + 1) * BASE - G0)) / (G1 - G0) - SCAN_AT, 60]);
+const traceIn = (id, el) => el.steps.map((_, i) => [`${id}${i}`, { op: 1 }, boxAt(el.x + (i + 1) * BASE), 60]); // as the box centre passes
 const crossAt = (() => { const c = cum(LONG.steps); return c.findIndex((v) => v >= THRESH); })();
 
 const INITIAL = {
@@ -149,7 +149,7 @@ const TIMELINES = [
     ...swap("t1", "t2"),
     ["scan", { op: 1 }, 400, 400],
     ...scanBox(SCAN_AT),
-    ...traceIn("lt", LONG, SCAN_AT),
+    ...traceIn("lt", LONG),
     ["longHit", { op: 1 }, boxAt(LONG.x + crossAt * BASE), 300],
     ["longOk", { op: 1, sc: 1 }, boxAt(LONG.x + crossAt * BASE) + 200, 500, SPRING],
   ],
@@ -158,7 +158,7 @@ const TIMELINES = [
     ["lt", { op: 0 }, 0, 400], ["longHit", { op: 0 }, 0, 400], ["longOk", { op: 0 }, 0, 400],
     ["box", { op: 0 }, 0, 300], ["box", { op: 1 }, 450, 250],   // hidden while it jumps back to the start
     ...scanBox(SCAN_AT),
-    ...traceIn("st", SHORT, SCAN_AT),
+    ...traceIn("st", SHORT),
     ["shortNo", { op: 1, ty: 0 }, boxAt(SHORT.x + SHORT.steps.length * BASE) + 300, 500, EASE],
   ],
   [...swap("t3", "t4"), ["scan", { op: 0 }, 0, 600], ["st", { op: 0 }, 0, 600]],
