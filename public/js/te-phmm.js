@@ -6,8 +6,9 @@
    Click 3: left, consensus GAC slides along ATCGTCACC and dies at GTC (no exact seed);
             right, the pHMM slides along the same sequence and scores GTC: green, amber, green ✅
    Click 4: an old, diverged copy in the genome; mutation ticks build up along it
-   Click 5: consensus search (every mismatch the same penalty, score 190 < cutoff 225, ❌) vs
-            pHMM search (variable positions amber, conserved red, 30 bits > 22 bits, ✅)
+   Click 5: consensus search (substitution matrix: penalty set by the base change, e.g. transitions
+            amber < transversions red, the same at every position; score 190 < cutoff 225, ❌) vs
+            pHMM search (position-specific: variable positions amber, conserved red, 30 bits > 22 bits, ✅)
    Click 6: three families: one flat cutoff (left) vs per-family calibrated cutoffs (right) */
 
 import { createStepper, EASE, EASE_IN_OUT, SPRING } from "./stepper.js";
@@ -31,6 +32,7 @@ const tx0 = (cx) => cx - (PITCH * (TARGET.length - 1)) / 2;
 /* ---- clicks 4-6: diverged copy, two searches, cutoffs ---- */
 const MUT = [0.05, 0.13, 0.21, 0.3, 0.38, 0.47, 0.55, 0.63, 0.71, 0.79, 0.87, 0.95]; // along the copy
 const VARIES = [true, true, false, true, true, false, true, false, true, true, false, true];
+const TRANSITION = [true, false, false, true, false, true, true, false, false, true, false, true]; // consensus side: matrix penalty by base change
 const PANELS = { L: 160, R: 820 };                             // panel left edges (620 wide)
 const AY = 540, BAR_B = 720, BAR_H = 200;                      // copy row; score bar bottom / full height
 const FAM = [["Alu", 70, 56], ["L1", 52, 40], ["MADE1", 26, 18]]; // name, true-hit score height, own cutoff height
@@ -94,11 +96,16 @@ function build(svg) {
       : range(12).map((i) => (i ? `<line class="ph-edge" x1="${cx0 + MUT[i - 1] * w}" y1="${AY - 46}" x2="${cx0 + MUT[i] * w}" y2="${AY - 46}"/>` : "")).join("") +
         MUT.map((f) => `<circle class="ph-node" cx="${cx0 + f * w}" cy="${AY - 46}" r="9"/>`).join("") + T(cx0 - 14, AY - 46, "pHMM", "ph-small ph-end")) + `</g>`;
     h += MUT.map((f, i) => {
-      const c = s === "L" ? RED : VARIES[i] ? AMBER : RED;
+      const c = (s === "L" ? TRANSITION[i] : VARIES[i]) ? AMBER : RED;
       return `<rect data-a="${s}m${i}" x="${cx0 + f * w - 8}" y="${AY - 15}" width="16" height="30" rx="4" style="fill:${c}"/>`;
     }).join("");
-    if (s === "L") h += T(cx0 + w / 2, AY + 44, "Every mismatch costs the same", "ph-small", `data-a="Lsame"`);
-    else h += T(cx0 + w / 2, AY + 44, "Variable position: small penalty · conserved: large", "ph-small", `data-a="Rsame"`);
+    h += `<g data-a="${s}same">` + (s === "L"
+      ? T(cx0 + w / 2, AY + 40, "Substitution matrix: penalty set by", "ph-small") +
+        T(cx0 + w / 2, AY + 64, "the base change (transition < transversion),", "ph-small") +
+        T(cx0 + w / 2, AY + 88, "the same at every position", "ph-small")
+      : T(cx0 + w / 2, AY + 40, "Position-specific scores: penalty set by", "ph-small") +
+        T(cx0 + w / 2, AY + 64, "how conserved each position is in the family", "ph-small") +
+        T(cx0 + w / 2, AY + 88, "(variable: small · conserved: large)", "ph-small")) + `</g>`;
     // the score bar grows upwards (a horizontal bar turned -90°, so sx grows it)
     const bar = (id, cls, hh) => `<g transform="rotate(-90 ${bx} ${BAR_B})"><rect data-a="${id}" class="ph-bar ${cls}" x="${bx}" y="${BAR_B - 22}" width="${hh}" height="44"/></g>`;
     h += `<rect class="ph-track" x="${bx - 22}" y="${BAR_B - BAR_H}" width="44" height="${BAR_H}" rx="4"/>` +
@@ -106,7 +113,7 @@ function build(svg) {
       `<line class="ph-cut" x1="${bx - 40}" y1="${BAR_B - hc}" x2="${bx + 40}" y2="${BAR_B - hc}"/>` +
       (s === "L" ? T(bx - 50, BAR_B - hc, unit.cutLbl, "ph-small ph-end") : T(bx + 50, BAR_B - hc, unit.cutLbl, "ph-small ph-start")) +
       T(bx + 34, BAR_B - hv, unit.valLbl, "ph-val ph-start", `data-a="${s}v"`) +
-      T(cx0 + w / 2, 640, s === "L" ? "❌ Not detected" : "✅ Detected", `ph-res ${s === "L" ? "" : "ph-res-ok"}`, `data-a="${s}r"`) + `</g>`;
+      T(cx0 + w / 2, 680, s === "L" ? "❌ Not detected" : "✅ Detected", `ph-res ${s === "L" ? "" : "ph-res-ok"}`, `data-a="${s}r"`) + `</g>`;
     // ---- cutoffs per family ----
     h += `<g data-a="${s}f">`;
     const fx = (i) => x + 170 + i * 140, FB = 850;
