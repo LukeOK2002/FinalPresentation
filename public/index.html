@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>Thesis presentation</title>
+  <link rel="stylesheet" href="lib/reveal/reveal.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/tsd.css">
+  <link rel="stylesheet" href="css/deck.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ===================== Title ===================== -->
+      <section id="title">
+        <div class="title-grid">
+          <div class="title-main">
+            <div class="eyebrow">Thesis presentation · University College Cork</div>
+            <h1>Discovery and annotation of transposable elements in the T2T-CHM13v2.0 genome assembly</h1>
+            <p class="byline">Your name · Supervisor · Date</p>
+          </div>
+          <aside class="join-card">
+            <div class="qr" data-qr></div>
+            <div class="join-text">
+              <strong>Join on your phone</strong>
+              <span>Scan, then keep the page open. It unlocks when we get to the live part.</span>
+              <span class="join-url" data-join-url></span>
+            </div>
+          </aside>
+        </div>
+        <aside class="notes">
+          Invite everyone to scan the QR now. The phone page stays on a "waiting" card until the live
+          simulation slide, so it won't distract during the talk.
+        </aside>
+      </section>
+
+      <!-- ============ Intro: what are transposable elements ============ -->
+      <!-- Each click advances one stage (js/te-intro.js). Going back snaps to the previous stage. -->
+      <section id="te-intro" class="te-intro">
+        <h2>What are transposable elements</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">Transposable Elements (TEs) are genetic sequences capable of copying themselves and spreading throughout the genome</p>
+          <p data-a="t1" data-sub-step="1">Either by creating an RNA intermediate (retrotransposition)...</p>
+          <p data-a="t2" data-sub-step="2">Or by excising itself (transposition)</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+          <!-- host genome with the TE in place -->
+          <g data-a="genome">
+            <line class="te-host" x1="260" y1="650" x2="640" y2="650"/>
+            <line class="te-te" x1="640" y1="650" x2="960" y2="650"/>
+            <line class="te-host" x1="960" y1="650" x2="1340" y2="650"/>
+          </g>
+          <g data-a="labels">
+            <text class="te-label" x="800" y="704">Transposable element</text>
+            <text class="te-label" x="450" y="704">Host genome</text>
+            <text class="te-label" x="1150" y="704">Host genome</text>
+          </g>
+          <!-- target sites: continuous grey lines drawn as two halves that split apart -->
+          <line data-a="s1L" class="te-host" x1="320" y1="650" x2="800" y2="650"/>
+          <line data-a="s1R" class="te-host" x1="800" y1="650" x2="1280" y2="650"/>
+          <line data-a="s2L" class="te-host" x1="320" y1="650" x2="800" y2="650"/>
+          <line data-a="s2R" class="te-host" x1="800" y1="650" x2="1280" y2="650"/>
+          <!-- the mobile copy: RNA intermediate (line + dot), later the excised TE (with end circles) -->
+          <g data-a="rna">
+            <line class="te-te" x1="640" y1="530" x2="960" y2="530"/>
+            <circle data-a="rnaDot" class="te-dot" cx="640" cy="530" r="13"/>
+            <circle data-a="cL" class="te-dot" cx="640" cy="530" r="17"/>
+            <circle data-a="cR" class="te-dot" cx="960" cy="530" r="17"/>
+          </g>
+          <!-- the circle that passes over the TE (reads it into RNA) -->
+          <circle data-a="poly" class="te-poly" cx="800" cy="650" r="34"/>
+        </svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Click 1: retrotransposition (copy via RNA, then paste into a new site).
+          Click 2: transposition (cut out, then paste into a new site).
+        </aside>
+      </section>
+
+      <!-- ============ What do TEs look like: TSDs, then sequence similarity ============ -->
+      <!-- Each click advances one stage (js/te-look.js); presenter screen only. -->
+      <section id="te-look" class="te-intro">
+        <h2>What do TEs look like?</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">When TEs insert within human DNA, they form target site duplications (TSDs)</p>
+          <p data-a="t1" data-sub-step="1">Staggered cuts created by TE insertion mechanism</p>
+          <p data-a="t2" data-sub-step="2">Staggered cuts filled in, creating TSDs</p>
+          <p data-a="t3" data-sub-step="3">Following insertion, the TEs passively acquire mutations</p>
+          <p data-a="t4" data-sub-step="4">Most importantly, TEs look like other TEs</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+          <!-- target site: upper TCGGATCCAG / lower AGCCTAGGTC. Staggered cut after
+               upper base 7 and lower base 3 leaves GATC / CTAG overhangs. -->
+          <g data-a="origBonds"><line class="dna-bond" x1="716" y1="582" x2="716" y2="608"/><line class="dna-bond" x1="772" y1="582" x2="772" y2="608"/><line class="dna-bond" x1="828" y1="582" x2="828" y2="608"/><line class="dna-bond" x1="884" y1="582" x2="884" y2="608"/></g>
+          <g data-a="L">
+            <text class="dna-base" x="548" y="560">T</text><text class="dna-base" x="604" y="560">C</text><text class="dna-base" x="660" y="560">G</text><text class="dna-base" x="716" y="560">G</text><text class="dna-base" x="772" y="560">A</text><text class="dna-base" x="828" y="560">T</text><text class="dna-base" x="884" y="560">C</text><text class="dna-base" x="548" y="630">A</text><text class="dna-base" x="604" y="630">G</text><text class="dna-base" x="660" y="630">C</text><line class="dna-bond" x1="548" y1="582" x2="548" y2="608"/><line class="dna-bond" x1="604" y1="582" x2="604" y2="608"/><line class="dna-bond" x1="660" y1="582" x2="660" y2="608"/>
+            <g data-a="fillL0"><line class="dna-bond" x1="716" y1="582" x2="716" y2="608"/><text class="dna-base" x="716" y="630">C</text></g><g data-a="fillL1"><line class="dna-bond" x1="772" y1="582" x2="772" y2="608"/><text class="dna-base" x="772" y="630">T</text></g><g data-a="fillL2"><line class="dna-bond" x1="828" y1="582" x2="828" y2="608"/><text class="dna-base" x="828" y="630">A</text></g><g data-a="fillL3"><line class="dna-bond" x1="884" y1="582" x2="884" y2="608"/><text class="dna-base" x="884" y="630">G</text></g>
+            <g data-a="tsdL"><text class="dna-base tsd" x="716" y="560">G</text><text class="dna-base tsd" x="716" y="630">C</text><text class="dna-base tsd" x="772" y="560">A</text><text class="dna-base tsd" x="772" y="630">T</text><text class="dna-base tsd" x="828" y="560">T</text><text class="dna-base tsd" x="828" y="630">A</text><text class="dna-base tsd" x="884" y="560">C</text><text class="dna-base tsd" x="884" y="630">G</text></g>
+          </g>
+          <g data-a="R">
+            <text class="dna-base" x="940" y="560">C</text><text class="dna-base" x="996" y="560">A</text><text class="dna-base" x="1052" y="560">G</text><text class="dna-base" x="716" y="630">C</text><text class="dna-base" x="772" y="630">T</text><text class="dna-base" x="828" y="630">A</text><text class="dna-base" x="884" y="630">G</text><text class="dna-base" x="940" y="630">G</text><text class="dna-base" x="996" y="630">T</text><text class="dna-base" x="1052" y="630">C</text><line class="dna-bond" x1="940" y1="582" x2="940" y2="608"/><line class="dna-bond" x1="996" y1="582" x2="996" y2="608"/><line class="dna-bond" x1="1052" y1="582" x2="1052" y2="608"/>
+            <g data-a="fillR0"><line class="dna-bond" x1="716" y1="582" x2="716" y2="608"/><text class="dna-base" x="716" y="560">G</text></g><g data-a="fillR1"><line class="dna-bond" x1="772" y1="582" x2="772" y2="608"/><text class="dna-base" x="772" y="560">A</text></g><g data-a="fillR2"><line class="dna-bond" x1="828" y1="582" x2="828" y2="608"/><text class="dna-base" x="828" y="560">T</text></g><g data-a="fillR3"><line class="dna-bond" x1="884" y1="582" x2="884" y2="608"/><text class="dna-base" x="884" y="560">C</text></g>
+            <g data-a="tsdR"><text class="dna-base tsd" x="716" y="560">G</text><text class="dna-base tsd" x="716" y="630">C</text><text class="dna-base tsd" x="772" y="560">A</text><text class="dna-base tsd" x="772" y="630">T</text><text class="dna-base tsd" x="828" y="560">T</text><text class="dna-base tsd" x="828" y="630">A</text><text class="dna-base tsd" x="884" y="560">C</text><text class="dna-base tsd" x="884" y="630">G</text></g>
+          </g>
+          <!-- the TE: a plain yellow block, no bases -->
+          <rect data-a="block" class="te-block" x="700" y="532" width="200" height="126" rx="10"/>
+          <!-- stage 3: a TE copy accumulating mutations over 50 My -->
+          <g data-a="seq"><text class="mut-base" x="380" y="590">G</text><text class="mut-base" x="436" y="590">C</text><text class="mut-base" x="492" y="590">G</text><text class="mut-base" x="604" y="590">G</text><text class="mut-base" x="660" y="590">C</text><text class="mut-base" x="716" y="590">A</text><text class="mut-base" x="828" y="590">C</text><text class="mut-base" x="884" y="590">C</text><text class="mut-base" x="940" y="590">A</text><text class="mut-base" x="1052" y="590">T</text><text class="mut-base" x="1108" y="590">G</text><text class="mut-base" x="1220" y="590">A</text></g>
+          <text data-a="my0" class="mut-base" x="548" y="590">T</text><text data-a="my1" class="mut-base" x="772" y="590">G</text><text data-a="my2" class="mut-base" x="996" y="590">G</text><text data-a="my3" class="mut-base" x="1164" y="590">C</text>
+          <text data-a="mg0" class="mut-base mut-grey" x="548" y="590">C</text><text data-a="mg1" class="mut-base mut-grey" x="772" y="590">A</text><text data-a="mg2" class="mut-base mut-grey" x="996" y="590">A</text><text data-a="mg3" class="mut-base mut-grey" x="1164" y="590">T</text>
+          <g data-a="timeBar">
+            <line class="time-track" x1="352" y1="690" x2="1248" y2="690"/>
+            <line class="time-tick" x1="352.0" y1="682" x2="352.0" y2="698"/><text class="time-lbl" x="352.0" y="726">0</text><line class="time-tick" x1="531.2" y1="682" x2="531.2" y2="698"/><text class="time-lbl" x="531.2" y="726">10</text><line class="time-tick" x1="710.4" y1="682" x2="710.4" y2="698"/><text class="time-lbl" x="710.4" y="726">20</text><line class="time-tick" x1="889.6" y1="682" x2="889.6" y2="698"/><text class="time-lbl" x="889.6" y="726">30</text><line class="time-tick" x1="1068.8" y1="682" x2="1068.8" y2="698"/><text class="time-lbl" x="1068.8" y="726">40</text><line class="time-tick" x1="1248.0" y1="682" x2="1248.0" y2="698"/><text class="time-lbl" x="1248.0" y="726">50</text>
+            <text class="time-lbl time-unit" x="1272" y="726">million years</text>
+          </g>
+          <clipPath id="timeClip"><rect x="352" y="684" width="896" height="12"/></clipPath>
+          <g clip-path="url(#timeClip)"><line data-a="timeFill" class="time-fill" x1="-544" y1="690" x2="352" y2="690"/></g>
+          <!-- stage 4: sequence similarity -->
+          <line data-a="known" class="te-te" x1="560" y1="540" x2="1040" y2="540"/>
+          <line data-a="putative" class="te-te te-te--light" x1="560" y1="640" x2="1040" y2="640"/>
+          <line data-a="sweep" class="te-sweep" x1="540" y1="490" x2="540" y2="690"/>
+        </svg>
+        <!-- HTML labels (so acronyms get the yellow underline) -->
+        <div class="scene-label tsd-label" data-a="tsdLabelL" style="left:588px;top:478px">TSD</div>
+        <div class="scene-label tsd-label" data-a="tsdLabelR" style="left:1012px;top:478px">TSD</div>
+        <div class="scene-label line-label" data-a="knownLabel" style="right:1088px;top:540px">Known TE</div>
+        <div class="scene-label line-label" data-a="putLabel" style="right:1088px;top:640px">Putative TE?</div>
+        <div class="scene-label line-label" data-a="confLabel" style="right:1088px;top:640px">Confirmed TE ✅</div>
+        <div class="scene-label identity" data-a="identity" style="left:800px;top:470px">95% identity</div>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Click 1: staggered cut, TE inserts. Click 2: overhangs filled in, the duplicated bases
+          (GATC / CTAG) turn blue = TSDs. Click 3: the TE copy picks up mutations (grey) over 50 My.
+          Click 4: TEs are recognised by similarity to known TEs.
+        </aside>
+      </section>
+
+      <!-- ============ TE families: consensus sequences, Dfam ============ -->
+      <!-- Each click advances one stage (js/te-families.js); presenter screen only. -->
+      <section id="te-families" class="te-intro">
+        <h2 data-a="title">TEs are split into different families</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">A family is defined by its consensus sequence</p>
+          <p data-a="t1" data-sub-step="1">Consensus sequences use each position’s most common base</p>
+          <p data-a="t2" data-sub-step="2">These families are catalogued in TE databases, such as Dfam</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+          <g data-a="fams"><line class="fam-line" x1="160" y1="600" x2="360" y2="600" style="stroke:#f9be00"/><line class="fam-line" x1="430" y1="600" x2="630" y2="600" style="stroke:#f93500"/><line class="fam-line" x1="700" y1="600" x2="900" y2="600" style="stroke:#f90081"/><line class="fam-line" x1="970" y1="600" x2="1170" y2="600" style="stroke:#006ff9"/><line class="fam-line" x1="1240" y1="600" x2="1440" y2="600" style="stroke:#00f93b"/></g>
+          <!-- column marker that walks across while the consensus is built -->
+          <rect data-a="colMark" class="col-mark" x="534" y="440" width="52" height="360" rx="10"/>
+          <g data-a="copies"><text class="seq-base" x="560" y="470">A</text><text class="seq-base" x="620" y="470">T</text><text class="seq-base" x="680" y="470">A</text><text class="seq-base" x="740" y="470">G</text><text class="seq-base" x="800" y="470">C</text><text class="seq-base" x="860" y="470">G</text><text class="seq-base" x="920" y="470">C</text><text class="seq-base" x="980" y="470">G</text><text class="seq-base" x="1040" y="470">A</text><text class="seq-base" x="560" y="522">A</text><text class="seq-base" x="620" y="522">T</text><text class="seq-base" x="680" y="522">A</text><text class="seq-base" x="740" y="522">G</text><text class="seq-base" x="800" y="522">C</text><text class="seq-base" x="860" y="522">G</text><text class="seq-base" x="920" y="522">C</text><text class="seq-base" x="980" y="522">G</text><text class="seq-base" x="1040" y="522">C</text><text class="seq-base" x="560" y="574">T</text><text class="seq-base" x="620" y="574">T</text><text class="seq-base" x="680" y="574">A</text><text class="seq-base" x="740" y="574">G</text><text class="seq-base" x="800" y="574">T</text><text class="seq-base" x="860" y="574">C</text><text class="seq-base" x="920" y="574">G</text><text class="seq-base" x="980" y="574">G</text><text class="seq-base" x="1040" y="574">A</text><text class="seq-base" x="560" y="626">A</text><text class="seq-base" x="620" y="626">T</text><text class="seq-base" x="680" y="626">A</text><text class="seq-base" x="740" y="626">G</text><text class="seq-base" x="800" y="626">T</text><text class="seq-base" x="860" y="626">C</text><text class="seq-base" x="920" y="626">G</text><text class="seq-base" x="980" y="626">G</text><text class="seq-base" x="1040" y="626">A</text><text class="seq-base" x="560" y="678">A</text><text class="seq-base" x="620" y="678">T</text><text class="seq-base" x="680" y="678">A</text><text class="seq-base" x="740" y="678">G</text><text class="seq-base" x="800" y="678">C</text><text class="seq-base" x="860" y="678">C</text><text class="seq-base" x="920" y="678">G</text><text class="seq-base" x="980" y="678">G</text><text class="seq-base" x="1040" y="678">A</text></g>
+          <text data-a="h0_0" class="seq-base seq-hit" x="560" y="470">A</text><text data-a="h0_1" class="seq-base seq-hit" x="620" y="470">T</text><text data-a="h0_2" class="seq-base seq-hit" x="680" y="470">A</text><text data-a="h0_3" class="seq-base seq-hit" x="740" y="470">G</text><text data-a="h0_4" class="seq-base seq-hit" x="800" y="470">C</text><text data-a="h0_7" class="seq-base seq-hit" x="980" y="470">G</text><text data-a="h0_8" class="seq-base seq-hit" x="1040" y="470">A</text><text data-a="h1_0" class="seq-base seq-hit" x="560" y="522">A</text><text data-a="h1_1" class="seq-base seq-hit" x="620" y="522">T</text><text data-a="h1_2" class="seq-base seq-hit" x="680" y="522">A</text><text data-a="h1_3" class="seq-base seq-hit" x="740" y="522">G</text><text data-a="h1_4" class="seq-base seq-hit" x="800" y="522">C</text><text data-a="h1_7" class="seq-base seq-hit" x="980" y="522">G</text><text data-a="h2_1" class="seq-base seq-hit" x="620" y="574">T</text><text data-a="h2_2" class="seq-base seq-hit" x="680" y="574">A</text><text data-a="h2_3" class="seq-base seq-hit" x="740" y="574">G</text><text data-a="h2_5" class="seq-base seq-hit" x="860" y="574">C</text><text data-a="h2_6" class="seq-base seq-hit" x="920" y="574">G</text><text data-a="h2_7" class="seq-base seq-hit" x="980" y="574">G</text><text data-a="h2_8" class="seq-base seq-hit" x="1040" y="574">A</text><text data-a="h3_0" class="seq-base seq-hit" x="560" y="626">A</text><text data-a="h3_1" class="seq-base seq-hit" x="620" y="626">T</text><text data-a="h3_2" class="seq-base seq-hit" x="680" y="626">A</text><text data-a="h3_3" class="seq-base seq-hit" x="740" y="626">G</text><text data-a="h3_5" class="seq-base seq-hit" x="860" y="626">C</text><text data-a="h3_6" class="seq-base seq-hit" x="920" y="626">G</text><text data-a="h3_7" class="seq-base seq-hit" x="980" y="626">G</text><text data-a="h3_8" class="seq-base seq-hit" x="1040" y="626">A</text><text data-a="h4_0" class="seq-base seq-hit" x="560" y="678">A</text><text data-a="h4_1" class="seq-base seq-hit" x="620" y="678">T</text><text data-a="h4_2" class="seq-base seq-hit" x="680" y="678">A</text><text data-a="h4_3" class="seq-base seq-hit" x="740" y="678">G</text><text data-a="h4_4" class="seq-base seq-hit" x="800" y="678">C</text><text data-a="h4_5" class="seq-base seq-hit" x="860" y="678">C</text><text data-a="h4_6" class="seq-base seq-hit" x="920" y="678">G</text><text data-a="h4_7" class="seq-base seq-hit" x="980" y="678">G</text><text data-a="h4_8" class="seq-base seq-hit" x="1040" y="678">A</text>
+          <text data-a="c0" class="seq-base seq-cons" x="560" y="770">A</text><text data-a="c1" class="seq-base seq-cons" x="620" y="770">T</text><text data-a="c2" class="seq-base seq-cons" x="680" y="770">A</text><text data-a="c3" class="seq-base seq-cons" x="740" y="770">G</text><text data-a="c4" class="seq-base seq-cons" x="800" y="770">C</text><text data-a="c5" class="seq-base seq-cons" x="860" y="770">C</text><text data-a="c6" class="seq-base seq-cons" x="920" y="770">G</text><text data-a="c7" class="seq-base seq-cons" x="980" y="770">G</text><text data-a="c8" class="seq-base seq-cons" x="1040" y="770">A</text>
+          <line data-a="consRule" class="cons-rule" x1="530" y1="732" x2="1070" y2="732"/>
+        </svg>
+        <div class="layer" data-a="famLabels"><div class="scene-label fam-label" style="left:260px;top:628px">AluYc</div><div class="scene-label fam-label" style="left:530px;top:628px">L1M5</div><div class="scene-label fam-label" style="left:800px;top:628px">MADE1</div><div class="scene-label fam-label" style="left:1070px;top:628px">GokuERV</div><div class="scene-label fam-label" style="left:1340px;top:628px">Charlie10</div></div>
+        <div class="scene-label seq-label" data-a="copiesLabel" style="right:1100px;top:574px">TE copies</div>
+        <div class="scene-label seq-label" data-a="consLabel" style="right:1100px;top:770px">Consensus</div>
+        <!-- Dfam "Browse" view (real entries from dfam.org) -->
+        <div class="dfam" data-a="dfam">
+          <div class="dfam-bar"><b>Dfam</b><span>Browse families</span><span class="dfam-url">dfam.org/browse</span></div>
+          <table>
+            <thead><tr><th>Accession</th><th>Name</th><th>Classification</th><th>Clades</th><th>Description</th><th>Length</th></tr></thead>
+            <tbody>
+              <tr data-a="row0"><td class="acc">DF000000001</td><td class="nm">MIR</td><td>SINE/MIR</td><td>Mammalia</td><td class="desc">MIR is a pan-mammalian SINE with a 5′ end derived from a tRNA…</td><td class="len">262</td></tr>
+              <tr data-a="row1"><td class="acc">DF000000008</td><td class="nm">L1M5_orf2</td><td>LINE/L1</td><td>Theria</td><td class="desc">Present in eutherians.</td><td class="len">3,294</td></tr>
+              <tr data-a="row2"><td class="acc">DF000000057</td><td class="nm">AluYc</td><td>SINE/Alu</td><td>Hominoidea</td><td class="desc">Alu elements derive from a pair of internally-deleted 7SL RNA monomers…</td><td class="len">299</td></tr>
+              <tr data-a="row3"><td class="acc">DF000000081</td><td class="nm">Charlie10</td><td>DNA/hAT-Charlie</td><td>Eutheria</td><td class="desc">Charlie10 is a full-length hAT-Charlie DNA transposon.</td><td class="len">2,822</td></tr>
+              <tr data-a="row4"><td class="acc">DF000000188</td><td class="nm">HERVK</td><td>LTR/ERVK</td><td>Catarrhini</td><td class="desc">gag (~156–2297), protease (~2063–3082), pol (~3037–5785) and env…</td><td class="len">7,536</td></tr>
+              <tr data-a="row5"><td class="acc">DF000000225</td><td class="nm">L1HS_3end</td><td>LINE/L1</td><td>Homininae</td><td class="desc">Currently active in human genome.</td><td class="len">902</td></tr>
+              <tr data-a="row6"><td class="acc">DF000000629</td><td class="nm">MADE1</td><td>DNA/TcMar-Mariner</td><td>Simiiformes</td><td class="desc">Resembles an internal deletion product of Mariner1; has 37 bp TIRs and a TA target site.</td><td class="len">80</td></tr>
+              <tr data-a="row7"><td class="acc">DF000000818</td><td class="nm">THE1B</td><td>LTR/ERVL-MaLR</td><td>Haplorrhini</td><td class="desc">An LTR of the THE1B retrovirus-like MaLR element. Has 5 bp TSDs…</td><td class="len">364</td></tr>
+              <tr data-a="row8"><td class="acc">DF000000876</td><td class="nm">MER5A</td><td>DNA/hAT-Charlie</td><td>Eutheria</td><td class="desc">MER5A has 14 bp TIRs and 8 bp TSDs…</td><td class="len">189</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="big-q">
+          <div data-a="q1" data-title-step="3">But, is this database complete?</div>
+          <div data-a="q2" data-sub-step="3">Are there TE families that have yet to be discovered?</div>
+        </div>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Click 1: five copies; the consensus is built column by column from each position's most common base
+          (ATAGCCGGA). Click 2: Dfam browse view (real entries). Click 3: the open question.
+          GokuERV is not in Dfam, so it is not in the table.
+        </aside>
+      </section>
+
+      <!-- ============ Discovering new TE families: RepeatModeler, then REPrise ============ -->
+      <!-- Each click advances one stage (js/te-discover.js); presenter screen only. -->
+      <section id="te-discover" class="te-intro">
+        <h2>Discovering new TE families with REPrise and RepeatModeler</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">Both tools search commonly reoccurring k-mers to find repeats</p>
+          <p data-a="t1" data-sub-step="1">RepeatModeler counts <em>exact</em> k-mer occurrences</p>
+          <p data-a="t2" data-sub-step="2">Whereas REPrise counts inexact k-mer occurrences</p>
+          <p data-a="t3" data-sub-step="3">These two tools can be used to model repeat families</p>
+          <p data-a="t4" data-sub-step="4">By finding sequences which are similar to each other within the genome</p>
+          <p data-a="t5" data-sub-step="5">New consensus sequences built by multiple alignment</p>
+          <p data-a="t6" data-sub-step="6">Already discovered sequences masked, so they aren’t rediscovered</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+          <!-- genome with three related TE copies -->
+          <g data-a="genome"><line data-a="gline" class="te-host" x1="160" y1="640" x2="1440" y2="640"/>
+          <line data-a="segA" class="rm-seg" x1="330" y1="640" x2="450" y2="640" style="stroke:#f9be00"/><line data-a="segB" class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#ffdc6d"/><line data-a="segC" class="rm-seg" x1="1110" y1="640" x2="1230" y2="640" style="stroke:#ffeba9"/></g>
+          <!-- masked (black) once discovered -->
+          <line data-a="mA" class="rm-mask" x1="330" y1="640" x2="450" y2="640"/><line data-a="mB" class="rm-mask" x1="740" y1="640" x2="860" y2="640"/><line data-a="mC" class="rm-mask" x1="1110" y1="640" x2="1230" y2="640"/>
+          <!-- copies lifted out and lined up -->
+          <line data-a="cA" class="rm-seg" x1="330" y1="640" x2="450" y2="640" style="stroke:#f9be00"/><line data-a="cB" class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#ffdc6d"/><line data-a="cC" class="rm-seg" x1="1110" y1="640" x2="1230" y2="640" style="stroke:#ffeba9"/>
+          <line data-a="cons" class="rm-seg" x1="740" y1="640" x2="860" y2="640" style="stroke:#f9be00"/>
+          <!-- k-mer counts: exact (RepeatModeler) vs inexact, 1 mismatch (REPrise) -->
+          <rect data-a="e0" class="kbar" x="620" y="460" width="433" height="40"/><rect data-a="x0" class="kbar kbar-x" x="1053" y="460" width="323" height="40"/><rect data-a="e1" class="kbar" x="620" y="546" width="370" height="40"/><rect data-a="x1" class="kbar kbar-x" x="990" y="546" width="184" height="40"/><rect data-a="e2" class="kbar" x="620" y="632" width="182" height="40"/><rect data-a="x2" class="kbar kbar-x" x="802" y="632" width="238" height="40"/><rect data-a="e3" class="kbar" x="620" y="718" width="96" height="40"/><rect data-a="x3" class="kbar kbar-x" x="716" y="718" width="124" height="40"/>
+          <text data-a="lbl0" class="kmer" x="596" y="480">TTATA</text><text data-a="n0a" class="kmer kn" x="446" y="480">TAATA</text><text data-a="n0b" class="kmer kn" x="296" y="480">TTATT</text><text data-a="lbl1" class="kmer" x="596" y="566">TCGCA</text><text data-a="n1a" class="kmer kn" x="446" y="566">TGGCA</text><text data-a="n1b" class="kmer kn" x="296" y="566">TCGCC</text><text data-a="lbl2" class="kmer" x="596" y="652">CGTAG</text><text data-a="n2a" class="kmer kn" x="446" y="652">CTTAG</text><text data-a="n2b" class="kmer kn" x="296" y="652">CGTAA</text><text data-a="lbl3" class="kmer" x="596" y="738">GCGCG</text><text data-a="n3a" class="kmer kn" x="446" y="738">GCGTG</text><text data-a="n3b" class="kmer kn" x="296" y="738">GCGCC</text>
+          <text data-a="ce0" class="kcount" x="1069" y="480">722</text><text data-a="ci0" class="kcount" x="1393" y="480">1,261</text><text data-a="ce1" class="kcount" x="1006" y="566">617</text><text data-a="ci1" class="kcount" x="1190" y="566">923</text><text data-a="ce2" class="kcount" x="818" y="652">304</text><text data-a="ci2" class="kcount" x="1057" y="652">701</text><text data-a="ce3" class="kcount" x="732" y="738">160</text><text data-a="ci3" class="kcount" x="856" y="738">367</text>
+          <line data-a="scan" class="te-sweep" x1="160" y1="600" x2="160" y2="680"/>
+        </svg>
+        <div class="scene-label rm-label" data-a="consLabel" style="left:884px;top:390px">New consensus</div>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Start: both tools look for frequently recurring k-mers. Click 1: exact counts (RepeatModeler).
+          Click 2: inexact counts (REPrise): each k-mer also counts its 1-mismatch neighbours; neighbour counts are illustrative. Click 3: a scan of the genome reveals three
+          related copies. Click 4: the copies are lifted out and lined up. Click 5: a new consensus is built.
+          Click 6: discovered copies are masked (black) so they aren't rediscovered.
+        </aside>
+      </section>
+
+      <!-- ============ Non-TE repeats RepeatModeler also finds ============ -->
+      <!-- Each click fills one quadrant (js/te-repeats.js); presenter screen only. -->
+      <section id="te-repeats" class="te-intro">
+        <h2>But, RepeatModeler also finds repeats which <u class="u-white">aren’t</u> TEs</h2>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+<g data-a="dup"><line class="rep-seg" x1="300" y1="440" x2="380" y2="440" style="stroke:#5c6773"/><line class="rep-seg" x1="380" y1="440" x2="420" y2="440" style="stroke:#00f93b"/><line class="rep-seg" x1="420" y1="440" x2="500" y2="440" style="stroke:#5c6773"/><line class="rep-seg" x1="500" y1="440" x2="540" y2="440" style="stroke:#006ff9"/></g><g data-a="dupCopy"><line class="rep-seg" x1="300" y1="440" x2="380" y2="440" style="stroke:#5c6773"/><line class="rep-seg" x1="380" y1="440" x2="420" y2="440" style="stroke:#00f93b"/><line class="rep-seg" x1="420" y1="440" x2="500" y2="440" style="stroke:#5c6773"/><line class="rep-seg" x1="500" y1="440" x2="540" y2="440" style="stroke:#006ff9"/></g>
+<line data-a="m0" class="rep-seg" x1="944" y1="440" x2="984" y2="440" style="stroke:#006ff9"/><line data-a="m1" class="rep-seg" x1="992" y1="440" x2="1032" y2="440" style="stroke:#006ff9"/><line data-a="m2" class="rep-seg" x1="1040" y1="440" x2="1080" y2="440" style="stroke:#006ff9"/><line data-a="m3" class="rep-seg" x1="1088" y1="440" x2="1128" y2="440" style="stroke:#006ff9"/><line data-a="m4" class="rep-seg" x1="1136" y1="440" x2="1176" y2="440" style="stroke:#006ff9"/><line data-a="m5" class="rep-seg" x1="1184" y1="440" x2="1224" y2="440" style="stroke:#006ff9"/><line data-a="m6" class="rep-seg" x1="1232" y1="440" x2="1272" y2="440" style="stroke:#006ff9"/><line data-a="m7" class="rep-seg" x1="1280" y1="440" x2="1320" y2="440" style="stroke:#006ff9"/><line data-a="m8" class="rep-seg" x1="1328" y1="440" x2="1368" y2="440" style="stroke:#006ff9"/><line data-a="m9" class="rep-seg" x1="1376" y1="440" x2="1416" y2="440" style="stroke:#006ff9"/>
+<g data-a="tri0"><line class="rep-seg" x1="171" y1="730" x2="207" y2="730" style="stroke:#006ff9"/><line class="rep-seg" x1="213" y1="730" x2="249" y2="730" style="stroke:#f93500"/><line class="rep-seg" x1="255" y1="730" x2="291" y2="730" style="stroke:#00f93b"/></g><g data-a="tri1"><line class="rep-seg" x1="297" y1="730" x2="333" y2="730" style="stroke:#006ff9"/><line class="rep-seg" x1="339" y1="730" x2="375" y2="730" style="stroke:#f93500"/><line class="rep-seg" x1="381" y1="730" x2="417" y2="730" style="stroke:#00f93b"/></g><g data-a="tri2"><line class="rep-seg" x1="423" y1="730" x2="459" y2="730" style="stroke:#006ff9"/><line class="rep-seg" x1="465" y1="730" x2="501" y2="730" style="stroke:#f93500"/><line class="rep-seg" x1="507" y1="730" x2="543" y2="730" style="stroke:#00f93b"/></g><g data-a="tri3"><line class="rep-seg" x1="549" y1="730" x2="585" y2="730" style="stroke:#006ff9"/><line class="rep-seg" x1="591" y1="730" x2="627" y2="730" style="stroke:#f93500"/><line class="rep-seg" x1="633" y1="730" x2="669" y2="730" style="stroke:#00f93b"/></g>
+<line data-a="flankL" class="rep-seg" x1="960" y1="730" x2="1180" y2="730" style="stroke:#5c6773"/><line data-a="flankR" class="rep-seg" x1="1180" y1="730" x2="1400" y2="730" style="stroke:#5c6773"/><line data-a="te" class="rep-seg" x1="1100" y1="730" x2="1260" y2="730" style="stroke:#f9be00"/>
+        </svg>
+        <div class="q-text" data-a="q1t" data-sub-step="1" style="left:420px;top:320px">Such as satellite duplications</div>
+        <div class="q-text" data-a="q2t" data-sub-step="2" style="left:1180px;top:320px">Simple repeats</div>
+        <div class="q-text" data-a="q3t" data-sub-step="3" style="left:420px;top:610px">Higher order repeats</div>
+        <div class="q-text" data-a="q4t" data-sub-step="4" style="left:1180px;top:610px">Already known TE families</div>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Quadrants fill in reading order. Click 1: a stretch (grey/green/grey/blue) duplicates onto its own end.
+          Click 2: a blue monomer extends monomer by monomer. Click 3: a blue/red/green trimer extends trimer by trimer.
+          Click 4: a known TE (yellow) between grey host flanks.
+        </aside>
+      </section>
+
+      <!-- ============ De novo discovery results: treemap ============ -->
+      <!-- Each click adds one rectangle (js/te-results.js); presenter screen only. -->
+      <section id="te-results" class="te-intro">
+        <h2>De novo discovery results</h2>
+        <div class="te-text te-text--high">
+          <p data-sub-step="0">29,124 families identified by RepeatModeler and REPrise</p>
+          <!-- phones: one line per click (the deck shows these inside the rectangles) -->
+          <span hidden data-sub-step="1">21,431 Segmental duplication</span>
+          <span hidden data-sub-step="2">4,960 Known TE</span>
+          <span hidden data-sub-step="3">1,123 Gene-derived</span>
+          <span hidden data-sub-step="4">593 Tandem / local cluster</span>
+          <span hidden data-sub-step="5">454 Satellite</span>
+          <span hidden data-sub-step="6">339 Too short</span>
+          <span hidden data-sub-step="7">222 Too few copies</span>
+        </div>
+        <svg class="te-scene tm-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Each click adds one category to the treemap (area = share of all 29,124 families), largest first.
+          The newest is dark; the previous one turns white. Small ones are labelled on the right.
+        </aside>
+      </section>
+
+      <!-- ============ Headline result: no novel TE families ============ -->
+      <section id="te-novel" class="novel-slide">
+        <h2 class="sr-title">0 novel TE families discovered*</h2>
+        <div class="novel-num" aria-hidden="true">0</div>
+        <div class="novel-text" aria-hidden="true">Novel TE families<br>discovered*</div>
+      </section>
+
+      <!-- ============ Investigating results with RepeatMasker ============ -->
+      <!-- Each click advances one stage (js/te-masker.js); presenter screen only. -->
+      <section id="te-masker" class="te-intro">
+        <h2>Investigating results with RepeatMasker</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">RepeatMasker is a tool used to annotate the genome’s repeat intervals</p>
+          <p data-a="t1" data-sub-step="1">Known TE sequences are fed into RepeatMasker</p>
+          <p data-a="t2" data-sub-step="2">Which are used to find intervals with TE homology</p>
+          <p data-a="t3" data-sub-step="3">As such, the genome was reannotated with families generated by the REPrise and RepeatModeler runs</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+          <line class="te-host" x1="160" y1="760" x2="1440" y2="760"/>
+          <line data-a="h0" class="rm-hit" x1="260" y1="760" x2="340" y2="760" style="stroke:#f9be00"/><line data-a="h1" class="rm-hit" x1="430" y1="760" x2="480" y2="760" style="stroke:#f93500"/><line data-a="h2" class="rm-hit" x1="560" y1="760" x2="660" y2="760" style="stroke:#006ff9"/><line data-a="h3" class="rm-hit" x1="830" y1="760" x2="890" y2="760" style="stroke:#f9be00"/><line data-a="h4" class="rm-hit" x1="990" y1="760" x2="1090" y2="760" style="stroke:#f93500"/><line data-a="h5" class="rm-hit" x1="1200" y1="760" x2="1260" y2="760" style="stroke:#006ff9"/>
+          <!-- Dfam card: x and y move in separate groups so their easings trace an arc -->
+          <g data-a="dfamX"><g data-a="dfamY">
+            <rect class="dfam-card" x="745" y="565" width="110" height="110" rx="16"/>
+            <text class="dfam-card-label" x="800" y="596">Dfam</text>
+            <line class="dfam-card-row" x1="765" y1="624" x2="835" y2="624"/>
+            <line class="dfam-card-row" x1="765" y1="640" x2="835" y2="640"/>
+            <line class="dfam-card-row" x1="765" y1="656" x2="835" y2="656"/>
+          </g></g>
+          <g data-a="box">
+            <rect data-a="beam" class="rm-beam" x="660" y="675" width="280" height="93"/>
+            <rect class="rm-box" x="660" y="565" width="280" height="110" rx="14"/>
+            <text class="rm-box-label" x="800" y="620">RepeatMasker</text>
+          </g>
+        </svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Click 1: known TE consensus sequences (Dfam) go into RepeatMasker. Click 2: RepeatMasker scans the genome
+          and colours intervals with TE homology. Click 3: the genome was re-annotated with the new REPrise and
+          RepeatModeler families.
+        </aside>
+      </section>
+
+      <!-- ============ Reannotation vs published annotation ============ -->
+      <!-- Each click advances one stage (js/te-compare.js); presenter screen only. -->
+      <section id="te-compare" class="te-intro">
+        <h2>How does this reannotation compare to the published annotation?</h2>
+        <div class="te-text">
+          <p data-a="t2" data-sub-step="2">Compared labelled repeat intervals</p>
+          <p data-a="t3" data-sub-step="3">Found 491 validated loci which had not been previously annotated</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+          <line class="te-host" x1="520" y1="500" x2="1460" y2="500"/><line class="te-te" x1="560" y1="500" x2="610" y2="500"/><line class="te-te" x1="660" y1="500" x2="720" y2="500"/><line class="te-te" x1="790" y1="500" x2="830" y2="500"/><line class="te-te" x1="900" y1="500" x2="970" y2="500"/><line class="te-te" x1="1030" y1="500" x2="1070" y2="500"/><line class="te-te" x1="1130" y1="500" x2="1200" y2="500"/><line class="te-te" x1="1260" y1="500" x2="1300" y2="500"/><line class="te-te" x1="1360" y1="500" x2="1420" y2="500"/>
+          <g data-a="pub"><line class="te-host" x1="520" y1="680" x2="1460" y2="680"/><line class="te-te" x1="560" y1="680" x2="610" y2="680"/><line class="te-te" x1="660" y1="680" x2="720" y2="680"/><line class="te-te" x1="900" y1="680" x2="970" y2="680"/><line class="te-te" x1="1030" y1="680" x2="1070" y2="680"/><line class="te-te" x1="1260" y1="680" x2="1300" y2="680"/><line class="te-te" x1="1360" y1="680" x2="1420" y2="680"/></g>
+          <g transform="rotate(90 585.0 590.0)"><line data-a="v0" class="cmp-line" x1="435.0" y1="590.0" x2="735.0" y2="590.0"/></g><g transform="rotate(90 690.0 590.0)"><line data-a="v1" class="cmp-line" x1="540.0" y1="590.0" x2="840.0" y2="590.0"/></g><g transform="rotate(90 810.0 590.0)"><line data-a="v2" class="cmp-line" x1="660.0" y1="590.0" x2="960.0" y2="590.0"/></g><g transform="rotate(90 935.0 590.0)"><line data-a="v3" class="cmp-line" x1="785.0" y1="590.0" x2="1085.0" y2="590.0"/></g><g transform="rotate(90 1050.0 590.0)"><line data-a="v4" class="cmp-line" x1="900.0" y1="590.0" x2="1200.0" y2="590.0"/></g><g transform="rotate(90 1165.0 590.0)"><line data-a="v5" class="cmp-line" x1="1015.0" y1="590.0" x2="1315.0" y2="590.0"/></g><g transform="rotate(90 1280.0 590.0)"><line data-a="v6" class="cmp-line" x1="1130.0" y1="590.0" x2="1430.0" y2="590.0"/></g><g transform="rotate(90 1390.0 590.0)"><line data-a="v7" class="cmp-line" x1="1240.0" y1="590.0" x2="1540.0" y2="590.0"/></g>
+          <ellipse data-a="ring2" class="cmp-ring" cx="810.0" cy="500" rx="50.0" ry="38"/><ellipse data-a="ring5" class="cmp-ring" cx="1165.0" cy="500" rx="65.0" ry="38"/>
+        </svg>
+        <div class="scene-label cmp-label" style="top:500px">RepeatMasker reannotation</div>
+        <div class="scene-label cmp-label" data-a="pubLabel" style="top:680px">Published annotation</div>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Start: the RepeatMasker reannotation (yellow = repeat intervals). Click 1: the published annotation, missing
+          two intervals. Click 2: each interval compared between the two tracks. Click 3: intervals with no published
+          counterpart circled: 491 such loci in total.
+        </aside>
+      </section>
+
+      <!-- ============ MADE1/2 investigation ============ -->
+      <!-- Each click advances one stage (js/te-made.js builds the scene); presenter screen only. -->
+      <section id="te-made" class="te-intro">
+        <h2>MADE1/2 investigation</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">One of these unannotated families was MADE1/MADE2</p>
+          <p data-a="t1" data-sub-step="1">It’s a short, 80 bp family composed of two palindromic repeats</p>
+          <p data-a="t2" data-sub-step="2">RepeatMasker’s search found 71 loci without annotation</p>
+          <p data-a="t3" data-sub-step="3">But a more sensitive BLAST search brought the count up to 378</p>
+          <p data-a="t4" data-sub-step="4">To ensure these loci were genuine, various tests were used</p>
+          <p data-a="t5" data-sub-step="5">Shuffling the sequence 500 times and BLASTing it against the reference sequence</p>
+          <p data-a="t6" data-sub-step="6">Comparing orthologous positions in primates</p>
+          <p data-a="t7" data-sub-step="7">Querying against profile hidden Markov models</p>
+          <p data-a="t8" data-sub-step="8">These tests confirmed all but one locus</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          1: MADE1 = 80 bp, two palindromic (inverted) repeats around a short core. 2: 71 unannotated RepeatMasker hits.
+          3: BLAST raises it to 378. 5: shuffled sequence (500 shuffles) scores ~1 vs 16 for the real locus.
+          6: present at the orthologous position in chimpanzee. 7: matches the profile HMM. 8: all confirmed but one.
+        </aside>
+      </section>
+
+      <!-- ============ TSD check ============ -->
+      <!-- Each click advances one stage (js/te-tsdcheck.js builds the scene); presenter screen only. -->
+      <section id="te-tsdcheck" class="te-intro">
+        <h2>TSD check</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">MADE1/MADE2 TEs insert at ‘TA’ positions</p>
+          <p data-a="t1" data-sub-step="2">Forming 2 bp ‘TA’ TSDs at either side</p>
+          <p data-a="t2" data-sub-step="3">Searched for ‘TA’ at both sides of the insertion</p>
+          <p data-a="t3" data-sub-step="4">However, in some cases, the element boundaries were unclear</p>
+          <p data-a="t4" data-sub-step="5">So, TSDs were searched for within a 6 bp window upstream/downstream of the insertion</p>
+          <p data-a="t5" data-sub-step="6">Results</p>
+          <p data-a="t6" data-sub-step="7">The majority do <u class="u-white">not</u> have detectable TSDs</p>
+          <p data-a="t7" data-sub-step="8">How do these results compare to background rates?</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          1: staggered cut at TA, MADE inserts. 2: fill-in gives 2 bp TA TSDs. 3: TA checked either side. 4: boundaries can be
+          ambiguous by a base or so. 5: so a 6 bp window was searched. 6: exact 2 bp 5.82% vs 6 bp window 32.28% with TA on both
+          sides. 7: most have no detectable TSDs. 8: compare to background.
+        </aside>
+      </section>
+
+      <!-- ============ Live simulation: TA on both flanks by chance ============ -->
+      <!-- data-unlock="tsd": landing here (in ?present mode) opens the simulator on every phone -->
+      <section id="tsd" data-unlock="tsd">
+        <header class="slide-head">
+          <div>
+            <div class="eyebrow">Live simulation · the whole room</div>
+            <h2>How often does chance alone give a TSD signal?</h2>
+          </div>
+          <div class="mini-join">
+            <div class="qr qr--mini" data-qr></div>
+            <span>Join<br><b data-join-url></b></span>
+          </div>
+        </header>
+        <div id="deck-sim" class="deck-sim"></div>
+        <div class="tsd-grid">
+          <div id="deck-pooled" class="deck-pooled"></div>
+        </div>
+        <aside class="notes">
+          Each round draws two random 6-bp flanks. Any TA dinucleotide lights up yellow; TA in both
+          flanks = a "TSD signal" produced by chance. Everyone's rounds are pooled, and the yellow line
+          should settle near the 9.66% background rate, inside the shaded chance band.
+          Keys: R = run a round, A = auto-run (fallback if phones can't connect).
+          Click the QR code (presenter) to run 1,000 rounds at once.
+          Model: bases are drawn with A = T ≈ 26.0%, C = G ≈ 24.0%, which is what makes
+          P(TA in both 6-bp flanks) exactly 9.66% (uniform bases would give 8.37%).
+        </aside>
+      </section>
+      <!-- ============ Positive/negative controls ============ -->
+      <!-- Each click advances one stage (js/te-controls.js builds the scene); presenter screen only. -->
+      <section id="te-controls" class="te-intro">
+        <h2>Positive/negative controls</h2>
+        <div class="te-text">
+          <p data-a="t1" data-sub-step="2">Observed TSD rate shown to be significantly elevated above background</p>
+          <p data-a="t2" data-sub-step="3">Compared rate with length/chromosome matched MADE copies in the published annotation</p>
+          <p data-a="t3" data-sub-step="5">Non-significant difference relative to existing copies</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Start: observed (n = 378) vs background (n = 3,780) TA-both-sides rates. 1: Fisher's exact test, p = 3.36e-15 (2 bp)
+          and 1.09e-29 (6 bp). 2: shown on a null distribution, far in the tail. 3: vs length/chromosome-matched known MADE copies
+          (n = 1,298). 4: p = 0.344 and 0.374. 5: no significant difference from existing copies.
+        </aside>
+      </section>
+
+      <!-- ============ Why were these copies missed? ============ -->
+      <!-- Each click advances one stage (js/te-missed.js builds the scene); presenter screen only. -->
+      <section id="te-missed" class="te-intro">
+        <h2>But why were these copies missed in the first place?</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">A permissive BLAST search found these copies, but RepeatMasker didn’t? Why?</p>
+          <p data-a="t1" data-sub-step="1">For this, I had to delve into RepeatMasker’s documentation</p>
+          <p data-a="t2" data-sub-step="2">As it turns out, RepeatMasker’s RMBlast engine requires copies to pass a fixed score threshold to be annotated</p>
+          <p data-a="t3" data-sub-step="3">However, short elements have fewer total bases, making it harder for them to reach this fixed threshold</p>
+          <p data-a="t4" data-sub-step="4">Detection is also dependent on the GC % of the surrounding sequence</p>
+          <p data-a="t5" data-sub-step="5">Using GC % to select the scoring matrix used</p>
+          <p data-a="t6" data-sub-step="6">RepeatMasker calculates GC % in 56–60 kb batches</p>
+          <p data-a="t7" data-sub-step="7">This can flip detection outcomes</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          2: RMBlast needs a Smith–Waterman score ≥ 225. 3: short elements top out below it. 5: GC% picks the scoring matrix.
+          6: GC is measured over 56–60 kb batches, so the local GC can differ. 7: same copy, 48% GC (60 kb) matrix → 214, missed;
+          45% GC (1 kb) matrix → 231, detected. Score traces and matrix values are illustrative.
+        </aside>
+      </section>
+
+      <!-- ============ pHMMs for TE detection ============ -->
+      <!-- Each click advances one stage (js/te-phmm.js builds the scene); presenter screen only. -->
+      <section id="te-phmm" class="te-intro">
+        <h2>Using profile hidden Markov models (pHMMs) for TE detection</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">Consensus-based alignment has clear limitations, pHMMs present an alternative</p>
+          <p data-a="t1" data-sub-step="1">Standard consensus sequences encode a position’s most common base, pHMMs encode all base probabilities</p>
+          <p data-a="t2" data-sub-step="2">As well as insertion/deletion probabilities</p>
+          <p data-a="t3" data-sub-step="3">While BLAST needs an exact match to start, pHMMs are more tolerant to divergence</p>
+          <p data-a="t4" data-sub-step="4">Consensus searches use one score cutoff for every family, Dfam pHMMs each have their own calibrated cutoffs</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          1: GCT/GAC/GAC → G 100% · A 67/C 33 · C 67/T 33. 2: + G-C and GATC → A 75/C 25, C 80/T 20, deletion 20% at
+          position 2, insertion 20% between 2 and 3. 3: consensus GAC needs an exact seed and dies at GTC; the pHMM scores it
+          with a small penalty for the unseen T. 4-6: an old diverged copy: consensus 190 < 225 (missed); pHMM 30 bits > 22
+          bits (found); per-family calibrated cutoffs vs one flat cutoff. Scores other than Luke's are illustrative.
+        </aside>
+      </section>
+
+      <!-- ============ Comparing the two search methods ============ -->
+      <!-- Each click advances one stage (js/te-engines.js builds the scene); presenter screen only. -->
+      <section id="te-engines" class="te-intro">
+        <h2>Comparing the two search methods</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">The two search methods’ ability to detect diverged copies were compared</p>
+          <p data-a="t1" data-sub-step="1">Divergence is how different a copy is from its family’s consensus sequence</p>
+          <p data-a="t2" data-sub-step="2">RepeatMasker can use different detection engines</p>
+          <p data-a="t3" data-sub-step="3">Same 1,143 family library used for both</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          1: Kimura divergence: transitions and transversions between a copy and its consensus (example: 10.5%).
+          2: RepeatMasker's engine is swappable: RMBlast → HMMER. 3: the same 1,143-family library goes into both.
+          4: both scan the same genome.
+        </aside>
+      </section>
+
+      <!-- ============ Comparing search results ============ -->
+      <!-- Each click advances one stage (js/te-overlap.js builds the scene); presenter screen only. -->
+      <section id="te-overlap" class="te-intro">
+        <h2>Comparing search results</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="1">HMMER (pHMM) found 5,935,649 loci, RMBlast (consensus) found 3,837,511</p>
+          <p data-a="t1" data-sub-step="2">99.56% of loci detected by RMBlast were also detected by HMMER</p>
+          <p data-a="t2" data-sub-step="3">0.44% of loci were exclusive to RMBlast</p>
+          <p data-a="t3" data-sub-step="4">19.47% of loci were only detected by HMMER</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Circle areas are proportional to the loci found; the overlap is set so 99.56% of the RMBlast circle lies inside HMMER's.
+          1: HMMER 5,935,649 vs RMBlast 3,837,511. 2: 99.56% of RMBlast loci also found by HMMER. 3: 0.44% RMBlast-only.
+          4: 19.47% HMMER-only.
+        </aside>
+      </section>
+
+      <!-- ============ Comparing results by divergence ============ -->
+      <!-- Each click builds the graph a step further (js/te-diverge.js); presenter screen only. -->
+      <section id="te-diverge" class="te-intro">
+        <h2>Comparing results by divergence</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="1">RMBlast and HMMER calls by divergence</p>
+          <p data-a="t1" data-sub-step="3">HMMER-detected loci also detected by RMBlast, by divergence</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Raw graph: calls per 0.5% Kimura bin (RMBlast red, HMMER blue), both axes rescale as the lines reveal;
+          pauses at 25%, where the lines are still together. HMMER's 1,795 calls above 50% are not shown.
+          Source: divergence_arms_pool1143.len20.tsv.
+          Points: % of HMMER loci (per 5% Kimura bin, plotted at the bin midpoint) also detected by RMBlast.
+          Fit: D(x) = 18.6 + (100.3 − 18.6) / (1 + e^((x − 34.68)/4.66)), R² = 0.9995.
+          x0 is the ceiling–floor midpoint (59.5% detection); the 50% crossing is ~36.9%.
+          The 18.6% floor is a composition floor, not a minimum RMBlast sensitivity.
+          Bins above 50% (n = 718, 261, 816) are excluded from the plot and the fit.
+          Source: EngineGap/results/sensitivity_curve_pool1143.len20both.tsv (pool1143, ≥20 bp both arms);
+          fit from EngineGap/results/enginegap_pool1143_writeup.md, "Fits".
+        </aside>
+      </section>
+
+
+      <!-- ===================== Conclusions ===================== -->
+      <!-- One bullet per click (js/te-conclude.js). -->
+      <section id="te-conclude" class="te-intro">
+        <h2>Conclusions</h2>
+        <ul class="cc-list">
+          <li data-a="b1" data-sub-step="1">Existing methodologies show the Dfam library to be mostly complete.</li>
+          <li data-a="b2" data-sub-step="2">Existing consensus-based annotation tools miss short copies, some of these misses were proven to be driven by the genomic context surrounding them</li>
+          <li data-a="b3" data-sub-step="3">HMMER-based genome annotation needed to provide maximum sensitivity</li>
+        </ul>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+      </section>
+
+
+      <!-- ===================== End ===================== -->
+      <section id="end" class="end-slide">
+        <h2>Thank you</h2>
+        <p class="byline" data-sub-step="0">Questions?</p>
+        <!-- presenter only (?present + password): wipes the rehearsal so the real talk starts clean -->
+        <button type="button" id="reset-all" class="reset-btn" hidden>Reset presentation</button>
+      </section>
+
+      <!-- ===================== FAQs (after the end) ===================== -->
+      <!-- Click a card to open its answer and play the animation (js/faq.js). Phones show the open question. -->
+      <section id="faq" class="te-intro">
+        <h2>FAQs</h2>
+        <div class="faq-cards">
+          <button type="button" class="faq-card" data-open="1">Why did you find known TEs if you had already masked these regions?</button>
+          <button type="button" class="faq-card" data-open="2">How were HMMER results validated?</button>
+          <button type="button" class="faq-card" data-open="3">Explain RepeatMasker reannotation a bit better</button>
+          <button type="button" class="faq-card" data-open="4">How were the copies compared to their primate orthologs?</button>
+        </div>
+        <div class="faq-panel" data-faq="1" data-phone-sub="Why did you find known TEs if you had already masked these regions?" hidden></div>
+        <div class="faq-panel" data-faq="2" data-phone-sub="How were HMMER results validated?" hidden></div>
+        <div class="faq-panel" data-faq="3" data-phone-sub="Explain RepeatMasker reannotation a bit better" hidden></div>
+        <div class="faq-panel" data-faq="4" data-phone-sub="How were the copies compared to their primate orthologs?" hidden></div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- presenter-only status, bottom-left -->
+  <div id="live-pill" class="live-pill" hidden><i></i><span></span></div>
+
+  <!-- presenter password: masked input, never window.prompt (it would show on the projector) -->
+  <div id="pw-overlay" class="pw-overlay" hidden>
+    <form class="pw-card">
+      <h3>Presenter mode</h3>
+      <p>Enter the presenter password to drive the phones from this deck.</p>
+      <input type="password" name="pw" autocomplete="current-password" placeholder="Password" required>
+      <p class="pw-error" aria-live="polite"></p>
+      <div class="pw-actions">
+        <button type="submit" class="btn-primary">Connect</button>
+        <button type="button" class="btn-ghost" data-skip>Run without live sync</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="lib/reveal/reveal.js"></script>
+  <script src="lib/reveal/plugin/notes.js"></script>
+  <script type="module" src="js/deck.js"></script>
+</body>
+</html>

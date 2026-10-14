@@ -1,0 +1,50 @@
+/* Design tokens shared by the slides, phone page and control page.
+   Colour has fixed meanings — keep them:
+     --yellow  'TA' dinucleotides and 2/2 (TSD signal) results
+     --blue    0/2 or 1/2 results
+   Everything else is neutral, so those two always stand out. */
+
+@font-face {
+  font-family: "PP Editorial New";
+  src: local("PP Editorial New"), local("PPEditorialNew-Regular"),
+       url("../fonts/PPEditorialNew-Regular.woff2") format("woff2"),
+       url("../fonts/PPEditorialNew-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Editorial New";
+  src: local("PP Editorial New Italic"), local("PPEditorialNew-Italic"),
+       url("../fonts/PPEditorialNew-Italic.woff2") format("woff2"),
+       url("../fonts/PPEditorialNew-Italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --yellow: #f9be00;
+  --blue: #187fc3;
+  --on-yellow: #1d1600;
+
+  --bg: #0a0f15;
+  --surface: #111821;
+  --surface-2: #19222d;
+  --surface-3: #222d3a;
+  --hairline: #263240;
+
+  --text: #eef2f6;
+  --text-2: #a9b5c2;
+  --muted: #6f7d8c;
+
+  --font: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Roboto, Arial, sans-serif;
+  /* slide titles; PP Editorial New is a licensed font — drop its .woff2 or .otf files into public/fonts/ (git-ignored) */
+  --display: "PP Editorial New", "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", "SF Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  color-scheme: dark;
+}
