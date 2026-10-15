@@ -63,3 +63,8 @@ that auto-plays a WAAPI animation (js/faq.js): soft vs hard masking; HMMER valid
 `npm test` (simulation model), `npm run dev` + `npm run test:room` (sync server).
 Check animations by driving Chromium with playwright-core
 (executablePath /opt/pw-browsers/chromium-1194/chrome-linux/chrome) and screenshotting stages.
+
+## Offline fallback (PowerPoint)
+`fallback/thesis-fallback.pptx` is the whole talk as an animated .pptx (no QR/live/simulation; FAQ answers are separate,
+linked slides). It is generated from this deck: change a slide here, then `cd fallback && npm run extract && npm test`
+(see fallback/README.md) and commit the rebuilt .pptx. Don't edit the .pptx by hand.
