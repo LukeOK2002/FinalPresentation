@@ -181,6 +181,7 @@ html, body { background: var(--bg); }
 [data-a], .te-scene circle { transform-box: fill-box; transform-origin: center; }
 .te-host { stroke: #5c6773; stroke-width: 16; }
 .te-te { stroke: var(--yellow); stroke-width: 16; }
+.t2t-fill { stroke: #7dff0a; stroke-width: 16; }
 .te-dot { fill: var(--yellow); }
 .te-poly { fill: rgba(238, 242, 246, 0.14); stroke: var(--text); stroke-width: 2.5; }
 .te-label { fill: var(--text-2); font: 500 20px var(--font); text-anchor: middle; }

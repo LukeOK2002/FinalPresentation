@@ -24,7 +24,7 @@ Work on branch `claude/brave-dirac-ntwekn`; commit + push after each change; don
   `data-title-step="N"` swaps the phone title. Register new modules in `js/deck.js`.
 
 ## Slides (in order)
-title · te-intro (what are TEs: retro/transposition) · te-look (TSDs, passive mutation over
+title · te-intro (what are TEs: retro/transposition) · te-t2t (what is T2T: grey hg38 line with 5 gaps, copy drops below, gaps fill lime #7dff0a; click 2 swaps text) · te-look (TSDs, passive mutation over
 50 My, similarity "95% identity") · te-families (5 family lines, consensus built column by
 column, real Dfam table, "is this database complete?") · te-discover (k-mers; exact
 RepeatModeler counts vs inexact REPrise counts with 1-mismatch neighbours; genome scan;

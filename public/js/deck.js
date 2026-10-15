@@ -15,6 +15,7 @@ import { connectLive } from "./live.js";
 import { hasTA, simulateRound } from "./tsd-model.js";
 import { renderJoinCodes } from "./qr.js";
 import { initTeIntro } from "./te-intro.js";
+import { initTeT2t } from "./te-t2t.js";
 import { initTeLook } from "./te-look.js";
 import { initTeFamilies } from "./te-families.js";
 import { initTeDiscover } from "./te-discover.js";
@@ -56,6 +57,7 @@ await Reveal.initialize({
 
 renderJoinCodes();
 initTeIntro();
+initTeT2t();
 initTeLook();
 initTeFamilies();
 initTeDiscover();

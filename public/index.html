@@ -18,7 +18,6 @@
       <section id="title">
         <div class="title-grid">
           <div class="title-main">
-            <div class="eyebrow">Thesis presentation · University College Cork</div>
             <h1>Discovery and annotation of transposable elements in the T2T-CHM13v2.0 genome assembly</h1>
             <p class="byline">Luke O’Keeffe · Supervisor: Martin Frith · 16th October 2026</p>
           </div>
@@ -78,6 +77,48 @@
         <aside class="notes">
           Click 1: retrotransposition (copy via RNA, then paste into a new site).
           Click 2: transposition (cut out, then paste into a new site).
+        </aside>
+      </section>
+
+      <!-- ============ What is the T2T-CHM13v2.0 assembly: hg38 gaps filled ============ -->
+      <!-- Click 1: hg38 line (5 gaps) appears, a copy drops below and its gaps fill lime (js/te-t2t.js). Click 2: text swap. -->
+      <section id="te-t2t" class="te-intro">
+        <h2>What is the T2T-CHM13v2.0 (T2T) genome assembly?</h2>
+        <div class="te-text">
+          <p data-a="t0" data-sub-step="0">T2T-CHM13v2.0 represents the first ever complete human reference genome assembly</p>
+          <p data-a="t1" data-sub-step="2">Prior assemblies were missing the short arms of several chromosomes, T2T is the first gap-less assembly</p>
+        </div>
+        <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
+          <g data-a="hg">
+            <line class="te-host" x1="260" y1="500" x2="400" y2="500"/>
+            <line class="te-host" x1="446" y1="500" x2="560" y2="500"/>
+            <line class="te-host" x1="600" y1="500" x2="760" y2="500"/>
+            <line class="te-host" x1="812" y1="500" x2="960" y2="500"/>
+            <line class="te-host" x1="1000" y1="500" x2="1160" y2="500"/>
+            <line class="te-host" x1="1212" y1="500" x2="1340" y2="500"/>
+          </g>
+          <text data-a="hgLabel" class="te-label" x="800" y="462">hg38 reference assembly</text>
+          <g data-a="t2t">
+            <line class="te-host" x1="260" y1="700" x2="400" y2="700"/>
+            <line class="te-host" x1="446" y1="700" x2="560" y2="700"/>
+            <line class="te-host" x1="600" y1="700" x2="760" y2="700"/>
+            <line class="te-host" x1="812" y1="700" x2="960" y2="700"/>
+            <line class="te-host" x1="1000" y1="700" x2="1160" y2="700"/>
+            <line class="te-host" x1="1212" y1="700" x2="1340" y2="700"/>
+          </g>
+          <line class="t2t-fill" x1="400" y1="700" x2="446" y2="700" data-a="f1"/>
+          <line class="t2t-fill" x1="560" y1="700" x2="600" y2="700" data-a="f2"/>
+          <line class="t2t-fill" x1="760" y1="700" x2="812" y2="700" data-a="f3"/>
+          <line class="t2t-fill" x1="960" y1="700" x2="1000" y2="700" data-a="f4"/>
+          <line class="t2t-fill" x1="1160" y1="700" x2="1212" y2="700" data-a="f5"/>
+          <text data-a="t2tLabel" class="te-label" x="800" y="662">T2T reference assembly</text>
+        </svg>
+        <span class="fragment anim-step"></span>
+        <span class="fragment anim-step"></span>
+        <aside class="notes">
+          Click 1: the hg38 line has five gaps; a copy drops below and the gaps fill in green (T2T).
+          Click 2: prior assemblies missed the short arms of several chromosomes; T2T is the first gap-less assembly.
+          The five gaps are schematic, not their real positions.
         </aside>
       </section>
 
