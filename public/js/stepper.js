@@ -15,6 +15,17 @@ export const EASE_IN_OUT = "cubic-bezier(0.65, 0, 0.35, 1)";
 export const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 export const LINEAR = "linear";
 
+/* Timeline helpers. A stage that should flow into the next one without a click is built as one timeline:
+   chain(a, b)       b starts when a has finished (+ gap ms)
+   chain(a, b, gap)  ...with a pause
+   shift(tl, ms)     delay every segment
+   speed(tl, f, o)   play f times faster (2 = twice as fast), measured from time o */
+export const endOf = (tl) => Math.max(...tl.map(([, , at, dur]) => at + dur));
+export const shift = (tl, ms) => tl.map(([id, ch, at, dur, ease]) => [id, ch, at + ms, dur, ease]);
+export const chain = (a, b, gap = 0) => [...a, ...shift(b, endOf(a) + gap)];
+export const speed = (tl, f, origin = 0) =>
+  tl.map(([id, ch, at, dur, ease]) => [id, ch, origin + (at - origin) / f, dur / f, ease]);
+
 const tf = (s) => `translate(${s.tx}px, ${s.ty}px) scale(${s.sc * s.sx}, ${s.sc})`;
 
 /**

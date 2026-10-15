@@ -24,36 +24,36 @@ Work on branch `claude/brave-dirac-ntwekn`; commit + push after each change; don
   `data-title-step="N"` swaps the phone title. Register new modules in `js/deck.js`.
 
 ## Slides (in order)
-title · te-intro (what are TEs: retro/transposition) · te-t2t (what is T2T: grey hg38 line with 5 gaps, copy drops below, gaps fill lime #7dff0a; click 2 swaps text) · te-look (TSDs, passive mutation over
-50 My, similarity "95% identity") · te-families (5 family lines, consensus built column by
-column, real Dfam table, "is this database complete?") · te-discover (k-mers; exact
-RepeatModeler counts vs inexact REPrise counts with 1-mismatch neighbours; genome scan;
-copies aligned; consensus; masking) · te-repeats (non-TE repeats RepeatModeler also
+title · te-intro (what are TEs: retro/transposition) · te-t2t (what is T2T: grey hg38 line with 5 gaps, copy drops below, gaps fill lime #7dff0a; click 2 swaps text) · te-look (staggered cut flows straight into TSD formation, one click; passive mutation over
+50 My; similarity "95% identity") · te-families (5 family lines, consensus built column by
+column at 1.5x speed, real Dfam table, "is this database complete?") · te-discover (k-mers; exact
+RepeatModeler counts vs inexact REPrise counts with 1-mismatch neighbours; "frequent k-mers serve as seeds": half-length yellow seeds on the genome;
+next click they extend in unison, lift out and align, then the consensus appears by itself; masking) · te-repeats (non-TE repeats RepeatModeler also
 finds, one quadrant per click: satellite duplications, simple repeats, higher order repeats,
-known TE families) · te-results (treemap, one category per click, area ∝ share;
+known TE families; all timelines 1.5x speed) · te-results (treemap, one category per click, area ∝ share;
 newest dark navy, previous ones invert to white; small ones get leader lines) · te-novel (big yellow "0" + "Novel TE families
-discovered*", static; no expansion of the * on purpose; hidden h2 gives phones the title) · te-masker (RepeatMasker box over genome; Dfam card
-arcs in fast via nested x/y groups with sine easings, then vanishes; box sweeps and colours TE hits) · te-compare (reannotation vs published track;
+discovered", static, no asterisk; hidden h2 gives phones the title) · te-masker (RepeatMasker box over genome; Dfam card
+arcs in fast via nested x/y groups with sine easings, then vanishes; the box sweeps and colours TE hits straight away, same click, sweep 1.5x speed) · te-compare (reannotation vs published track;
 white comparison lines; published track fades in already missing them; novel intervals circled, "491 loci") · te-made (MADE1/2: TIR/core diagram → 71 → 378
-copies grid → shuffle test, orthology, profile HMM, each with ✅ → all but one confirmed; scene built in JS) · te-tsdcheck (TA target-site cut/insert/fill →
-TA either side → unclear boundary shift → 6 bp window → results bars 5.82% / 32.28%, blue pulses) · tsd (live pooled TA-flank simulation; presenter clicks the QR to run 1,000
-rounds at once) · te-controls (observed vs background bars → Fisher p-values → z-curve; then vs known
-copies, p = 0.344 / 0.374, also placed on the curve) · te-missed (RMBlast fixed SW threshold 225: score
-trace while scanning; short copy fails; GC % picks matrix; 1→60 kb GC window; 48% vs 45% matrix → 214 vs 231) · te-phmm (alignment → base/indel probabilities; exact seed vs
+copies grid → shuffle test, orthology, profile HMM, each with ✅ → all but one confirmed, the unconfirmed one red; scene built in JS) · te-tsdcheck (TA target-site cut/insert/fill →
+TA either side → unclear boundary shift, then the 6 bp window follows by itself → results bars 5.82% / 32.28%, then 1.3 s after the bars fill "majority have no TSDs" + blue pulses) · tsd (live pooled TA-flank simulation; presenter clicks the QR to run 1,000
+rounds at once) · te-controls (observed vs background bars → Fisher p-values, which go straight onto the z-curve in the same click; then vs known
+copies, p = 0.344 / 0.374, also straight onto the curve) · te-missed (RMBlast fixed SW threshold 225 ("each matching base contributes to a copy's total score, with a total of 225 needed for annotation"): score
+trace while scanning (both scans 1.3x speed); short copy fails; GC % picks matrix; 1→60 kb GC window; 48% vs 45% matrix → 214 vs 231) · te-phmm (alignment → base/indel probabilities; exact seed vs
 profile on ATCGTCACC; diverged copy: consensus 190 < 225 vs pHMM 30 > 22 bits; flat vs per-family cutoffs) · te-engines (Kimura divergence matrix → 10.5%; RepeatMasker engine slot RMBlast → HMMER;
 duplicated, Dfam 1,143 fed to both; both scan one genome) · te-overlap (area-proportional circles, HMMER 5,935,649 vs
 RMBlast 3,837,511; HMMER circle blue #006ff9, RMBlast red #f93500; overlap drawn in background navy (clipped bg circle); zoom on 0.44% sliver; 19.47% HMMER-only) · te-diverge (first a raw-calls graph per 0.5% bin, RMBlast red #f93500 / HMMER blue #006ff9, drawn
 per frame by a rAF revealer with axes rescaling to the revealed extent, pauses at 25%, click finishes to 50%; then detection graph built per click: axes, x label, 10 bin points, 4PL fit
 drawn L→R with fit box; data from EngineGap pool1143 len20both) · te-conclude (3 bullets, one per click) · end (Thank you / Questions?) · faq (after the end: 4 cards (2×2) in the background navy, white on hover; click opens an answer panel
 that auto-plays a WAAPI animation (js/faq.js): soft vs hard masking; HMMER validation vs GARLIC + 0.2% cutoff
-(schematic curves); RepeatModeler families → RepeatMasker → reannotated genome; liftOver human → chimp via chain blocks. Phones show the open question). · reset (last slide, after the FAQs: red presenter-only button, click twice; wipes results, closes the phone simulator, jumps to the title; not in the PowerPoint fallback).
+(schematic curves); RepeatModeler families → RepeatMasker → reannotated genome; liftOver human → chimp via chain blocks. Phones show the open question). · reset (last slide, after the FAQs: red presenter-only button, click twice; wipes results, closes the phone simulator, jumps to the title).
 
 ## Style rules Luke has set
 - Dark theme. Titles: PP Editorial New (licensed .otf in public/fonts/, git-ignored).
   Centred explanatory text: white Helvetica. Labels Helvetica.
 - Colours: #f9be00 yellow = TEs / TA / 2-of-2; #187fc3 blue = TSDs / 0-1 of 2; host genome
   dark grey #5c6773. Follow colours Luke specifies exactly.
-- Each click = one text change + its animation plays automatically.
+- Each click = one text change + its animation plays automatically. Some stages deliberately chain into the next one without a click (text included): build them as one timeline with `chain(a, b, gap)`, `shift`, `speed` from `stepper.js` and remove the extra `.anim-step` span (phones mirror the last text of a chained click, so give chained lines the same `data-sub-step`).
 - Stepper gotcha: segments on the same element+property (op, or any of tx/ty/sc/sx) must not
   overlap in time, or WAAPI throws "Offsets must be monotonically non-decreasing".
 - Flag (don't silently change) wording/science issues; fix obvious typos and say so.
@@ -62,8 +62,3 @@ that auto-plays a WAAPI animation (js/faq.js): soft vs hard masking; HMMER valid
 `npm test` (simulation model), `npm run dev` + `npm run test:room` (sync server).
 Check animations by driving Chromium with playwright-core
 (executablePath /opt/pw-browsers/chromium-1194/chrome-linux/chrome) and screenshotting stages.
-
-## Offline fallback (PowerPoint)
-`fallback/thesis-fallback.pptx` is the whole talk as an animated .pptx (no QR/live/simulation; FAQ answers are separate,
-linked slides). It is generated from this deck: change a slide here, then `cd fallback && npm run extract && npm test`
-(see fallback/README.md) and commit the rebuilt .pptx. Don't edit the .pptx by hand.

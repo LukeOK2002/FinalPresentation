@@ -10,7 +10,7 @@
    The curve is a standard normal; each p-value sits at its two-sided z-score
    (p = 3.36e-15 → z ≈ 7.9, p = 1.09e-29 → z ≈ 11.3; p = 0.344 → 0.95, 0.374 → 0.89). Illustrative. */
 
-import { createStepper, EASE, SPRING } from "./stepper.js";
+import { createStepper, chain, EASE, SPRING } from "./stepper.js";
 
 const BX = 500, BW = 600, BH = 36, LX = 470, VX = 1115, KX = 1250, PX = 1390;
 const GROUPS = [{ name: "2 bp exact", y: 440 }, { name: "6 bp window", y: 640 }];
@@ -104,15 +104,14 @@ const INITIAL = {
   ...Object.fromEntries([0, 1].flatMap((g) => [0, 1].map((r) => [`bb${g}${r}`, hidden]))),
 };
 
-const TIMELINES = [
-  null,
-  [ // 1 · Fisher's exact test
+const FISHER1 = [ // Fisher's exact test
     ...[0, 1].flatMap((i) => [
       ["ak" + i, { op: 1, tx: 0 }, 200 + i * 500, 500, EASE],
       ["ap" + i, { op: 1, sc: 1 }, 700 + i * 500, 500, SPRING],
     ]),
-  ],
-  [ // 2 · onto the null distribution
+];
+
+const CURVE1 = [ // onto the null distribution
     ...swap(null, "t1"),
     ["set1", { op: 0 }, 0, 600], ["ak0", { op: 0 }, 0, 500], ["ak1", { op: 0 }, 0, 500],
     ["curve", { op: 1 }, 700, 700],
@@ -120,8 +119,9 @@ const TIMELINES = [
       ["ap" + i, { tx: zx(Z1[i]) - PX, ty: TARGET[i].y - pFrom(i) }, 1300 + i * 300, 1100, EASE],
       ["mk" + i, { op: 1 }, 2200 + i * 300, 500],
     ]),
-  ],
-  [ // 3 · against known copies
+];
+
+const KNOWN = [ // against known copies
     ...swap("t1", "t2"),
     ...["curve", "mk0", "mk1", "ap0", "ap1"].map((id) => [id, { op: 0 }, 0, 600]),
     ["set2", { op: 1 }, 700, 400],
@@ -129,14 +129,16 @@ const TIMELINES = [
       [`bs${g}${r}`, { sx: 1 }, 900 + (g * 2 + r) * 150, 800, EASE],
       [`bb${g}${r}`, { op: 1 }, 1300 + (g * 2 + r) * 150, 500],
     ])),
-  ],
-  [ // 4 · Fisher's exact test again
+];
+
+const FISHER2 = [ // Fisher's exact test again
     ...[0, 1].flatMap((i) => [
       ["bk" + i, { op: 1, tx: 0 }, 200 + i * 500, 500, EASE],
       ["bp" + i, { op: 1, sc: 1 }, 700 + i * 500, 500, SPRING],
     ]),
-  ],
-  [ // 5 · onto the null distribution: well inside the bulk this time
+];
+
+const CURVE2 = [ // onto the null distribution: well inside the bulk this time
     ...swap("t2", "t3"),
     ["set2", { op: 0 }, 0, 600], ["bk0", { op: 0 }, 0, 500], ["bk1", { op: 0 }, 0, 500],
     ["curve", { op: 1 }, 700, 700],
@@ -144,8 +146,10 @@ const TIMELINES = [
       ["bp" + i, { tx: zx(Z2[i]) + LABEL2_DX - PX, ty: TARGET2[i].y - pFrom(i) }, 1300 + i * 300, 1100, EASE],
       ["mk" + (i + 2), { op: 1 }, 2200 + i * 300, 500],
     ]),
-  ],
 ];
+
+// each pair of p-values flows straight onto the distribution, no click in between
+const TIMELINES = [null, chain(FISHER1, CURVE1, 300), KNOWN, chain(FISHER2, CURVE2, 300)];
 
 export function initTeControls() {
   const slide = document.getElementById("te-controls");

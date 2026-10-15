@@ -12,7 +12,7 @@
 
    Scores, matrices and the GC trace are illustrative; 225, 45%/48%, 214 and 231 are Luke's. */
 
-import { createStepper, EASE, EASE_IN_OUT, SPRING } from "./stepper.js";
+import { createStepper, speed, EASE, EASE_IN_OUT, SPRING } from "./stepper.js";
 
 const GREY = "#5c6773", Y = "#f9be00", PALE = "#f5dd93";
 const fmt = (n) => n.toLocaleString("en-IE");
@@ -145,22 +145,22 @@ const END = COUNT_AT + ALN.length * STEP_MS;
 const TIMELINES = [
   null,
   [...swap("t0", "t1")],
-  [ // 2 · fixed threshold
+  speed([ // 2 · fixed threshold
     ...swap("t1", "t2"),
     ["scan", { op: 1 }, 400, 400],
     ...scanBox(SCAN_AT),
     ...traceIn("lt", LONG),
     ["longHit", { op: 1 }, boxAt(LONG.x + crossAt * BASE), 300],
     ["longOk", { op: 1, sc: 1 }, boxAt(LONG.x + crossAt * BASE) + 200, 500, SPRING],
-  ],
-  [ // 3 · a short copy never gets there
+  ], 1.3), // scan + score line: 30% faster
+  speed([ // 3 · a short copy never gets there
     ...swap("t2", "t3"),
     ["lt", { op: 0 }, 0, 400], ["longHit", { op: 0 }, 0, 400], ["longOk", { op: 0 }, 0, 400],
     ["box", { op: 0 }, 0, 300], ["box", { op: 1 }, 450, 250],   // hidden while it jumps back to the start
     ...scanBox(SCAN_AT),
     ...traceIn("st", SHORT),
     ["shortNo", { op: 1, ty: 0 }, boxAt(SHORT.x + SHORT.steps.length * BASE) + 300, 500, EASE],
-  ],
+  ], 1.3), // 30% faster
   [...swap("t3", "t4"), ["scan", { op: 0 }, 0, 600], ["st", { op: 0 }, 0, 600]],
   [ // 5 · GC% picks the matrix
     ...swap("t4", "t5"),

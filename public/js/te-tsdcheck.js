@@ -5,13 +5,13 @@
    Click 2: overhangs filled in; the 2 bp 'TA' TSDs turn blue
    Click 3: DNA fades; MADE? between GATGCTA / TATCGAT; the flanking TAs light up; MADE? → MADE
    Click 4: MADE? between CGTCGTATC / GTAGATTAC with the boundary C and G hidden under it;
-            it shifts 1 bp left and right, revealing them; a white ? appears
-   Click 5: 6 bp windows bracketed either side; the TAs light up; MADE? → MADE
-   Click 6: results bars (exact 2 bp vs 6 bp window), as on the simulation slide
-   Click 7: the blue "not detected" parts pulse once
-   Click 8: text only */
+            it shifts 1 bp left and right, revealing them; a white ? appears. As soon as that has
+            finished (no click) the 6 bp windows are bracketed either side; the TAs light up; MADE? → MADE
+   Click 5: results bars (exact 2 bp vs 6 bp window), as on the simulation slide; 1.3 s after the bars
+            have filled the text changes to "the majority do not have TSDs" and the blue parts pulse once
+   Click 6: text only */
 
-import { createStepper, EASE, EASE_IN_OUT, SPRING } from "./stepper.js";
+import { createStepper, chain, shift, EASE, EASE_IN_OUT, SPRING } from "./stepper.js";
 
 const P = 56, CX = 800, UY = 560, LY = 630, PULL = 212;           // DNA pitch / rows
 const UP = "GCCGTAGCGC", LO = "CGGCATCGCG";
@@ -96,42 +96,45 @@ const INITIAL = {
 
 const SHIFT = [[-S, 900], [0, 1500], [S, 2100], [0, 2700]]; // 1 bp left, back, 1 bp right, back
 
-const TIMELINES = [
-  null,
-  [ // 1 · cut, pull apart, MADE inserts
+const CUT = [ // 1 · cut, pull apart, MADE inserts
     fadeOut("cutBonds", 0, 400),
     ["L", { tx: -PULL }, 300, 1100, EASE_IN_OUT],
     ["R", { tx: PULL }, 300, 1100, EASE_IN_OUT],
     fadeIn("made", 1500, 400),
     ["made", { ty: 0 }, 1500, 900, EASE],
-  ],
-  [ // 2 · fill in; TSDs
+];
+
+const FILL = [ // 2 · fill in; TSDs
     ...swap("t0", "t1"),
     fadeIn("fillL", 700), fadeIn("fillR", 700),
     fadeIn("tsdL", 1600, 700), fadeIn("tsdR", 1600, 700),
-  ],
-  [ // 3 · search for TA either side
+];
+
+const SEARCH = [ // 3 · search for TA either side
     ...swap("t1", "t2"),
     ...["L", "R", "made"].map((id) => fadeOut(id, 0, 600)),
     fadeIn("ex1", 800),
     fadeIn("e1ta", 1900, 400),
     fadeIn("e1y", 2600, 600),
-  ],
-  [ // 4 · unclear boundaries
+];
+
+const UNCLEAR = [ // 4 · unclear boundaries
     ...swap("t2", "t3"),
     fadeOut("ex1", 0, 600),
     fadeIn("ex2", 700, 500),
     ...SHIFT.map(([tx, at]) => ["e2blk", { tx }, at + 600, 450, EASE_IN_OUT]),
     ["e2what", { op: 1, sc: 1 }, 1500, 500, SPRING],
-  ],
-  [ // 5 · 6 bp windows
+];
+
+const WINDOWS = [ // 5 · 6 bp windows
     ...swap("t3", "t4"),
     ["e2win", { op: 1, ty: 0 }, 600, 500, EASE],
     fadeIn("e2ta", 1400, 400),
     fadeOut("e2what", 2000, 300),
     fadeIn("e2y", 2100, 600),
-  ],
-  [ // 6 · results
+];
+
+const RESULTS = [ // 6 · results
     ...swap("t4", "t5"),
     fadeOut("ex2", 0, 600),
     fadeIn("res", 600, 300),
@@ -141,11 +144,20 @@ const TIMELINES = [
       [`bv${i}`, { op: 1, tx: 0 }, 1700 + i * 300, 400, EASE],
     ]),
     fadeIn("legend", 2300, 500),
-  ],
-  [ // 7 · the blue parts pulse once
+];
+
+const MAJORITY = [ // 7 · the blue parts pulse once
     ...swap("t5", "t6"),
     ...[0, 1].flatMap((i) => [[`bp${i}`, { op: 0.5 }, 700, 900, EASE_IN_OUT], [`bp${i}`, { op: 0 }, 1600, 1600, EASE_IN_OUT]]),
-  ],
+];
+
+const TIMELINES = [
+  null,
+  CUT,
+  FILL,
+  SEARCH,
+  chain(UNCLEAR, WINDOWS),                // 4 · unclear boundaries, then (no click) the 6 bp windows
+  [...RESULTS, ...shift(MAJORITY, 3600)], // 5 · results; "the majority" follows 1.3 s after the bars have filled (2.3 s)
   [...swap("t6", "t7")],
 ];
 

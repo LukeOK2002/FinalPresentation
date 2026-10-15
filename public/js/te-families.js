@@ -6,7 +6,7 @@
    Click 2: Dfam "Browse" table (real entries)
    Click 3: everything fades; the open question, large and centred */
 
-import { createStepper, EASE, EASE_IN_OUT } from "./stepper.js";
+import { createStepper, speed, EASE, EASE_IN_OUT } from "./stepper.js";
 
 const COPIES = ["ATAGCGCGA", "ATAGCGCGC", "TTAGTCGGA", "ATAGTCGGA", "ATAGCCGGA"];
 const COLS = COPIES[0].length;
@@ -62,7 +62,7 @@ const TIMELINES = [
     ["copiesLabel", { op: 1 }, 700, 600],
     ["consRule", { op: 1 }, 1000, 500],
     ["consLabel", { op: 1 }, 1000, 500],
-    ...buildConsensus(),
+    ...speed(buildConsensus(), 1.5, COL_START - 250), // column-by-column fill plays 50% faster
   ],
   [ // 2 · Dfam
     ...swap("t1", "t2"),

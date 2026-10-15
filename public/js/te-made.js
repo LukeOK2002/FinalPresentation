@@ -44,7 +44,7 @@ function build(svg) {
   for (let i = 0; i < N; i++) {
     const x = GX + (i % COLS) * PX, y = GY + Math.floor(i / COLS) * PY;
     h += line(x, x + LEN, y, Y, `class="mi-copy" data-a="m${i}"`);
-    if (i === DEAD) h += line(x, x + LEN, y, GREY, `class="mi-copy" data-a="dead"`);
+    if (i === DEAD) h += line(x, x + LEN, y, "#f93500", `class="mi-copy" data-a="dead"`);
   }
   h += `</g>`;
   // shuffle test

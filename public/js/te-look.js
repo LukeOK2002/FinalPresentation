@@ -1,13 +1,13 @@
 /* "What do TEs look like?" slide (presenter screen only).
 
-   Click 1: staggered cut; the two halves pull apart and the TE (yellow block) drops in
-   Click 2: overhangs filled in base by base; the duplicated bases turn blue = TSDs
-   Click 3: DNA fades; a TE copy (yellow) picks up mutations (grey) at a steady
+   Click 1: staggered cut; the two halves pull apart and the TE (yellow block) drops in, then
+            (no click) the overhangs fill in base by base and the duplicated bases turn blue = TSDs
+   Click 2: DNA fades; a TE copy (yellow) picks up mutations (grey) at a steady
             rate over 50 million years
-   Click 4: a known TE and a putative TE are compared (white line sweeps),
+   Click 3: a known TE and a putative TE are compared (white line sweeps),
             "95% identity" appears and the putative TE becomes confirmed */
 
-import { createStepper, EASE, EASE_IN_OUT, SPRING } from "./stepper.js";
+import { createStepper, chain, EASE, EASE_IN_OUT, SPRING } from "./stepper.js";
 
 const PULL = 212;
 const MUTATIONS = [10, 22, 35, 46]; // million years at which each of the 4 bases mutates (matches markup)
@@ -37,17 +37,16 @@ const swap = (from, to) => [
 // Overhangs fill in one base at a time.
 const fill = (side, start) => [0, 1, 2, 3].map((k) => [`fill${side}${k}`, { op: 1 }, start + k * 220, 600]);
 
-const TIMELINES = [
-  null,
-  [ // 1 · staggered cut, TE inserts
+const CUT = [ // staggered cut, TE inserts
     ...swap("t0", "t1"),
     ["origBonds", { op: 0 }, 700, 400],
     ["L", { tx: -PULL }, 900, 1100, EASE_IN_OUT],
     ["R", { tx: PULL }, 900, 1100, EASE_IN_OUT],
     ["block", { op: 1 }, 2100, 400],
     ["block", { ty: 0 }, 2100, 900, EASE],
-  ],
-  [ // 2 · fill in, TSDs
+];
+
+const FILL = [ // fill in, TSDs
     ...swap("t1", "t2"),
     ...fill("L", 700),
     ...fill("R", 700),
@@ -55,8 +54,12 @@ const TIMELINES = [
     ["tsdR", { op: 1 }, 2600, 700],
     ["tsdLabelL", { op: 1, ty: 0 }, 3000, 500],
     ["tsdLabelR", { op: 1, ty: 0 }, 3000, 500],
-  ],
-  [ // 3 · passive mutation over 50 My
+];
+
+const TIMELINES = [
+  null,
+  chain(CUT, FILL, 200), // 1 · the cut flows straight into TSD formation, no click between
+  [ // 2 · passive mutation over 50 My
     ...swap("t2", "t3"),
     ["L", { op: 0 }, 0, 600],
     ["R", { op: 0 }, 0, 600],
@@ -72,7 +75,7 @@ const TIMELINES = [
       return [[`my${k}`, { op: 0 }, t, 350], [`mg${k}`, { op: 1, sc: 1 }, t, 450, SPRING]];
     }),
   ],
-  [ // 4 · TEs look like other TEs
+  [ // 3 · TEs look like other TEs
     ...swap("t3", "t4"),
     ...["seq", "mg0", "mg1", "mg2", "mg3", "timeBar", "timeFill"].map((id) => [id, { op: 0 }, 0, 600]),
     ["known", { op: 1 }, 800, 600],

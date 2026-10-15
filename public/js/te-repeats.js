@@ -6,7 +6,7 @@
    Click 3: higher order repeats: a blue / red / green trimer extends trimer by trimer
    Click 4: already known TE families: grey flanks part and a yellow TE grows between them */
 
-import { createStepper, EASE, EASE_IN_OUT } from "./stepper.js";
+import { createStepper, speed, EASE, EASE_IN_OUT } from "./stepper.js";
 
 const MONO = 48, TRI = 126; // pitch of one monomer / one trimer (px)
 const M = [1, 2, 3, 4, 5, 6, 7, 8, 9], T = [1, 2, 3];
@@ -21,7 +21,7 @@ const INITIAL = {
   flankL: hidden, flankR: hidden, te: { op: 0, sx: 0 },
 };
 
-const TIMELINES = [
+const AT_NORMAL_SPEED = [
   null,
   [ // 1 · satellite duplications
     ...textIn(1),
@@ -49,5 +49,8 @@ const TIMELINES = [
     ["te", { op: 1, sx: 1 }, 1300, 700, EASE],
   ],
 ];
+
+// every animation on this slide plays 50% faster
+const TIMELINES = AT_NORMAL_SPEED.map((tl) => tl && speed(tl, 1.5));
 
 export const initTeRepeats = () => createStepper(document.getElementById("te-repeats"), INITIAL, TIMELINES);

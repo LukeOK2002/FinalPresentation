@@ -129,9 +129,9 @@
         <div class="te-text">
           <p data-a="t0" data-sub-step="0">When TEs insert within human DNA, they form target site duplications (TSDs)</p>
           <p data-a="t1" data-sub-step="1">Staggered cuts created by TE insertion mechanism</p>
-          <p data-a="t2" data-sub-step="2">Staggered cuts filled in, creating TSDs</p>
-          <p data-a="t3" data-sub-step="3">Following insertion, the TEs passively acquire mutations</p>
-          <p data-a="t4" data-sub-step="4">Most importantly, TEs look like other TEs</p>
+          <p data-a="t2" data-sub-step="1">Staggered cuts filled in, creating TSDs</p>
+          <p data-a="t3" data-sub-step="2">Following insertion, the TEs passively acquire mutations</p>
+          <p data-a="t4" data-sub-step="3">Most importantly, TEs look like other TEs</p>
         </div>
         <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
           <!-- target site: upper TCGGATCCAG / lower AGCCTAGGTC. Staggered cut after
@@ -175,11 +175,10 @@
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
-        <span class="fragment anim-step"></span>
         <aside class="notes">
-          Click 1: staggered cut, TE inserts. Click 2: overhangs filled in, the duplicated bases
-          (GATC / CTAG) turn blue = TSDs. Click 3: the TE copy picks up mutations (grey) over 50 My.
-          Click 4: TEs are recognised by similarity to known TEs.
+          Click 1: staggered cut, TE inserts, then straight on (no click) to the overhangs filling in and the duplicated bases
+          (GATC / CTAG) turning blue = TSDs. Click 2: the TE copy picks up mutations (grey) over 50 My.
+          Click 3: TEs are recognised by similarity to known TEs.
         </aside>
       </section>
 
@@ -244,10 +243,10 @@
           <p data-a="t0" data-sub-step="0">Both tools search commonly reoccurring k-mers to find repeats</p>
           <p data-a="t1" data-sub-step="1">RepeatModeler counts <em>exact</em> k-mer occurrences</p>
           <p data-a="t2" data-sub-step="2">Whereas REPrise counts inexact k-mer occurrences</p>
-          <p data-a="t3" data-sub-step="3">These two tools can be used to model repeat families</p>
-          <p data-a="t4" data-sub-step="4">By finding sequences which are similar to each other within the genome</p>
-          <p data-a="t5" data-sub-step="5">New consensus sequences built by multiple alignment</p>
-          <p data-a="t6" data-sub-step="6">Already discovered sequences masked, so they aren’t rediscovered</p>
+          <p data-a="t3" data-sub-step="3">These frequent k-mers serve as seeds</p>
+          <p data-a="t4" data-sub-step="4">which are then extended in unison, finding similar sequences</p>
+          <p data-a="t5" data-sub-step="4">New consensus sequences built by multiple alignment</p>
+          <p data-a="t6" data-sub-step="5">Already discovered sequences masked, so they aren’t rediscovered</p>
         </div>
         <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
           <!-- genome with three related TE copies -->
@@ -262,7 +261,6 @@
           <rect data-a="e0" class="kbar" x="620" y="460" width="433" height="40"/><rect data-a="x0" class="kbar kbar-x" x="1053" y="460" width="323" height="40"/><rect data-a="e1" class="kbar" x="620" y="546" width="370" height="40"/><rect data-a="x1" class="kbar kbar-x" x="990" y="546" width="184" height="40"/><rect data-a="e2" class="kbar" x="620" y="632" width="182" height="40"/><rect data-a="x2" class="kbar kbar-x" x="802" y="632" width="238" height="40"/><rect data-a="e3" class="kbar" x="620" y="718" width="96" height="40"/><rect data-a="x3" class="kbar kbar-x" x="716" y="718" width="124" height="40"/>
           <text data-a="lbl0" class="kmer" x="596" y="480">TTATA</text><text data-a="n0a" class="kmer kn" x="446" y="480">TAATA</text><text data-a="n0b" class="kmer kn" x="296" y="480">TTATT</text><text data-a="lbl1" class="kmer" x="596" y="566">TCGCA</text><text data-a="n1a" class="kmer kn" x="446" y="566">TGGCA</text><text data-a="n1b" class="kmer kn" x="296" y="566">TCGCC</text><text data-a="lbl2" class="kmer" x="596" y="652">CGTAG</text><text data-a="n2a" class="kmer kn" x="446" y="652">CTTAG</text><text data-a="n2b" class="kmer kn" x="296" y="652">CGTAA</text><text data-a="lbl3" class="kmer" x="596" y="738">GCGCG</text><text data-a="n3a" class="kmer kn" x="446" y="738">GCGTG</text><text data-a="n3b" class="kmer kn" x="296" y="738">GCGCC</text>
           <text data-a="ce0" class="kcount" x="1069" y="480">722</text><text data-a="ci0" class="kcount" x="1393" y="480">1,261</text><text data-a="ce1" class="kcount" x="1006" y="566">617</text><text data-a="ci1" class="kcount" x="1190" y="566">923</text><text data-a="ce2" class="kcount" x="818" y="652">304</text><text data-a="ci2" class="kcount" x="1057" y="652">701</text><text data-a="ce3" class="kcount" x="732" y="738">160</text><text data-a="ci3" class="kcount" x="856" y="738">367</text>
-          <line data-a="scan" class="te-sweep" x1="160" y1="600" x2="160" y2="680"/>
         </svg>
         <div class="scene-label rm-label" data-a="consLabel" style="left:884px;top:390px">New consensus</div>
         <span class="fragment anim-step"></span>
@@ -270,12 +268,12 @@
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
-        <span class="fragment anim-step"></span>
         <aside class="notes">
           Start: both tools look for frequently recurring k-mers. Click 1: exact counts (RepeatModeler).
-          Click 2: inexact counts (REPrise): each k-mer also counts its 1-mismatch neighbours; neighbour counts are illustrative. Click 3: a scan of the genome reveals three
-          related copies. Click 4: the copies are lifted out and lined up. Click 5: a new consensus is built.
-          Click 6: discovered copies are masked (black) so they aren't rediscovered.
+          Click 2: inexact counts (REPrise): each k-mer also counts its 1-mismatch neighbours; neighbour counts are illustrative.
+          Click 3: the frequent k-mers appear on the genome as short yellow seeds. Click 4: the seeds extend in unison, lift out of
+          the genome and line up; once that has finished the new consensus appears (no click).
+          Click 5: discovered copies are masked (black) so they aren't rediscovered.
         </aside>
       </section>
 
@@ -335,9 +333,9 @@
 
       <!-- ============ Headline result: no novel TE families ============ -->
       <section id="te-novel" class="novel-slide">
-        <h2 class="sr-title">0 novel TE families discovered*</h2>
+        <h2 class="sr-title">0 novel TE families discovered</h2>
         <div class="novel-num" aria-hidden="true">0</div>
-        <div class="novel-text" aria-hidden="true">Novel TE families<br>discovered*</div>
+        <div class="novel-text" aria-hidden="true">Novel TE families<br>discovered</div>
       </section>
 
       <!-- ============ Investigating results with RepeatMasker ============ -->
@@ -347,8 +345,8 @@
         <div class="te-text">
           <p data-a="t0" data-sub-step="0">RepeatMasker is a tool used to annotate the genome’s repeat intervals</p>
           <p data-a="t1" data-sub-step="1">Known TE sequences are fed into RepeatMasker</p>
-          <p data-a="t2" data-sub-step="2">Which are used to find intervals with TE homology</p>
-          <p data-a="t3" data-sub-step="3">As such, the genome was reannotated with families generated by the REPrise and RepeatModeler runs</p>
+          <p data-a="t2" data-sub-step="1">Which are used to find intervals with TE homology</p>
+          <p data-a="t3" data-sub-step="2">As such, the genome was reannotated with families generated by the REPrise and RepeatModeler runs</p>
         </div>
         <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true">
           <line class="te-host" x1="160" y1="760" x2="1440" y2="760"/>
@@ -369,10 +367,9 @@
         </svg>
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
-        <span class="fragment anim-step"></span>
         <aside class="notes">
-          Click 1: known TE consensus sequences (Dfam) go into RepeatMasker. Click 2: RepeatMasker scans the genome
-          and colours intervals with TE homology. Click 3: the genome was re-annotated with the new REPrise and
+          Click 1: known TE consensus sequences (Dfam) go into RepeatMasker, then straight on (no click) to RepeatMasker scanning the
+          genome and colouring intervals with TE homology. Click 2: the genome was re-annotated with the new REPrise and
           RepeatModeler families.
         </aside>
       </section>
@@ -443,10 +440,10 @@
           <p data-a="t1" data-sub-step="2">Forming 2 bp ‘TA’ TSDs at either side</p>
           <p data-a="t2" data-sub-step="3">Searched for ‘TA’ at both sides of the insertion</p>
           <p data-a="t3" data-sub-step="4">However, in some cases, the element boundaries were unclear</p>
-          <p data-a="t4" data-sub-step="5">So, TSDs were searched for within a 6 bp window upstream/downstream of the insertion</p>
-          <p data-a="t5" data-sub-step="6">Results</p>
-          <p data-a="t6" data-sub-step="7">The majority do <u class="u-white">not</u> have detectable TSDs</p>
-          <p data-a="t7" data-sub-step="8">How do these results compare to background rates?</p>
+          <p data-a="t4" data-sub-step="4">So, TSDs were searched for within a 6 bp window upstream/downstream of the insertion</p>
+          <p data-a="t5" data-sub-step="5">Results</p>
+          <p data-a="t6" data-sub-step="5">The majority do <u class="u-white">not</u> have detectable TSDs</p>
+          <p data-a="t7" data-sub-step="6">How do these results compare to background rates?</p>
         </div>
         <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
         <span class="fragment anim-step"></span>
@@ -455,12 +452,10 @@
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
-        <span class="fragment anim-step"></span>
-        <span class="fragment anim-step"></span>
         <aside class="notes">
           1: staggered cut at TA, MADE inserts. 2: fill-in gives 2 bp TA TSDs. 3: TA checked either side. 4: boundaries can be
-          ambiguous by a base or so. 5: so a 6 bp window was searched. 6: exact 2 bp 5.82% vs 6 bp window 32.28% with TA on both
-          sides. 7: most have no detectable TSDs. 8: compare to background.
+          ambiguous by a base or so, so (no click) a 6 bp window was searched. 5: exact 2 bp 5.82% vs 6 bp window 32.28% with TA on both
+          sides; 1.3 s after the bars have filled: most have no detectable TSDs. 6: compare to background.
         </aside>
       </section>
 
@@ -496,20 +491,18 @@
       <section id="te-controls" class="te-intro">
         <h2>Positive/negative controls</h2>
         <div class="te-text">
-          <p data-a="t1" data-sub-step="2">Observed TSD rate shown to be significantly elevated above background</p>
-          <p data-a="t2" data-sub-step="3">Compared rate with length/chromosome matched MADE copies in the published annotation</p>
-          <p data-a="t3" data-sub-step="5">Non-significant difference relative to existing copies</p>
+          <p data-a="t1" data-sub-step="1">Observed TSD rate shown to be significantly elevated above background</p>
+          <p data-a="t2" data-sub-step="2">Compared rate with length/chromosome matched MADE copies in the published annotation</p>
+          <p data-a="t3" data-sub-step="3">Non-significant difference relative to existing copies</p>
         </div>
         <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
         <span class="fragment anim-step"></span>
-        <span class="fragment anim-step"></span>
-        <span class="fragment anim-step"></span>
         <aside class="notes">
           Start: observed (n = 378) vs background (n = 3,780) TA-both-sides rates. 1: Fisher's exact test, p = 3.36e-15 (2 bp)
-          and 1.09e-29 (6 bp). 2: shown on a null distribution, far in the tail. 3: vs length/chromosome-matched known MADE copies
-          (n = 1,298). 4: p = 0.344 and 0.374. 5: no significant difference from existing copies.
+          and 1.09e-29 (6 bp), then straight onto a null distribution, far in the tail. 2: vs length/chromosome-matched known MADE copies
+          (n = 1,298). 3: p = 0.344 and 0.374, then straight onto the distribution: no significant difference from existing copies.
         </aside>
       </section>
 
@@ -520,7 +513,7 @@
         <div class="te-text">
           <p data-a="t0" data-sub-step="0">A permissive BLAST search found these copies, but RepeatMasker didn’t? Why?</p>
           <p data-a="t1" data-sub-step="1">For this, I had to delve into RepeatMasker’s documentation</p>
-          <p data-a="t2" data-sub-step="2">As it turns out, RepeatMasker’s RMBlast engine requires copies to pass a fixed score threshold to be annotated</p>
+          <p data-a="t2" data-sub-step="2">Each matching base contributes to a copy’s total score, with a total of 225 needed for annotation</p>
           <p data-a="t3" data-sub-step="3">However, short elements have fewer total bases, making it harder for them to reach this fixed threshold</p>
           <p data-a="t4" data-sub-step="4">Detection is also dependent on the GC % of the surrounding sequence</p>
           <p data-a="t5" data-sub-step="5">Using GC % to select the scoring matrix used</p>
