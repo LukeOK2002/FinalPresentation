@@ -144,7 +144,7 @@ const grab = (arg) => {
 const ids = await page.evaluate(() => [...document.querySelectorAll(".reveal .slides section[id]")].map((s) => s.id));
 const model = [];
 for (const id of ids) {
-  if (id === "tsd" || id === "faq") continue;
+  if (id === "tsd" || id === "faq" || id === "reset") continue;
   await page.evaluate((i) => Reveal.slide(document.querySelector(`.reveal .slides section[id="${i}"]`).dataset.indexH ? 0 : 0), id).catch(() => {});
   await page.evaluate((i) => { const secs = [...document.querySelectorAll(".reveal .slides > section")]; Reveal.slide(secs.findIndex((x) => x.id === i), 0); }, id);
   await page.waitForTimeout(500);

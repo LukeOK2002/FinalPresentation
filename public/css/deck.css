@@ -140,7 +140,7 @@ html, body { background: var(--bg); }
 .btn-primary { background: var(--text); color: var(--bg); }
 .btn-ghost { background: transparent; color: var(--text-2); box-shadow: inset 0 0 0 1px var(--hairline); }
 
-/* ---- big red reset (end slide, presenter only) ---- */
+/* ---- big red reset (slide after the FAQs, presenter only) ---- */
 .reset-btn {
   align-self: flex-start;
   margin-top: 64px;

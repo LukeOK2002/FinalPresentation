@@ -115,7 +115,7 @@ function recordRound(round) {
 }
 
 /* ---------------- presenter password overlay ---------------- */
-const resetBtn = document.getElementById("reset-all"); // big red reset, end slide
+const resetBtn = document.getElementById("reset-all"); // big red reset, slide after the FAQs
 const overlay = document.getElementById("pw-overlay");
 const overlayForm = overlay.querySelector("form");
 const overlayError = overlay.querySelector(".pw-error");
@@ -266,7 +266,7 @@ document.addEventListener("phone-refresh", sendSlide);
 if (PRESENT && !RECEIVER && !storedPw()) showOverlay();
 updatePill();
 
-/* ---------------- big red reset (end slide) ----------------
+/* ---------------- big red reset (slide after the FAQs) ----------------
    Click once to arm, again within 4 s to confirm (no browser dialog on the projector).
    Resets every result, closes the simulator on all phones, and jumps back to the title. */
 let armTimer = null;

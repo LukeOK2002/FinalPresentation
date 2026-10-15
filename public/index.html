@@ -661,8 +661,6 @@
       <section id="end" class="end-slide">
         <h2>Thank you</h2>
         <p class="byline" data-sub-step="0">Questions?</p>
-        <!-- presenter only (?present + password): wipes the rehearsal so the real talk starts clean -->
-        <button type="button" id="reset-all" class="reset-btn" hidden>Reset presentation</button>
       </section>
 
       <!-- ===================== FAQs (after the end) ===================== -->
@@ -679,6 +677,14 @@
         <div class="faq-panel" data-faq="2" data-phone-sub="How were HMMER results validated?" hidden></div>
         <div class="faq-panel" data-faq="3" data-phone-sub="Explain RepeatMasker reannotation a bit better" hidden></div>
         <div class="faq-panel" data-faq="4" data-phone-sub="How were the copies compared to their primate orthologs?" hidden></div>
+      </section>
+
+      <!-- ============ Reset (after the FAQs) ============ -->
+      <!-- presenter only (?present + password): wipes the rehearsal so the real talk starts clean -->
+      <section id="reset" class="end-slide">
+        <h2>Reset the simulation</h2>
+        <p class="byline" data-sub-step="0">Clears every pooled result, closes the simulator on all phones, then returns to the title</p>
+        <button type="button" id="reset-all" class="reset-btn" hidden>Reset presentation</button>
       </section>
 
     </div>

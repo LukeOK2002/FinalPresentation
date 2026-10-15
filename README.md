@@ -127,7 +127,7 @@ The small pill bottom-left of the deck (present mode only) shows `Live · N phon
       mobile data. If eduroam blocks it, ask the audience to switch to mobile data
       for that slide; the auto-run (**A**) is your fallback either way.
 - [ ] Rehearse with a few friends' phones, then click the big red **Reset
-      presentation** button on the final slide (twice: once to arm, once to
+      presentation** button on the final slide, after the FAQs (twice: once to arm, once to
       confirm). It clears every result, sends phones back to the waiting card
       and jumps to the title slide. It only appears in `?present` mode after the
       password. `/control/` has the same reset.
