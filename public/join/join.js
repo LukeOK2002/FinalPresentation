@@ -110,7 +110,7 @@ document.addEventListener("click", (e) => {
   const abbr = e.target.closest("abbr.acr");
   if (abbr && ACRONYMS[abbr.dataset.acr]) {
     const a = ACRONYMS[abbr.dataset.acr];
-    sheet.querySelector(".acr-name").textContent = `${abbr.dataset.acr}: ${a.name}`;
+    sheet.querySelector(".acr-name").textContent = a.ci ? a.name : `${abbr.dataset.acr}: ${a.name}`; // plain-English terms are their own title
     sheet.querySelector(".acr-def").textContent = a.def;
     sheet.hidden = false;
   } else {

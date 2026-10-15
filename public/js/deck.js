@@ -159,7 +159,8 @@ function updatePill() {
 }
 
 /* What phones mirror: the slide title and the current centred text. A slide's
-   centred lines carry data-sub-step="N"; the one shown is the last N <= clicks so far. */
+   centred lines carry data-sub-step="N"; the one shown is the last N <= clicks so far.
+   A slide with data-sub-keep shows all of them so far, one per line (te-repeats: the four kinds of repeat stay on screen). */
 function phoneView(s) {
   const step = s.querySelectorAll(".anim-step.visible").length;
   // a slide can swap its phone title from a given click on: data-title-step="N"
@@ -168,9 +169,11 @@ function phoneView(s) {
     if (+el.dataset.titleStep <= step) title = el.textContent.trim();
   }
   let sub = "";
+  const lines = [];
   for (const el of s.querySelectorAll("[data-sub-step]")) {
-    if (+el.dataset.subStep <= step) sub = el.textContent.trim();
+    if (+el.dataset.subStep <= step) { sub = el.textContent.trim(); lines.push(sub); }
   }
+  if (s.hasAttribute("data-sub-keep")) sub = lines.join("\n");
   const open = s.querySelector(".is-open[data-phone-sub]"); // FAQ answer on screen
   if (open) sub = open.dataset.phoneSub;
   return { title, sub };

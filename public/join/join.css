@@ -129,6 +129,7 @@ main { max-width: 520px; margin: 0 auto; }
   font-size: clamp(21px, 5.8vw, 26px);
   line-height: 1.4;
   color: #fff;
+  white-space: pre-line; /* slides that keep several lines (te-repeats) */
 }
 #m-sub:empty { display: none; }
 

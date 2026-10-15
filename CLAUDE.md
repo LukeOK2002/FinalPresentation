@@ -15,8 +15,12 @@ Work on branch `claude/brave-dirac-ntwekn`; commit + push after each change; don
 - `public/index.html`: reveal.js 6 deck, fixed 1600×900 canvas, slides as `<section id>`.
 - Phones (`public/join/`) show ONLY the presenter's slide title + current centred text
   (no animations, for performance). The TSD simulator shows only while the deck is on `#tsd`.
-  Acronyms (TE, TSD, pHMM) and software names (RepeatModeler, REPrise, RepeatMasker) are
-  yellow-underlined + tappable on phones only (`js/acronyms.js`), not on the deck.
+  Acronyms (TE, TSD, pHMM), software names (RepeatModeler, REPrise, RepeatMasker, BLAST, RMBlast, HMMER)
+  and glossary terms (retrotransposition, transposition, Dfam, k-mer, masked, satellite duplication, simple
+  repeat, tandem repeat, homology, orthologous, hidden Markov model, GC %, family library) are
+  yellow-underlined + tappable on phones only (`js/acronyms.js`: add a term there; `ci: true` = case-insensitive,
+  `match: [...]` = extra spellings), not on the deck. A section with `data-sub-keep` (te-repeats) shows all its
+  `data-sub-step` lines so far on phones instead of only the latest.
 - Animated slides use `js/stepper.js`: elements tagged `data-a="name"`, one hidden
   `<span class="fragment anim-step">` per click, a per-slide module with INITIAL state and
   TIMELINES `[name, {op,tx,ty,sc,sx}, startMs, durMs, ease]`. Going back snaps to end states.
