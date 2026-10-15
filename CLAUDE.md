@@ -36,7 +36,7 @@ next click they extend in unison, lift out and align, then the consensus appears
 finds, one quadrant per click: satellite duplications, simple repeats, higher order repeats,
 known TE families; all timelines 1.5x speed) · te-results (treemap, one category per click, area ∝ share;
 newest dark navy, previous ones invert to white; small ones get leader lines) · te-novel (big yellow "0" + "Novel TE families
-discovered", static, no asterisk; hidden h2 gives phones the title) · te-masker (RepeatMasker box over genome; Dfam card
+discovered", static, no asterisk; hidden h2 gives phones the title) · te-where (big centred title only: "But do we know where existing families are?") · te-masker (RepeatMasker box over genome; Dfam card
 arcs in fast via nested x/y groups with sine easings, then vanishes; the box sweeps and colours TE hits straight away, same click, sweep 1.5x speed) · te-compare (reannotation vs published track;
 white comparison lines; published track fades in already missing them; novel intervals circled, "491 loci") · te-made (MADE1/2: TIR/core diagram → 71 → 378
 copies grid → shuffle test, orthology, profile HMM, each with ✅ → all but one confirmed, the unconfirmed one red; scene built in JS) · te-tsdcheck (TA target-site cut/insert/fill →

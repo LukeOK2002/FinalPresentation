@@ -291,6 +291,10 @@ html, body { background: var(--bg); }
 .novel-num { margin-top: -10px; font: 400 580px/0.9 var(--display); color: var(--yellow); }
 .novel-text { margin-top: 0; font: 400 96px/1.05 var(--display); color: #fff; }
 
+/* ---- one big centred question (te-where) ---- */
+.statement-slide { display: flex !important; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.statement-slide h2 { max-width: 1280px; margin: 0; font-size: 112px; line-height: 1.1; color: #fff; }
+
 /* ---- RepeatMasker ---- */
 .rm-box { fill: #1d3461; stroke: #fff; stroke-width: 2.5; }
 .rm-box-label { fill: #fff; font: 600 34px "Helvetica Neue", Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
