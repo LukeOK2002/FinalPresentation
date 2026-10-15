@@ -8,11 +8,12 @@
    Click 5: a white line passes over the locus; GC = 45%; the 45% GC scoring matrix appears
    Click 6: zoom out: the window grows from 1 kb to 60 kb while GC wanders 45.3% → 48%
    Click 7: 60 kb / 48% GC (left) vs 1 kb / 45% GC (right): the same alignment is scored
-            position by position with each matrix: 214 (missed) vs 231 (detected)
+            position by position with each matrix: 214 (missed) vs 231 (detected) (20% faster); then,
+            with no click, the scene clears and two separate MADE1 copies appear (grey line, faded yellow stretch)
 
    Scores, matrices and the GC trace are illustrative; 225, 45%/48%, 214 and 231 are Luke's. */
 
-import { createStepper, speed, EASE, EASE_IN_OUT, SPRING } from "./stepper.js";
+import { createStepper, chain, speed, EASE, EASE_IN_OUT, SPRING } from "./stepper.js";
 
 const GREY = "#5c6773", Y = "#f9be00", PALE = "#f5dd93";
 const fmt = (n) => n.toLocaleString("en-IE");
@@ -108,6 +109,9 @@ function build(svg) {
     return s;
   };
   h += side("L", 440, "60 kb batch · 48% GC", 8, M48, "48% GC matrix", SC48, false) + side("R", 1160, "1 kb batch · 45% GC", 200, M45, "45% GC matrix", SC45, true);
+  // after click 7: two separate MADE1 copies, each a grey line with a faded yellow stretch inside
+  h += `<g data-a="mc">` + line(300, 1300, 460, GREY, `class="ms-seq"`) + line(620, 800, 460, Y, `class="ms-seq" opacity="0.5"`) +
+    line(300, 1300, 600, GREY, `class="ms-seq"`) + line(880, 1010, 600, Y, `class="ms-seq" opacity="0.5"`) + `</g>`;
   svg.innerHTML = h;
 }
 
@@ -118,7 +122,8 @@ const traceIn = (id, el) => el.steps.map((_, i) => [`${id}${i}`, { op: 1 }, boxA
 const crossAt = (() => { const c = cum(LONG.steps); return c.findIndex((v) => v >= THRESH); })();
 
 const INITIAL = {
-  ...Object.fromEntries(range(7).map((k) => [`t${k + 1}`, { op: 0, ty: 12 }])),
+  ...Object.fromEntries(range(8).map((k) => [`t${k + 1}`, { op: 0, ty: 12 }])),
+  mc: hidden,
   scan: hidden, longHit: hidden, longOk: { op: 0, sc: 0.8 }, shortNo: { op: 0, ty: 8 }, box: { tx: G0 - 800 },
   ...Object.fromEntries(LONG.steps.map((_, i) => [`lt${i}`, hidden])), ...Object.fromEntries(SHORT.steps.map((_, i) => [`st${i}`, hidden])),
   gc: hidden, gcSweep: hidden, gcVal: { op: 0, ty: 8 }, m45: { op: 0, sc: 0.92 },
@@ -179,14 +184,18 @@ const TIMELINES = [
       return [[`z${i - 1}`, { op: 0 }, t, 120], [`z${i}`, { op: 1 }, t, 120]];
     }),
   ],
-  [ // 7 · same alignment, two matrices
+  chain(speed([ // 7 · same alignment, two matrices (20% faster)
     ...swap("t6", "t7"),
     ["zoom", { op: 0 }, 0, 500],
     ["L", { op: 1 }, 600, 500], ["R", { op: 1 }, 600, 500],
     ...countUp("L"), ...countUp("R"),
     ["REl", { op: 1 }, END + 200, 500], ["LEl", { op: 1 }, END + 200, 500],
     ["LOut", { op: 1, ty: 0 }, END + 400, 500, EASE], ["ROut", { op: 1, ty: 0 }, END + 400, 500, EASE],
-  ],
+  ], 1.2), [ // once that has finished (no click): clear the scene, two MADE1 copies
+    ...swap("t7", "t8"),
+    ["L", { op: 0 }, 0, 500], ["R", { op: 0 }, 0, 500],
+    ["mc", { op: 1 }, 700, 700],
+  ], 1000),
 ];
 
 export function initTeMissed() {

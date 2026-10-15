@@ -39,14 +39,14 @@ copies grid → shuffle test, orthology, profile HMM, each with ✅ → all but 
 TA either side → unclear boundary shift, then the 6 bp window follows by itself → results bars 5.82% / 32.28%, then 1.3 s after the bars fill "majority have no TSDs" + blue pulses) · tsd (live pooled TA-flank simulation; presenter clicks the QR to run 1,000
 rounds at once) · te-controls (observed vs background bars → Fisher p-values, which go straight onto the z-curve in the same click; then vs known
 copies, p = 0.344 / 0.374, also straight onto the curve) · te-missed (RMBlast fixed SW threshold 225 ("each matching base contributes to a copy's total score, with a total of 225 needed for annotation"): score
-trace while scanning (both scans 1.3x speed); short copy fails; GC % picks matrix; 1→60 kb GC window; 48% vs 45% matrix → 214 vs 231) · te-phmm (alignment → base/indel probabilities; exact seed vs
+trace while scanning (both scans 1.3x speed); short copy fails; GC % picks matrix; 1→60 kb GC window; 48% vs 45% matrix → 214 vs 231, last stage 1.2x speed; then with no click the scene clears: "this effect was demonstrated on two separate MADE1 copies", two grey lines with faded yellow stretches) · te-phmm (alignment → base/indel probabilities; exact seed vs
 profile on ATCGTCACC; diverged copy: consensus 190 < 225 vs pHMM 30 > 22 bits; flat vs per-family cutoffs) · te-engines (Kimura divergence matrix → 10.5%; RepeatMasker engine slot RMBlast → HMMER;
-duplicated, Dfam 1,143 fed to both; both scan one genome) · te-overlap (area-proportional circles, HMMER 5,935,649 vs
+duplicated, Dfam 1,143 fed to both; both scan one genome, scan 1.4x speed (3 s)) · te-overlap (area-proportional circles, HMMER 5,935,649 vs
 RMBlast 3,837,511; HMMER circle blue #006ff9, RMBlast red #f93500; overlap drawn in background navy (clipped bg circle); zoom on 0.44% sliver; 19.47% HMMER-only) · te-diverge (first a raw-calls graph per 0.5% bin, RMBlast red #f93500 / HMMER blue #006ff9, drawn
 per frame by a rAF revealer with axes rescaling to the revealed extent, pauses at 25%, click finishes to 50%; then detection graph built per click: axes, x label, 10 bin points, 4PL fit
-drawn L→R with fit box; data from EngineGap pool1143 len20both) · te-conclude (3 bullets, one per click) · end (Thank you / Questions?) · faq (after the end: 4 cards (2×2) in the background navy, white on hover; click opens an answer panel
+drawn L→R with fit box; data from EngineGap pool1143 len20both) · te-conclude (3 bullets, one per click) · end (Thank you / Questions?) · faq (after the end: 5 cards (3 + 2 centred) in the background navy, white on hover; click opens an answer panel
 that auto-plays a WAAPI animation (js/faq.js): soft vs hard masking; HMMER validation vs GARLIC + 0.2% cutoff
-(schematic curves); RepeatModeler families → RepeatMasker → reannotated genome; liftOver human → chimp via chain blocks. Phones show the open question). · reset (last slide, after the FAQs: red presenter-only button, click twice; wipes results, closes the phone simulator, jumps to the title).
+(schematic curves); RepeatModeler families → RepeatMasker → reannotated genome; liftOver human → chimp via chain blocks; non-TE repeats: putative TE track vs segdup track, `bedtools intersect`, reciprocal overlap 92% / 85%, disqualified (schematic numbers). Phones show the open question). · reset (last slide, after the FAQs: red presenter-only button, click twice; wipes results, closes the phone simulator, jumps to the title).
 
 ## Style rules Luke has set
 - Dark theme. Titles: PP Editorial New (licensed .otf in public/fonts/, git-ignored).

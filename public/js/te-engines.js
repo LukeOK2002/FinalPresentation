@@ -132,8 +132,8 @@ const TIMELINES = [
     ["genome", { op: 1 }, 300, 500],
     ["boxA", { tx: 200 - BCX, ty: 545 - BCY, sc: S2 }, 400, 900, EASE_IN_OUT],
     ["boxB", { tx: 200 - BCX, ty: 735 - BCY, sc: S2 }, 400, 900, EASE_IN_OUT],
-    ["boxA", { tx: 1400 - BCX }, 1600, 4200, "linear"],
-    ["boxB", { tx: 1400 - BCX }, 1600, 4200, "linear"],
+    ["boxA", { tx: 1400 - BCX }, 1600, 3000, "linear"],   // 4200 ms / 1.4: the scan runs 40% faster
+    ["boxB", { tx: 1400 - BCX }, 1600, 3000, "linear"],
   ],
 ];
 

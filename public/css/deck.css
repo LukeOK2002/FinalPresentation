@@ -501,11 +501,13 @@ html, body { background: var(--bg); }
 }
 
 /* ---- FAQs (after the end) ---- */
-.faq-cards { position: absolute; left: 160px; right: 160px; top: 230px; display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+.faq-cards { position: absolute; left: 100px; right: 100px; top: 230px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 36px; }
+.faq-card { grid-column: span 2; }
+.faq-card:nth-child(4) { grid-column: 2 / span 2; }   /* five cards: 3 on top, 2 centred below */
 .faq-card {
-  height: 250px; padding: 36px; border: 0; border-radius: 22px; cursor: pointer;
+  height: 270px; padding: 34px; border: 0; border-radius: 22px; cursor: pointer;
   background: var(--bg); color: #fff; text-align: left;
-  font: 600 32px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 600 29px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
   box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.18);
   transition: background 0.18s, color 0.18s, transform 0.18s;
 }
@@ -551,5 +553,11 @@ html, body { background: var(--bg); }
 .fq-block { stroke: #9aa4b1; stroke-width: 16; }
 .fq-ribbon { fill: rgba(154, 164, 177, 0.16); stroke: rgba(154, 164, 177, 0.35); stroke-width: 1.5; }
 .fq-proj { fill: rgba(249, 190, 0, 0.35); }
+.fq-sd { stroke: #f90081; stroke-width: 16; }
+.fq-cmdbox { fill: #111821; stroke: #263240; stroke-width: 2; }
+.fq-cmd { fill: #c3cad3; font: 500 30px var(--mono); text-anchor: middle; dominant-baseline: central; }
+.fq-overlap { fill: rgba(255, 255, 255, 0.14); stroke: #fff; stroke-width: 2; stroke-dasharray: 8 6; }
+.fq-num { fill: #f9be00; font-weight: 700; }
+.fq-bold { font-weight: 700; }
 .fq-target { fill: none; stroke: #fff; stroke-width: 2.5; stroke-dasharray: 8 6; }
 .faq-cards[hidden] { display: none; }

@@ -8,6 +8,9 @@
        (curve shapes are schematic)
    3 · reannotation: RepeatModeler family sequences go into RepeatMasker, which sweeps the
        genome and labels each copy with its family
+   5 · non-TE repeats: a putative TE interval is intersected (bedtools intersect) with the segmental
+       duplication track, the reciprocal overlap is computed and the family is disqualified
+       (intervals and percentages are schematic)
    4 · liftOver: a human copy is projected through the chain file's aligned blocks onto the
        chimpanzee genome, where the orthologous copy is found; a copy in an alignment gap fails
        (block positions are schematic)
@@ -332,8 +335,67 @@ function play4(A) {
   at("noB", 12100, 500);
 }
 
+/* ---------------- 5 · diagnosing non-TE repeats (segmental duplications) ---------------- */
+// schematic: the intervals, the percentages (92% / 85%, from the overlap below) and the wording are illustrative
+const X0 = 380, X1 = 1420, YT = 450, YD = 590;
+const PUT = [700, 940], SD = [720, 980], OV = [Math.max(PUT[0], SD[0]), Math.min(PUT[1], SD[1])];
+const OF_PUT = Math.round((100 * (OV[1] - OV[0])) / (PUT[1] - PUT[0])), OF_SD = Math.round((100 * (OV[1] - OV[0])) / (SD[1] - SD[0]));
+const RECIP = Math.min(OF_PUT, OF_SD);
+const CAPS5 = [
+  "A putative TE is compared with the segmental duplication track",
+  "bedtools intersect reports where the two tracks overlap",
+  "Reciprocal overlap: the overlap as a fraction of each interval",
+  "Almost all of both intervals overlap: a segmental duplication, not a TE",
+];
+
+function scene5() {
+  let h = CAPS5.map((s, i) => T(800, 840, s, "fq-cap", `data-k="c${i}" ${hide}`)).join("");
+  h += `<g data-k="tracks" ${hide}>` +
+    `<line class="fq-track fq-grey" x1="${X0}" y1="${YT}" x2="${X1}" y2="${YT}"/><line class="fq-track fq-grey" x1="${X0}" y1="${YD}" x2="${X1}" y2="${YD}"/>` +
+    T(X0 - 30, YT, "Putative TE copies", "fq-lbl fq-end") + T(X0 - 30, YD, "Segmental duplication track", "fq-lbl fq-end", 'style="fill:#ff5aa8"') + `</g>`;
+  const iv = (cls, a, b, y, k) => `<line data-k="${k}" class="${cls}" x1="${a}" y1="${y}" x2="${b}" y2="${y}" ${hide}/>`;
+  h += iv("fq-hit", 450, 520, YT, "te0") + iv("fq-hit", 1180, 1260, YT, "te1") + iv("fq-sd", 560, 640, YD, "sd0") + iv("fq-sd", 1060, 1140, YD, "sd1");
+  h += iv("fq-hit", PUT[0], PUT[1], YT, "put") + iv("fq-sd", SD[0], SD[1], YD, "sd");
+  h += `<line data-k="putGrey" class="fq-track" style="stroke:#7d8794;opacity:0" x1="${PUT[0]}" y1="${YT}" x2="${PUT[1]}" y2="${YT}"/>`;
+  // the command
+  h += `<g data-k="cmd" ${hide}><rect class="fq-cmdbox" x="${800 - 520}" y="262" width="1040" height="74" rx="14"/>` +
+    T(800, 299, "$ bedtools intersect -a putative_TE.bed -b segdups.bed", "fq-cmd") + `</g>`;
+  // the overlap
+  h += `<rect data-k="ov" class="fq-overlap" x="${OV[0]}" y="${YT - 30}" width="${OV[1] - OV[0]}" height="${YD - YT + 60}" rx="6" ${hide}/>`;
+  // reciprocal overlap read-outs
+  h += T(800, 690, `Overlap ÷ putative TE = <tspan class="fq-num">${OF_PUT}%</tspan>`, "fq-res", `data-k="r1" ${hide}`) +
+    T(800, 735, `Overlap ÷ segmental duplication = <tspan class="fq-num">${OF_SD}%</tspan>`, "fq-res", `data-k="r2" ${hide}`) +
+    T(800, 780, `Reciprocal overlap = <tspan class="fq-num">${RECIP}%</tspan>`, "fq-res fq-bold", `data-k="r3" ${hide}`);
+  // verdict
+  h += T(800, 780, "❌  Disqualified: segmental duplication", "fq-res", `data-k="out" style="opacity:0;fill:#ff6b5e"`);
+  return h;
+}
+
+function play5(A) {
+  const fade = (k, at, d = 500) => A(k, [{ opacity: 0 }, { opacity: 1 }], at, d);
+  const out = (k, at, d = 300, to = 0) => A(k, [{ opacity: 1 }, { opacity: to }], at, d);
+  fade("c0", 0);
+  fade("tracks", 100, 600);
+  ["te0", "te1", "put"].forEach((k, i) => fade(k, 600 + i * 150, 500));
+  ["sd0", "sd1", "sd"].forEach((k, i) => fade(k, 1100 + i * 150, 500));
+  // 1 · bedtools intersect
+  out("c0", 2600); fade("c1", 2800, 400);
+  fade("cmd", 3000, 600);
+  fade("ov", 4300, 700);
+  ["te0", "te1", "sd0", "sd1"].forEach((k) => out(k, 4300, 500, 0.25));
+  // 2 · reciprocal overlap
+  out("c1", 6300); fade("c2", 6500, 400);
+  out("cmd", 6500, 500);
+  fade("r1", 7000, 500); fade("r2", 8000, 500); fade("r3", 9200, 600);
+  // 3 · disqualified
+  out("c2", 11000); fade("c3", 11200, 400);
+  ["r1", "r2", "r3"].forEach((k) => out(k, 11200, 400));
+  fade("putGrey", 11800, 600); out("put", 11800, 600);
+  fade("out", 12400, 600);
+}
+
 /* ---------------- panels ---------------- */
-const SCENES = { 1: [scene1, play1], 2: [scene2, play2], 3: [scene3, play3], 4: [scene4, play4] };
+const SCENES = { 1: [scene1, play1], 2: [scene2, play2], 3: [scene3, play3], 4: [scene4, play4], 5: [scene5, play5] };
 
 export function initFaq() {
   const slide = document.getElementById("faq");

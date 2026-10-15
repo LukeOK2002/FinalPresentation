@@ -519,6 +519,7 @@
           <p data-a="t5" data-sub-step="5">Using GC % to select the scoring matrix used</p>
           <p data-a="t6" data-sub-step="6">RepeatMasker calculates GC % in 56–60 kb batches</p>
           <p data-a="t7" data-sub-step="7">This can flip detection outcomes</p>
+          <p data-a="t8" data-sub-step="7">This effect was demonstrated on two separate MADE1 copies</p>
         </div>
         <svg class="te-scene" viewBox="0 0 1600 900" aria-hidden="true"></svg>
         <span class="fragment anim-step"></span>
@@ -531,7 +532,7 @@
         <aside class="notes">
           2: RMBlast needs a Smith–Waterman score ≥ 225. 3: short elements top out below it. 5: GC% picks the scoring matrix.
           6: GC is measured over 56–60 kb batches, so the local GC can differ. 7: same copy, 48% GC (60 kb) matrix → 214, missed;
-          45% GC (1 kb) matrix → 231, detected. Score traces and matrix values are illustrative.
+          45% GC (1 kb) matrix → 231, detected, then (no click) two separate MADE1 copies. Score traces and matrix values are illustrative.
         </aside>
       </section>
 
@@ -665,11 +666,13 @@
           <button type="button" class="faq-card" data-open="2">How were HMMER results validated?</button>
           <button type="button" class="faq-card" data-open="3">Explain RepeatMasker reannotation a bit better</button>
           <button type="button" class="faq-card" data-open="4">How were the copies compared to their primate orthologs?</button>
+          <button type="button" class="faq-card" data-open="5">How were non-TE repeats diagnosed?</button>
         </div>
         <div class="faq-panel" data-faq="1" data-phone-sub="Why did you find known TEs if you had already masked these regions?" hidden></div>
         <div class="faq-panel" data-faq="2" data-phone-sub="How were HMMER results validated?" hidden></div>
         <div class="faq-panel" data-faq="3" data-phone-sub="Explain RepeatMasker reannotation a bit better" hidden></div>
         <div class="faq-panel" data-faq="4" data-phone-sub="How were the copies compared to their primate orthologs?" hidden></div>
+        <div class="faq-panel" data-faq="5" data-phone-sub="How were non-TE repeats diagnosed?" hidden></div>
       </section>
 
       <!-- ============ Reset (after the FAQs) ============ -->
