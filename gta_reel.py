@@ -5,7 +5,7 @@ sys.path.insert(0, SK + '/examples')
 from kz import *
 from phone_misunderstanding import phone_back, steam, sofa_front
 
-DUR = 5.2
+DUR = 7.0
 NF, NR = 1300, 115
 PHONE_Y = NF - 2.12 * NR
 
@@ -72,10 +72,10 @@ def _front_hair_nikki(cv, x, y, r, sp):
 kz._front_hair = _front_hair_nikki
 
 # ------------------------------------------------------------------ story data
-MSG = [("hey, dinner's ready", .2), ("babe?", .65), ("are you ignoring me", 1.1), ("it's been 3 hours", 1.55),
-       ("HELLO??", 2.0), ("seriously?", 3.0), ("I'm going to bed", 3.6), ("enjoy your game.", 4.2)]
+MSG = [("hey, dinner's ready", .2), ("babe?", .695), ("are you ignoring me", 1.19), ("it's been 3 hours", 1.685),
+       ("HELLO??", 2.18), ("seriously?", 3.28), ("I'm going to bed", 3.94), ("enjoy your game.", 4.6)]   # texting 10% slower
 T = [m[1] for m in MSG]
-CRASH = [1.2, 3.8]
+CRASH = [1.2, 3.8, 5.9]
 SPLIT_A, SPLIT_B = 2.5, 3.2
 
 
@@ -307,13 +307,21 @@ def boy_arms(dy=0, jl=0, jr=0, sad=0):
 
 
 def boy_hands(cv, dy, jl, jr):
+    """Hands wrapped round the grips: heel of the palm on top, four fingers curling round, all angled with the grip."""
     skin = BOY['skin']
+    yc = NF - 2.0 * NR + dy * NR
     for sd, j in ((-1, jl), (1, jr)):
-        hx, hy = 540 + sd * .68 * NR, NF + (-1.72 + dy + j) * NR
-        for k in range(3):   # fingers wrapped round the grip
-            shaded(cv, rrp(hx - .17 * NR, hy + k * .11 * NR, hx + .17 * NR, hy + (.1 + k * .11) * NR, .05 * NR),
-                   skin, dark(skin, .2), dx=-2, dy=-2)
-        hand(cv, hx, hy - .05 * NR, .2 * NR, skin)
+        gx, gy = 540 + sd * .66 * NR, yc + .02 * NR
+        cv.save()
+        cv.translate(0, j * NR)
+        cv.rotate(-sd * 12, gx, gy)
+        shaded(cv, rrp(gx - .2 * NR, gy - .03 * NR, gx + .2 * NR, gy + .3 * NR, .12 * NR), skin, dark(skin, .2), dx=-2, dy=-2)
+        for k in range(4):
+            y0 = gy + (.2 + k * .12) * NR
+            shaded(cv, rrp(gx - .245 * NR, y0, gx + .245 * NR, y0 + .105 * NR, .052 * NR), skin, dark(skin, .2), dx=-2, dy=-2)
+            cv.drawPath(poly([(gx - .2 * NR, y0 + .108 * NR), (gx + .2 * NR, y0 + .108 * NR)], False),
+                        paint(dark(skin, .35), 110, stroke=2))
+        cv.restore()
 
 
 def boy_legs(cv):
@@ -492,7 +500,7 @@ def chat_phone(cv, t, box):
     cv.drawCircle(r_ - 32, b - 38, 19, paint('#E8548F'))
     cv.drawPath(poly([(r_ - 39, b - 46), (r_ - 24, b - 38), (r_ - 39, b - 30)]), paint('#FFFFFF'))
     for tt in T:
-        a = prog(t, tt - .4, tt - .03)
+        a = prog(t, tt - .44, tt - .03)
         if 0 < a < 1 and t < tt:
             cv.drawPath(rrp(l + 26, b - 44, l + 26 + (r_ - l - 120) * a, b - 32, 6), paint('#9A98B8'))
     cv.restore()
@@ -502,12 +510,12 @@ def chat_phone(cv, t, box):
 
 def typing_amp(t):
     for tt in T:
-        if tt - .4 <= t < tt:
+        if tt - .44 <= t < tt:
             return 1.0
     return .12
 
 
-ANGER = [(2.4, .15), (3.0, .4), (3.6, .66), (4.2, .92), (4.8, 1.0)]
+ANGER = [(2.4, .15), (3.28, .4), (3.94, .66), (4.6, .92), (5.3, 1.0)]
 
 
 def anger_mark(cv, x, y, s):
@@ -593,13 +601,13 @@ def girl_figure(cv, t):
     e = ease(prog(an, .12, .7))
     ang = lerp(-9, 28, e)
     rs = lerp(.08, -.05, e)
-    look_y = lerp(.8, -.1, ease(prog(t, 4.45, 4.8)))
+    look_y = lerp(.8, -.1, ease(prog(t, 5.0, 5.4)))
     fc = dict(eyes='open', squint=.45 * an, look=(0, look_y), mouth=lerp(-.05, -.85, an),
               brows=((ang, rs), (ang, rs)), blush=lerp(.4, 1.4, an),
               blushc=mix((255, 120, 140), (255, 70, 70), an))
     amp = typing_amp(t)
-    jl = math.sin(t * 24) * .05 * amp
-    jr = math.sin(t * 24 + 2) * .05 * amp
+    jl = math.sin(t * 21.6) * .05 * amp
+    jr = math.sin(t * 21.6 + 2) * .05 * amp
     arms = [((-.98, -1.45), (-.38, -1.72 + jl)), ((.98, -1.45), (.38, -1.72 + jr))]
     tilt = math.sin(t * 1.1) * 2 * an - 2 * an
     lift = math.sin(t * 2.2) * .015 + .07 * clamp((an - .5) / .4)

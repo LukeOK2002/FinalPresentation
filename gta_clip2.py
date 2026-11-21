@@ -3,8 +3,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from gta_reel import *   # kz toolkit + shared cast, props and helpers from clip 1
 
 DUR = 12.0
-TS = 8.95                       # door slam begins
-DX0, DX1, DY0, DY1 = 790, 990, 690, 1190   # doorway (hinge on the right)
+TS = 8.85                       # door slam begins
 SOFA_DX = -120                   # sofa group shifted left to leave room for the door
 
 
@@ -114,7 +113,22 @@ def tv_popout2(cv, t, box, k, content):
     cv.restore()
 
 
-# ------------------------------------------------------------------ door
+# ------------------------------------------------------------------ door (on the right-hand side wall)
+DU0, DU1 = 954, 1062            # doorway x-range on screen; hinge on the near (right) side
+
+
+def wall_bot(x):
+    return 1195 + 1.013 * (x - 930)
+
+
+def dtop(x):
+    return wall_bot(x) - 640 * (1 + (x - 930) * .0013)
+
+
+def DP(x, v):
+    return (x, lerp(dtop(x), wall_bot(x), v))
+
+
 def door_angle(t):
     a = 78 * ease(prog(t, 3.6, 3.95))
     if t >= TS:
@@ -122,37 +136,38 @@ def door_angle(t):
     return a
 
 
-def door_back(cv, t):
+def side_wall(cv, t):
     a = door_angle(t)
-    shaded(cv, rrp(DX0 - 16, DY0 - 16, DX1 + 16, DY1 + 4, 8), '#3B3F7A', dx=-5, dy=-5)
-    cv.drawRect(R(DX0, DY0, DX1, DY1), paint(shader=lin(0, DY0, 0, DY1, ['#07041A', '#1B1240'])))
+    cv.drawPath(poly([(930, -400), (1100, -400), (1100, 1367), (930, 1195)]),
+                paint(shader=lin(930, 0, 1100, 0, ['#1B2058', '#0F1240'])))
+    cv.drawPath(poly([(930, 1195), (1100, 1367)], False), paint('#3A2D6A', stroke=8))
+    cv.drawPath(poly([DP(DU0 - 10, -.04), DP(DU1 + 10, -.04), DP(DU1 + 10, 1), DP(DU0 - 10, 1)]), paint('#3B3F7A'))
+    cv.drawPath(poly([DP(DU0, 0), DP(DU1, 0), DP(DU1, 1), DP(DU0, 1)]),
+                paint(shader=lin(0, dtop(DU0), 0, wall_bot(DU1), ['#07041A', '#1B1240'])))
     if a > 5:
-        glow(cv, (DX0 + DX1) / 2, DY0 + 60, 200, '#FFE9B5', 45 * clamp(a / 78), mid=1)
+        glow(cv, (DU0 + DU1) / 2, dtop(DU0) + 80, 190, '#FFE9B5', 50 * clamp(a / 78), mid=1)
 
 
 def door_leaf(cv, t):
     a = door_angle(t)
-    ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
-    free_x = DX1 - (DX1 - DX0) * ca
-    h = DY1 - DY0
-    grow = .10 * sa
-    ft, fb = DY0 - h * grow * .6, DY1 + h * grow * .4
-    P = lambda u, v: (lerp(DX1, free_x, u), lerp(lerp(DY0, ft, u), lerp(DY1, fb, u), v))
-    shaded(cv, poly([P(0, 0), P(1, 0), P(1, 1), P(0, 1)]), '#B5694F', dx=-(8 * ca + 2), dy=0)
+    ca = math.cos(math.radians(a))
+    xf = DU1 - (DU1 - DU0) * ca
+    Pm = lambda u, v: DP(lerp(DU1, xf, u), v)
+    shaded(cv, poly([Pm(0, 0), Pm(1, 0), Pm(1, 1), Pm(0, 1)]), '#B5694F', dx=-(5 * ca + 1), dy=0)
     for u0, u1, v0, v1 in ((.14, .86, .08, .44), (.14, .86, .54, .92)):
-        pp = poly([P(u0, v0), P(u1, v0), P(u1, v1), P(u0, v1)])
+        pp = poly([Pm(u0, v0), Pm(u1, v0), Pm(u1, v1), Pm(u0, v1)])
         cv.drawPath(pp, paint('#A05A44'))
-        cv.drawPath(pp, paint('#8A4A38', stroke=3))
+        cv.drawPath(pp, paint('#8A4A38', stroke=2))
     if ca > .15:
-        kx, ky = P(.86, .55)
-        cv.drawCircle(kx, ky, 9 * ca + 2, paint('#FFD66B'))
+        kx, ky = Pm(.86, .55)
+        cv.drawCircle(kx, ky, 7 * ca + 2, paint('#FFD66B'))
 
 
 def slam_fx(cv, t):
     ia = t - (TS + .12)
     if not (0 <= ia < .6):
         return
-    dcx, dcy = (DX0 + DX1) / 2, (DY0 + DY1) / 2
+    dcx, dcy = (DU0 + DU1) / 2, 960
     glow(cv, dcx, dcy, 380, '#FFFFFF', 200 * max(0, 1 - ia / .3) ** 2)
     for i in range(12):
         a = i * math.pi / 6 + .2
@@ -161,8 +176,8 @@ def slam_fx(cv, t):
                           (dcx + math.cos(a) * (r0 + 70), dcy + math.sin(a) * (r0 + 70) * 1.1)], False),
                     paint('#FFE9B5', 220 * (1 - ia / .6), stroke=7))
     for i in range(7):
-        px = DX0 - 20 + i * 38
-        py = 1186 - ia * (60 + i % 3 * 20)
+        px = 950 + i * 34
+        py = wall_bot(px) - 6 - ia * (60 + i % 3 * 20)
         cv.drawCircle(px, py, 14 + ia * 50, paint('#B8A7D8', 120 * (1 - ia / .6)))
 
 
@@ -216,19 +231,16 @@ def mix_arms(a, b, k):
 
 
 def girl_state(t):
-    """x, yf, back-view?, x-squash, walking amount."""
-    if t < 4.0:
+    """She walks in from the right-hand door and storms back out the same way, always facing the room."""
+    if t < 4.0 or t > 8.7:
         return None
     if t < 5.0:
         u = ease(prog(t, 4.0, 5.0))
-        return dict(x=lerp(905, 870, u), yf=lerp(1195, 1345, u), back=False, sx=1, walk=1)
+        return dict(x=lerp(1210, 830, u), yf=lerp(1325, 1345, u), back=False, sx=1, walk=1)
     if t < 7.6:
-        return dict(x=870, yf=1345, back=False, sx=1, walk=0)
-    if t < 7.9:
-        p = prog(t, 7.6, 7.9)
-        return dict(x=870, yf=1345, back=p > .5, sx=max(.04, abs(math.cos(p * math.pi))), walk=0)
-    u = ease(prog(t, 7.9, 8.85))
-    return dict(x=lerp(870, 915, u), yf=lerp(1345, 1195, u), back=True, sx=1, walk=1.4 if t < 8.85 else 0)
+        return dict(x=830, yf=1345, back=False, sx=1, walk=0)
+    u = ease(prog(t, 7.6, 8.5))
+    return dict(x=lerp(830, 1260, u), yf=lerp(1345, 1325, u), back=False, sx=1, walk=1.4)
 
 
 def girl(cv, t):
@@ -238,14 +250,14 @@ def girl(cv, t):
     x, yf, back, sx, walk = st['x'], st['yf'], st['back'], st['sx'], st['walk']
     s = .78 + .22 * clamp((yf - 1195) / 150)
     r = NR * s
-    alpha = clamp((yf - 1196) / 20) if yf < 1216 else 1
+    alpha = 1
     if alpha <= 0:
         return
-    ph = t * (9 if t < 7.9 else 17)
+    ph = t * (9 if t < 7.6 else 17)
     swing = math.sin(ph) * walk
     an = keyf(t, [(5.4, 0), (6.4, .15), (7.4, 1.0)])
     shock = ease(prog(t, 5.5, 5.75)) * (1 - ease(prog(t, 6.3, 6.6)))
-    stomp = 1.0 if t >= 7.9 else 0
+    stomp = 1.0 if t >= 7.6 else 0
     look = lerp2((-.6, -.4), (-.95, .15), ease(prog(t, 6.3, 6.8))) if t >= 5.0 else (-.3, -.2)
     if shock > .01:
         fc = dict(eyes='wide', mouth=0, mopen=0, look=(-.3, -.3), brows=((-16 * shock, .2 * shock),) * 2,
@@ -263,7 +275,7 @@ def girl(cv, t):
                       blushc=mix((255, 120, 140), (255, 70, 70), an))
     arms = mix_arms(REL, GASP, shock)
     arms = mix_arms(arms, HIPS, ease(prog(t, 6.4, 6.7)))
-    pump = ease(prog(t, 7.9, 8.1))
+    pump = ease(prog(t, 7.6, 7.8))
     PUMP = [((-1.0, -1.95), (-.95, -1.5 + .3 * math.sin(ph))), ((1.0, -1.95), (.95, -1.5 - .3 * math.sin(ph)))]
     arms = mix_arms(arms, PUMP, pump)
     if walk and not stomp:
@@ -271,8 +283,6 @@ def girl(cv, t):
     tilt = -2 * an + (math.sin(ph) * 5 * stomp) + (math.sin(ph) * 2 * (walk and not stomp))
     lift = -abs(math.sin(ph)) * .05 * walk + (.07 * clamp((an - .5) / .4) if t > 6.4 else 0)
     cv.save()
-    if yf < 1216:
-        cv.clipRect(R(DX0 - 14, DY0 - 14, DX1 + 14, DY1 + 6))
     if alpha < 1:
         cv.saveLayerAlpha(None, A(255 * alpha))
     cv.translate(x, 0)
@@ -351,11 +361,11 @@ def room(cv, t):
         cv.drawPath(rrp(fx + 12, fy + 12, fx + fw - 12, fy + fh - 12, 4), paint(c, 200))
         cv.drawCircle(fx + fw / 2, fy + fh / 2, min(fw, fh) * .18, paint('#ffffff', 130))
         cv.restore()
-    door_back(cv, t)
     cv.drawRect(R(-700, 1190, 1800, 2300), paint(shader=lin(0, 1190, 0, 1920, ['#2A2052', '#140B2A', '#0A0618'])))
     cv.drawRect(R(-700, 1186, 1800, 1196), paint('#3A2D6A'))
     cv.drawOval(R(40, 1270, 800, 1380), paint('#3E2E70'))
     cv.drawOval(R(70, 1280, 770, 1370), paint('#4A3884', stroke=6))
+    side_wall(cv, t)
     c = mix('#FF9FD0', '#7FC4FF', .5 + .5 * math.sin(t * 1.7))
     glow(cv, 420, 900, 900, c, 30, mid=1)
     door_leaf(cv, t)
