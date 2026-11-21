@@ -10,12 +10,66 @@ NF, NR = 1300, 115
 PHONE_Y = NF - 2.12 * NR
 
 # ------------------------------------------------------------------ cast
-BOY = dict(skin=(238, 190, 160), hair='#3A2418', style='short', top='#E3A83B', pants='#2A2E46',
+BOY = dict(skin=(238, 190, 160), hair='#3A2418', style='short', top='#E3A83B', pants='#3A4678',
            shoes='#ECECF4', hoodie=True)
 # girlfriend: stylised after Nikki from Obsession (long dark hair, warm skin, pink top)
 GIRL = dict(skin=(226, 176, 142), hair='#12080A', style='long', top='#E9D6B8', pants='#3A3470',
-            shoes='#F2F2FA')
+            shoes='#F2F2FA', nikki=True)
 CREAM = '#E9D6B8'
+
+import kz
+
+
+def lock_path(hx, hy, r, sd):
+    """Long front lock that hugs the cheek and jaw (keeps the face narrow) and falls over the shoulder."""
+    p = skia.Path()
+    p.moveTo(hx + sd * .6 * r, hy - .5 * r)
+    p.cubicTo(hx + sd * .72 * r, hy - .1 * r, hx + sd * .66 * r, hy + .5 * r, hx + sd * .4 * r, hy + .94 * r)
+    p.cubicTo(hx + sd * .34 * r, hy + 1.2 * r, hx + sd * .5 * r, hy + 1.6 * r, hx + sd * .56 * r, hy + 1.85 * r)
+    p.quadTo(hx + sd * .8 * r, hy + 2.0 * r, hx + sd * 1.0 * r, hy + 1.78 * r)
+    p.cubicTo(hx + sd * 1.14 * r, hy + 1.0 * r, hx + sd * 1.18 * r, hy + .1 * r, hx + sd * .9 * r, hy - .62 * r)
+    p.close()
+    return p
+
+
+def nikki_hair_cap(cv, hx, hy, r, hc):
+    """Hair on top of the head with smooth curtain bangs opening from a part."""
+    cv.save()
+    cv.clipPath(cp(hx, hy, r * 1.07), skia.ClipOp.kIntersect, True)
+    E = skia.Path()
+    E.addOval(R(hx - 1.3 * r, hy - 1.55 * r, hx + 1.3 * r, hy))
+    C = skia.Path()
+    C.moveTo(hx - .05 * r, hy - .98 * r)
+    C.cubicTo(hx - .2 * r, hy - .85 * r, hx - .62 * r, hy - .55 * r, hx - .84 * r, hy - .02 * r)
+    C.lineTo(hx - .84 * r, hy + .3 * r)
+    C.lineTo(hx + .84 * r, hy + .3 * r)
+    C.lineTo(hx + .82 * r, hy - .04 * r)
+    C.cubicTo(hx + .55 * r, hy - .6 * r, hx + .18 * r, hy - .88 * r, hx - .05 * r, hy - .98 * r)
+    C.close()
+    hair = skia.Op(E, C, skia.PathOp.kDifference_PathOp)
+    shaded(cv, hair, hc, dark(hc, .25), dx=-.06 * r, dy=-.08 * r)
+    for sd in (-1, 1):
+        hl = skia.Path()
+        hl.moveTo(hx + sd * .1 * r, hy - 1.1 * r)
+        hl.cubicTo(hx + sd * .3 * r, hy - 1.0 * r, hx + sd * .75 * r, hy - .7 * r, hx + sd * .95 * r, hy - .15 * r)
+        cv.drawPath(hl, paint('#5A3A3E', 75, stroke=.05 * r))
+    cv.drawPath(poly([(hx - .05 * r, hy - 1.15 * r), (hx - .05 * r, hy - .96 * r)], False), paint('#5A3A3E', 130, stroke=.03 * r))
+    cv.restore()
+
+
+_orig_front_hair = kz._front_hair
+
+
+def _front_hair_nikki(cv, x, y, r, sp):
+    if not sp.get('nikki'):
+        return _orig_front_hair(cv, x, y, r, sp)
+    hc = sp['hair']
+    for sd in (-1, 1):
+        shaded(cv, lock_path(x, y, r, sd), hc, dark(hc, .25), dx=-.05 * r * sd, dy=-.05 * r)
+    nikki_hair_cap(cv, x, y, r, hc)
+
+
+kz._front_hair = _front_hair_nikki
 
 # ------------------------------------------------------------------ story data
 MSG = [("hey, dinner's ready", .2), ("babe?", .65), ("are you ignoring me", 1.1), ("it's been 3 hours", 1.55),
@@ -231,19 +285,47 @@ def tv_popout(cv, t, box, k):
 
 # ------------------------------------------------------------------ boy's room (design coords, floor = 1300)
 def controller(cv, x, y, s, rot, t):
+    """Controller seen from behind: its back faces the viewer, the grips hang down into his hands."""
     cv.save()
     cv.rotate(rot, x, y)
     for sd in (-1, 1):
-        shaded(cv, rrp(x + sd * .78 * s - .17 * s, y - .02 * s, x + sd * .78 * s + .17 * s, y + .5 * s, .15 * s),
-               '#2C3050', dx=-4, dy=-4)
+        gx, gy = x + sd * .66 * s, y + .02 * s
+        cv.save()
+        cv.rotate(-sd * 12, gx, gy)
+        shaded(cv, rrp(gx - .19 * s, gy, gx + .19 * s, gy + .72 * s, .19 * s), '#2C3050', dx=-4, dy=-3)
+        cv.restore()
     shaded(cv, rrp(x - .86 * s, y - .22 * s, x + .86 * s, y + .22 * s, .2 * s), '#363B62', dx=-5, dy=-5)
-    cv.drawPath(rrp(x - .3 * s, y - .2 * s, x + .3 * s, y - .13 * s, .03 * s), paint('#FF5FA0', 230))
-    glow(cv, x, y - .17 * s, .5 * s, '#FF5FA0', 70)
+    cv.drawPath(rrp(x - .3 * s, y - .14 * s, x + .3 * s, y + .12 * s, .08 * s), paint('#2A2E4E'))
     for sd in (-1, 1):
-        cv.drawCircle(x + sd * .24 * s, y + .06 * s, .1 * s, paint('#1B1D33'))
-    for dx_, dy_, c in ((.62, -.06, '#FF6B6B'), (.7, .02, '#FFD66B'), (.54, .02, '#6BD1FF'), (.62, .1, '#8BE08B')):
-        cv.drawCircle(x + dx_ * s * .9 + .0, y + dy_ * s, .04 * s, paint(c))
+        a_, b_ = sorted((x + sd * .28 * s, x + sd * .78 * s))
+        cv.drawPath(rrp(a_, y - .31 * s, b_, y - .2 * s, .05 * s), paint('#4F5588'))
     cv.restore()
+
+
+def boy_arms(dy=0, jl=0, jr=0, sad=0):
+    return [((-1.05, -1.5 + .15 * sad), (-.68, -1.72 + dy + jl)), ((1.05, -1.5 + .15 * sad), (.68, -1.72 + dy + jr))]
+
+
+def boy_hands(cv, dy, jl, jr):
+    skin = BOY['skin']
+    for sd, j in ((-1, jl), (1, jr)):
+        hx, hy = 540 + sd * .68 * NR, NF + (-1.72 + dy + j) * NR
+        for k in range(3):   # fingers wrapped round the grip
+            shaded(cv, rrp(hx - .17 * NR, hy + k * .11 * NR, hx + .17 * NR, hy + (.1 + k * .11) * NR, .05 * NR),
+                   skin, dark(skin, .2), dx=-2, dy=-2)
+        hand(cv, hx, hy - .05 * NR, .2 * NR, skin)
+
+
+def boy_legs(cv):
+    """Seated legs: short foreshortened lap, slim shins, small rounded knees (drawn before the torso)."""
+    pants, shoes = BOY['pants'], BOY['shoes']
+    x, yf, r = 540, NF, NR
+    shaded(cv, rrp(x - .6 * r, yf - 1.42 * r, x + .6 * r, yf - .86 * r, .16 * r), pants, dx=0, dy=-.05 * r)
+    for sd in (-1, 1):
+        shaded(cv, rrp(x + sd * .35 * r - .17 * r, yf - 1.02 * r, x + sd * .35 * r + .17 * r, yf - .1 * r, .13 * r),
+               pants, dx=-.05 * r, dy=0)
+        shaded(cv, op(x + sd * .38 * r - .27 * r, yf - .26 * r, x + sd * .38 * r + .27 * r, yf + .02 * r),
+               shoes, dx=-.05 * r, dy=-.06 * r)
 
 
 def boy_figure(cv, t):
@@ -261,12 +343,13 @@ def boy_figure(cv, t):
                   mopen=.12 + .1 * (.5 + .5 * math.sin(t * 5)), brows=((9, 0), (9, 0)), blush=.35)
     jl = math.sin(t * 17) * .035
     jr = math.sin(t * 17 + 2) * .035
-    arms = [((-1.02, -1.5), (-.55, -1.95 + jl)), ((1.02, -1.5), (.55, -1.95 + jr))]
 
     def held(cv_):
-        controller(cv_, 540, NF - 1.9 * NR, NR, tr * 7, t)
-    person(cv, 540, NF, NR, BOY, dict(legs='sit', arms=arms, face=fc, held=held, tilt=tr * 3.5,
-                                      lift=math.sin(t * 3) * .015))
+        controller(cv_, 540, NF - 2.0 * NR, NR, tr * 7, t)
+        boy_hands(cv_, 0, jl, jr)
+    boy_legs(cv)
+    person(cv, 540, NF, NR, BOY, dict(legs=None, arms=boy_arms(0, jl, jr), face=fc, held=held, hands=False,
+                                      tilt=tr * 3.5, lift=math.sin(t * 3) * .015))
     c = mix('#7FC4FF', '#FF8AB0', .5 + .5 * math.sin(t * 1.7))
     glow(cv, 540, NF - 3.75 * NR, 1.3 * NR, c, 26, mid=1)
 
@@ -435,24 +518,22 @@ def anger_mark(cv, x, y, s):
                    math.degrees(a) + 180 - 55 - 90 + 90, 110, False, paint('#FF4A5A', stroke=6 * s))
 
 
-def girl_overlay(cv, t, fc, an, tilt, lift):
-    """Likeness details drawn over the toolkit's head/torso: hair part + curtain bangs, lashes, pursed-lip chin,
-    off-shoulder cream knit, bare shoulders and a thin gold pendant."""
-    r = NR
-    hx, hy = 540, NF + (-3.85 + lift) * r
-    U = lambda px, py: (540 + px * r, NF + py * r)
-    skin, hc = GIRL['skin'], GIRL['hair']
-    # bare shoulders + collarbones (clipped so they never cover the chin)
+def girl_body(cv, x, yf, r, lift, tilt, front=True):
+    """Bare shoulders, cream ruched off-shoulder knit and thin gold pendant."""
+    U = lambda px, py: (x + px * r, yf + py * r)
+    hy = yf + (-3.85 + lift) * r
+    skin = GIRL['skin']
     cv.save()
-    cv.rotate(tilt, hx, hy + 1.1 * r)
-    cv.clipPath(cp(hx, hy, r), skia.ClipOp.kDifference, True)
-    cv.rotate(-tilt, hx, hy + 1.1 * r)
+    cv.rotate(tilt, x, hy + 1.1 * r)
+    cv.clipPath(cp(x, hy, r), skia.ClipOp.kDifference, True)
+    cv.rotate(-tilt, x, hy + 1.1 * r)
     shaded(cv, rrp(*U(-.92, -3.02 + lift), *U(.92, -2.45 + lift), .42 * r), skin, dark(skin, .16), dx=-.04 * r, dy=-.05 * r)
-    for sd in (-1, 1):
-        cb = skia.Path()
-        cb.moveTo(*U(sd * .08, -2.74 + lift))
-        cb.quadTo(*U(sd * .26, -2.84 + lift), *U(sd * .5, -2.76 + lift))
-        cv.drawPath(cb, paint(dark(skin, .22), 110, stroke=.03 * r))
+    if front:
+        for sd in (-1, 1):
+            cb = skia.Path()
+            cb.moveTo(*U(sd * .08, -2.74 + lift))
+            cb.quadTo(*U(sd * .26, -2.84 + lift), *U(sd * .5, -2.76 + lift))
+            cv.drawPath(cb, paint(dark(skin, .22), 110, stroke=.03 * r))
     shaded(cv, rrp(*U(-1.0, -2.64 + lift), *U(1.0, -2.18 + lift), .2 * r), CREAM, dx=-.06 * r, dy=-.07 * r)
     for yy in (-2.5, -2.36):
         w_ = skia.Path()
@@ -460,62 +541,50 @@ def girl_overlay(cv, t, fc, an, tilt, lift):
         w_.cubicTo(*U(-.5, yy - .05 + lift), *U(-.2, yy + .05 + lift), *U(0, yy + lift))
         w_.cubicTo(*U(.2, yy - .05 + lift), *U(.5, yy + .05 + lift), *U(.95, yy + lift))
         cv.drawPath(w_, paint(dark(CREAM, .22), 140, stroke=.028 * r))
-    ch = skia.Path()
-    ch.moveTo(*U(-.22, -2.9 + lift))
-    ch.quadTo(*U(0, -2.45 + lift), *U(.22, -2.9 + lift))
-    cv.drawPath(ch, paint('#F0C25A', 230, stroke=.022 * r))
-    shaded(cv, rrp(*U(-.055, -2.6 + lift), *U(.055, -2.47 + lift), .03 * r), '#F0C25A', '#B98A2E', dx=-.015 * r, dy=-.015 * r)
+    if front:
+        ch = skia.Path()
+        ch.moveTo(*U(-.22, -2.9 + lift))
+        ch.quadTo(*U(0, -2.45 + lift), *U(.22, -2.9 + lift))
+        cv.drawPath(ch, paint('#F0C25A', 230, stroke=.022 * r))
+        shaded(cv, rrp(*U(-.055, -2.6 + lift), *U(.055, -2.47 + lift), .03 * r), '#F0C25A', '#B98A2E', dx=-.015 * r, dy=-.015 * r)
     cv.restore()
-    # head details (rotate with the head)
+
+
+def girl_head(cv, x, yf, r, lift, tilt, fc, an, shock=0):
+    """Details over the toolkit face: locks redrawn over the knit, lashes, shocked 'O' mouth."""
+    hx, hy = x, yf + (-3.85 + lift) * r
+    skin, hc = GIRL['skin'], GIRL['hair']
     cv.save()
     cv.rotate(tilt, hx, hy + 1.1 * r)
-    for sd in (-1, 1):  # front locks over the shoulders, redrawn on top of the knit
-        q = skia.Path()
-        q.moveTo(hx + sd * .78 * r, hy - .55 * r)
-        q.cubicTo(hx + sd * 1.18 * r, hy - .1 * r, hx + sd * 1.12 * r, hy + .9 * r, hx + sd * 1.02 * r, hy + 1.75 * r)
-        q.quadTo(hx + sd * .9 * r, hy + 1.95 * r, hx + sd * .78 * r, hy + 1.7 * r)
-        q.cubicTo(hx + sd * .86 * r, hy + .9 * r, hx + sd * .9 * r, hy + .2 * r, hx + sd * .78 * r, hy - .55 * r)
-        q.close()
-        shaded(cv, q, hc, dark(hc, .25), dx=-.05 * r * sd, dy=-.05 * r)
+    for sd in (-1, 1):
+        shaded(cv, lock_path(hx, hy, r, sd), hc, dark(hc, .25), dx=-.05 * r * sd, dy=-.05 * r)
         hl = skia.Path()
-        hl.moveTo(hx + sd * .95 * r, hy + .1 * r)
-        hl.quadTo(hx + sd * 1.0 * r, hy + .9 * r, hx + sd * .93 * r, hy + 1.5 * r)
+        hl.moveTo(hx + sd * .78 * r, hy + .1 * r)
+        hl.quadTo(hx + sd * .86 * r, hy + .9 * r, hx + sd * .8 * r, hy + 1.5 * r)
         cv.drawPath(hl, paint('#5A3A3E', 90, stroke=.05 * r))
-    # curtain bangs: forehead opens in an inverted V from a slightly off-centre part
-    fringe = skia.Path()
-    fringe.addOval(R(hx - 1.3 * r, hy - 1.4 * r, hx + .5 * r, hy - .4 * r))
-    fringe.addOval(R(hx - .3 * r, hy - 1.3 * r, hx + 1.25 * r, hy - .52 * r))
-    tri = skia.Path()
-    tri.moveTo(hx - .05 * r, hy - .78 * r)
-    tri.cubicTo(hx - .18 * r, hy - .68 * r, hx - .42 * r, hy - .6 * r, hx - .55 * r, hy - .44 * r)
-    tri.lineTo(hx + .5 * r, hy - .44 * r)
-    tri.cubicTo(hx + .38 * r, hy - .6 * r, hx + .16 * r, hy - .68 * r, hx - .05 * r, hy - .78 * r)
-    tri.close()
-    gap = skia.Op(tri, fringe, skia.PathOp.kIntersect_PathOp)
-    cv.save()
-    cv.clipPath(cp(hx, hy, r * .995), skia.ClipOp.kIntersect, True)
-    cv.drawPath(gap, paint(skin))
-    cv.drawPath(poly([(hx - .05 * r, hy - 1.08 * r), (hx - .05 * r, hy - .78 * r)], False), paint('#5A3A3E', 120, stroke=.03 * r))
-    cv.restore()
-    # lashes
     lx, ly = fc.get('look', (0, 0))
     sq = fc.get('squint', 0)
     for sd in (-1, 1):
         cx = hx + sd * .34 * r + lx * .07 * r
         cy = hy + .06 * r + ly * .07 * r
-        oh = .125 * r * (1 - .45 * sq)
+        oh = .125 * r * (1 - .45 * sq) * (1.22 if fc.get('eyes') == 'wide' else 1)
         lid = skia.Path()
         lid.moveTo(cx - .12 * r, cy - oh * .35)
         lid.quadTo(cx, cy - oh * 1.7, cx + .12 * r, cy - oh * .35)
         cv.drawPath(lid, paint(INK, stroke=.038 * r))
         cv.drawPath(poly([(cx + sd * .09 * r, cy - oh * .9), (cx + sd * .19 * r, cy - oh * 1.25)], False), paint(INK, stroke=.04 * r))
-    # pursed lip / bunched chin when angry
-    ca = clamp((an - .35) / .3)
-    if ca > 0:
-        lip = skia.Path()
-        lip.moveTo(hx - .16 * r, hy + .47 * r)
-        lip.quadTo(hx, hy + .7 * r, hx + .16 * r, hy + .47 * r)
-        cv.drawPath(lip, paint(INK, A(190 * ca), stroke=.03 * r))
+    if shock > .05:
+        cv.drawOval(R(hx - .22 * r, hy + .33 * r, hx + .22 * r, hy + .47 * r), paint(skin))
+        mw, mh = .09 * r, .15 * r * shock
+        cy_ = hy + .43 * r
+        cv.drawOval(R(hx - mw, cy_ - mh, hx + mw, cy_ + mh), paint((132, 36, 62)))
+        cv.drawOval(R(hx - mw * .5, cy_ + mh * .1, hx + mw * .5, cy_ + mh * .8), paint((240, 110, 120)))
+        cv.drawOval(R(hx - mw, cy_ - mh, hx + mw, cy_ + mh), paint(INK, stroke=.03 * r))
+        for k in (-1, 0, 1):
+            a = math.radians(-90 + k * 30)
+            cv.drawPath(poly([(hx + math.cos(a) * 1.22 * r, hy + math.sin(a) * 1.22 * r),
+                              (hx + math.cos(a) * 1.5 * r, hy + math.sin(a) * 1.5 * r)], False),
+                        paint('#FFFFFF', 210 * shock, stroke=.04 * r))
     cv.restore()
 
 
@@ -533,10 +602,11 @@ def girl_figure(cv, t):
     jr = math.sin(t * 24 + 2) * .05 * amp
     arms = [((-.98, -1.45), (-.38, -1.72 + jl)), ((.98, -1.45), (.38, -1.72 + jr))]
     tilt = math.sin(t * 1.1) * 2 * an - 2 * an
-    lift = math.sin(t * 2.2) * .015
+    lift = math.sin(t * 2.2) * .015 + .07 * clamp((an - .5) / .4)
 
     def held(cv_):
-        girl_overlay(cv_, t, fc, an, tilt, lift)
+        girl_body(cv_, 540, NF, NR, lift, tilt, True)
+        girl_head(cv_, 540, NF, NR, lift, tilt, fc, an)
         phone_back(cv_, 540, NF - 1.82 * NR, 1.0, .9)
     person(cv, 540, NF, NR, GIRL, dict(legs='sit', arms=arms, face=fc, held=held, tilt=tilt, lift=lift))
     glow(cv, 540, NF - 3.75 * NR, 1.3 * NR, '#FFB0D0', 26, mid=1)

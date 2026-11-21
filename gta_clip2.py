@@ -167,89 +167,6 @@ def slam_fx(cv, t):
 
 
 # ------------------------------------------------------------------ girlfriend (stylised after Nikki, see clip 1)
-def girl_body(cv, x, yf, r, lift, tilt, front=True):
-    U = lambda px, py: (x + px * r, yf + py * r)
-    hy = yf + (-3.85 + lift) * r
-    skin = GIRL['skin']
-    cv.save()
-    cv.rotate(tilt, x, hy + 1.1 * r)
-    cv.clipPath(cp(x, hy, r), skia.ClipOp.kDifference, True)
-    cv.rotate(-tilt, x, hy + 1.1 * r)
-    shaded(cv, rrp(*U(-.92, -3.02 + lift), *U(.92, -2.45 + lift), .42 * r), skin, dark(skin, .16), dx=-.04 * r, dy=-.05 * r)
-    if front:
-        for sd in (-1, 1):
-            cb = skia.Path()
-            cb.moveTo(*U(sd * .08, -2.74 + lift))
-            cb.quadTo(*U(sd * .26, -2.84 + lift), *U(sd * .5, -2.76 + lift))
-            cv.drawPath(cb, paint(dark(skin, .22), 110, stroke=.03 * r))
-    shaded(cv, rrp(*U(-1.0, -2.64 + lift), *U(1.0, -2.18 + lift), .2 * r), CREAM, dx=-.06 * r, dy=-.07 * r)
-    for yy in (-2.5, -2.36):
-        w_ = skia.Path()
-        w_.moveTo(*U(-.95, yy + lift))
-        w_.cubicTo(*U(-.5, yy - .05 + lift), *U(-.2, yy + .05 + lift), *U(0, yy + lift))
-        w_.cubicTo(*U(.2, yy - .05 + lift), *U(.5, yy + .05 + lift), *U(.95, yy + lift))
-        cv.drawPath(w_, paint(dark(CREAM, .22), 140, stroke=.028 * r))
-    if front:
-        ch = skia.Path()
-        ch.moveTo(*U(-.22, -2.9 + lift))
-        ch.quadTo(*U(0, -2.45 + lift), *U(.22, -2.9 + lift))
-        cv.drawPath(ch, paint('#F0C25A', 230, stroke=.022 * r))
-        shaded(cv, rrp(*U(-.055, -2.6 + lift), *U(.055, -2.47 + lift), .03 * r), '#F0C25A', '#B98A2E', dx=-.015 * r, dy=-.015 * r)
-    cv.restore()
-
-
-def girl_head(cv, x, yf, r, lift, tilt, fc, an):
-    hx, hy = x, yf + (-3.85 + lift) * r
-    skin, hc = GIRL['skin'], GIRL['hair']
-    cv.save()
-    cv.rotate(tilt, hx, hy + 1.1 * r)
-    for sd in (-1, 1):
-        q = skia.Path()
-        q.moveTo(hx + sd * .78 * r, hy - .55 * r)
-        q.cubicTo(hx + sd * 1.18 * r, hy - .1 * r, hx + sd * 1.12 * r, hy + .9 * r, hx + sd * 1.02 * r, hy + 1.75 * r)
-        q.quadTo(hx + sd * .9 * r, hy + 1.95 * r, hx + sd * .78 * r, hy + 1.7 * r)
-        q.cubicTo(hx + sd * .86 * r, hy + .9 * r, hx + sd * .9 * r, hy + .2 * r, hx + sd * .78 * r, hy - .55 * r)
-        q.close()
-        shaded(cv, q, hc, dark(hc, .25), dx=-.05 * r * sd, dy=-.05 * r)
-        hl = skia.Path()
-        hl.moveTo(hx + sd * .95 * r, hy + .1 * r)
-        hl.quadTo(hx + sd * 1.0 * r, hy + .9 * r, hx + sd * .93 * r, hy + 1.5 * r)
-        cv.drawPath(hl, paint('#5A3A3E', 90, stroke=.05 * r))
-    fringe = skia.Path()
-    fringe.addOval(R(hx - 1.3 * r, hy - 1.4 * r, hx + .5 * r, hy - .4 * r))
-    fringe.addOval(R(hx - .3 * r, hy - 1.3 * r, hx + 1.25 * r, hy - .52 * r))
-    tri = skia.Path()
-    tri.moveTo(hx - .05 * r, hy - .78 * r)
-    tri.cubicTo(hx - .18 * r, hy - .68 * r, hx - .42 * r, hy - .6 * r, hx - .55 * r, hy - .44 * r)
-    tri.lineTo(hx + .5 * r, hy - .44 * r)
-    tri.cubicTo(hx + .38 * r, hy - .6 * r, hx + .16 * r, hy - .68 * r, hx - .05 * r, hy - .78 * r)
-    tri.close()
-    gap = skia.Op(tri, fringe, skia.PathOp.kIntersect_PathOp)
-    cv.save()
-    cv.clipPath(cp(hx, hy, r * .995), skia.ClipOp.kIntersect, True)
-    cv.drawPath(gap, paint(skin))
-    cv.drawPath(poly([(hx - .05 * r, hy - 1.08 * r), (hx - .05 * r, hy - .78 * r)], False), paint('#5A3A3E', 120, stroke=.03 * r))
-    cv.restore()
-    lx, ly = fc.get('look', (0, 0))
-    sq = fc.get('squint', 0)
-    for sd in (-1, 1):
-        cx = hx + sd * .34 * r + lx * .07 * r
-        cy = hy + .06 * r + ly * .07 * r
-        oh = .125 * r * (1 - .45 * sq) * (1.22 if fc.get('eyes') == 'wide' else 1)
-        lid = skia.Path()
-        lid.moveTo(cx - .12 * r, cy - oh * .35)
-        lid.quadTo(cx, cy - oh * 1.7, cx + .12 * r, cy - oh * .35)
-        cv.drawPath(lid, paint(INK, stroke=.038 * r))
-        cv.drawPath(poly([(cx + sd * .09 * r, cy - oh * .9), (cx + sd * .19 * r, cy - oh * 1.25)], False), paint(INK, stroke=.04 * r))
-    ca = clamp((an - .35) / .3)
-    if ca > 0:
-        lip = skia.Path()
-        lip.moveTo(hx - .16 * r, hy + .47 * r)
-        lip.quadTo(hx, hy + .7 * r, hx + .16 * r, hy + .47 * r)
-        cv.drawPath(lip, paint(INK, A(190 * ca), stroke=.03 * r))
-    cv.restore()
-
-
 def girl_back_hair(cv, x, yf, r, lift, tilt):
     hx, hy = x, yf + (-3.85 + lift) * r
     hc = GIRL['hair']
@@ -331,8 +248,8 @@ def girl(cv, t):
     stomp = 1.0 if t >= 7.9 else 0
     look = lerp2((-.6, -.4), (-.95, .15), ease(prog(t, 6.3, 6.8))) if t >= 5.0 else (-.3, -.2)
     if shock > .01:
-        fc = dict(eyes='wide', mouth=0, mopen=.9 * shock, look=(-.3, -.3), brows=((-14 * shock, .14 * shock),) * 2,
-                  blush=lerp(.4, .2, shock))
+        fc = dict(eyes='wide', mouth=0, mopen=0, look=(-.3, -.3), brows=((-16 * shock, .2 * shock),) * 2,
+                  blush=lerp(.4, 0, shock))
     else:
         e = ease(prog(an, .12, .7))
         ang, rs = lerp(-9, 28, e), lerp(.08, -.05, e)
@@ -352,7 +269,7 @@ def girl(cv, t):
     if walk and not stomp:
         arms = mix_arms(arms, [((-.95, -2.0), (-.9, -1.35 + .2 * swing)), ((.95, -2.0), (.9, -1.35 - .2 * swing))], .8)
     tilt = -2 * an + (math.sin(ph) * 5 * stomp) + (math.sin(ph) * 2 * (walk and not stomp))
-    lift = -abs(math.sin(ph)) * .05 * walk
+    lift = -abs(math.sin(ph)) * .05 * walk + (.07 * clamp((an - .5) / .4) if t > 6.4 else 0)
     cv.save()
     if yf < 1216:
         cv.clipRect(R(DX0 - 14, DY0 - 14, DX1 + 14, DY1 + 6))
@@ -373,7 +290,7 @@ def girl(cv, t):
         if back:
             girl_back_hair(cv_, x, yf, r, lift, tilt)
         else:
-            girl_head(cv_, x, yf, r, lift, tilt, fc, an)
+            girl_head(cv_, x, yf, r, lift, tilt, fc, an, shock)
     person(cv, x, yf, r, GIRL, dict(legs=None, arms=arms, face=fc, held=held, tilt=tilt, lift=lift))
     if not back:
         st_ = clamp((an - .45) / .25)
@@ -406,13 +323,14 @@ def boy2(cv, t):
     jl = math.sin(t * 17) * .035 * jit
     jr = math.sin(t * 17 + 2) * .035 * jit
     dy = .35 * sad
-    arms = [((-1.02, -1.5 + .15 * sad), (-.55, -1.95 + dy + jl)), ((1.02, -1.5 + .15 * sad), (.55, -1.95 + dy + jr))]
     tr = turn(t) * (1 - sad)
 
     def held(cv_):
-        controller(cv_, 540, NF - 1.9 * NR + dy * NR, NR, tr * 7, t)
-    person(cv, 540, NF, NR, BOY, dict(legs='sit', arms=arms, face=fc, held=held,
-                                      tilt=lerp(math.sin(t * 2.6) * 2.2, 4, notice) + 0 * fl,
+        controller(cv_, 540, NF - 2.0 * NR + dy * NR, NR, tr * 7, t)
+        boy_hands(cv_, dy, jl, jr)
+    boy_legs(cv)
+    person(cv, 540, NF, NR, BOY, dict(legs=None, arms=boy_arms(dy, jl, jr, sad), face=fc, held=held, hands=False,
+                                      tilt=lerp(math.sin(t * 2.6) * 2.2, 4, notice),
                                       lift=math.sin(t * 3) * .012 * jit + .05 * sad - .07 * fl))
     c = mix('#FF9FD0', '#7FC4FF', .5 + .5 * math.sin(t * 1.7))
     glow(cv, 540, NF - 3.75 * NR, 1.3 * NR, c, 26, mid=1)
