@@ -1,13 +1,12 @@
 import os, sys
-SK = '/root/.claude/skills/synced/4e0ea4d7-c568-4bbf-ae1d-e23fce685fc3_d1ab2ef0-75cd-4219-be4f-f884141ad564/kurzgesagt-reel'
-sys.path.insert(0, SK + '/scripts')
-from kz import *
+from kzs import *
 
 DUR = 13.0
-GOLD = '#FFC94A'
-PINK = '#FF4FA3'
+GOLD = '#FFD23F'
+PINK = '#FF3D9A'
 WHITE = '#FFFFFF'
 MUTED = '#B9B7D8'
+NAVY_TXT = '#1D1A6B'
 
 
 def A(x):
@@ -57,7 +56,7 @@ QSTEP = .15
 # highlight phrases: list of (word-index ranges per line), colour, start time
 HL_PHRASES = [
     ([(0, 3, 5), (1, 0, 5)], GOLD, 7.3),          # "not value" + "GTA 6 more than you."
-    ([(2, 3, 5), (3, 0, 2)], PINK, 9.0),          # "honest and" + "caring relationship,"
+    ([(2, 3, 5), (3, 0, 2)], '#61E7ED', 9.0),          # "honest and" + "caring relationship,"
 ]
 
 
@@ -117,12 +116,11 @@ def draw_scene(cv, t):
         cv.translate(cx, cy)
         cv.scale(s, s)
         cv.translate(-cx, -cy)
-        glow(cv, cx, cy, 700, PINK, 40 * ck, mid=1)
-        cv.drawPath(rrp(l, tp + 14, r_, b + 14, 44), paint('#05031a', 150, blur=22))
-        cv.drawPath(rrp(l, tp, r_, b, 44), paint('#1B1650', 250))
-        cv.drawPath(rrp(l, tp, r_, b, 44), paint(GOLD, 120, stroke=3))
-        shaded(cv, rrp(l, tp + 44, l + 18, b - 44, 9), GOLD, dx=-2, dy=0)
-        text(cv, '“', l + 100, tp + 150, font('bold', 300), GOLD, 255, shadow=0)
+        glow(cv, cx, cy, 760, '#FF3D9A', 70 * ck, mid=1)
+        cv.drawPath(rrp(l, tp + 16, r_, b + 16, 44), paint('#4A0050', 255))
+        cv.drawPath(rrp(l, tp, r_, b, 44), paint('#FFFFFF'))
+        shaded(cv, rrp(l + 4, tp + 50, l + 24, b - 50, 10), YEL, dx=-2, dy=0)
+        text(cv, '\u201c', l + 100, tp + 150, font('bold', 300), YEL, 255, shadow=0)
         cv.restore()
 
     # ---- highlight marker sweeps (behind the words), then the words themselves
@@ -146,24 +144,23 @@ def draw_scene(cv, t):
         a = eout(prog(t, ts, ts + .3))
         if a <= 0:
             continue
-        c = '#1B1650' if marked.get(idx) == GOLD else WHITE
-        text(cv, w, x, y + (1 - a) * 16, f, c, A(255 * a), anchor='l', shadow=0 if idx in marked else 5)
+        text(cv, w, x, y + (1 - a) * 16, f, NAVY_TXT, A(255 * a), anchor='l', shadow=0)
 
-    # ---- attribution + satire note
+    # ---- attribution
     at = ease(prog(t, 9.9, 10.5))
     if at > 0:
-        cv.drawPath(poly([(Q_X, 1318), (Q_X + 70 * at, 1318)], False), paint(GOLD, 255, stroke=4))
-        text(cv, 'Wives and Girlfriends Association of America', Q_X, 1362 + (1 - at) * 10, font('med', 28), '#E9E7FF', A(255 * at), anchor='l')
-        text(cv, 'Satire. Not a real statement.', Q_X, 1416, font('med', 22), '#8F8DB5', A(255 * at), anchor='l')
+        cv.drawPath(poly([(Q_X, 1318), (Q_X + 70 * at, 1318)], False), paint(YEL, 255, stroke=5))
+        text(cv, 'Wives and Girlfriends Association of America', Q_X, 1366 + (1 - at) * 10, font('semi', 30), '#4A45A8', A(255 * at), anchor='l')
 
 
 def draw(cv, t, fi):
-    cv.drawRect(R(0, 0, W, H), paint(shader=lin(0, 0, 0, H, ['#0A0720', '#241258', '#0A0720'])))
-    stars(cv, t, ymax=1700, a=.7)
-    for i in range(7):
-        bx = (i * 173 + t * 14 * (1 + i % 3)) % 1180 - 50
-        by = 200 + (i * 241) % 1400 - math.sin(t * .6 + i) * 20
-        cv.drawCircle(bx, by, 16 + (i % 3) * 14, paint(('#FF9FD0', '#9FD4FF', '#FFE08A')[i % 3], 24, blur=6))
+    cv.drawRect(R(0, 0, W, H), paint(shader=rad(540, 820, 1500, ['#E0108A', '#B0007A', '#6A0A66', '#3A0F62'], [0, .35, .72, 1])))
+    sunburst(cv, 540, 820, t, '#FFFFFF', 20, 20, 2600, .035)
+    for i in range(14):                                         # tone-on-tone skyline
+        bx = -30 + i * 85
+        bh = 220 + (i * 97) % 260
+        cv.drawRect(R(bx, H - bh, bx + 70, H), paint('#7A0A74', 140))
+    sparkle_field(cv, t, 31, 40, 0, H)
     k = 1 + .03 * ease(prog(t, 0, DUR))
     cv.save()
     cv.translate(540, 760)
@@ -171,7 +168,6 @@ def draw(cv, t, fi):
     cv.translate(-540, -760)
     draw_scene(cv, t)
     cv.restore()
-    vignette(cv, 140)
     fade = 1 - prog(t, 0, .3)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))

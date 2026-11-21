@@ -12,8 +12,8 @@ def dancer(cv, t, cx, base):
     """Flat-vector party dancer seen from behind: hourglass cartoon silhouette, hips bouncing to the beat."""
     sway = math.sin(t * 5.0) * 13
     hop = abs(math.sin(t * 10.0)) * 7
-    skin = (214, 154, 110)
-    pink, hair = '#FF4FA3', '#2A1410'
+    skin = (255, 150, 92)
+    pink, hair = '#FF2D95', '#1A1260'
     hx, hy = cx + sway, base - 112 + hop * .6
     sy = base - 182
     tx = cx + sway * .4
@@ -54,32 +54,34 @@ def dancer(cv, t, cx, base):
     # head (from behind: hair) with swinging ponytail
     cv.drawPath(poly([(tx, sy - 44), (tx - sway * 1.3 + 12, sy + 8)], False), paint(hair, stroke=11))
     shaded(cv, cp(tx, sy - 32, 18.5), hair, dark(hair, .3), dx=-3, dy=-3)
+    gloss_arc(cv, tx, sy - 32, 14, 200, 55, 3.4)
 
 
 def game_screen2(cv, t):
     cv.save()
     cv.drawRect(R(-20, -20, 720, 420), paint(shader=lin(0, 0, 0, 205, [sky_col(0), sky_col(70), sky_col(145), sky_col(205)])))
     glow(cv, 350, 170, 240, '#FF7AA0', 90, mid=1)
+    sunburst(cv, 350, 200, t, '#FFFFFF', 20, 16, 900, .05)
     cv.save()
     cv.clipPath(cp(350, 150, 82), skia.ClipOp.kIntersect, True)
-    cv.drawRect(R(260, 60, 440, 240), paint(shader=lin(0, 68, 0, 232, ['#FFE08A', '#FF8E7A', '#FF4F8A'])))
+    cv.drawRect(R(260, 60, 440, 240), paint(shader=lin(0, 68, 0, 232, ['#FFE45C', '#FF9A3D', '#FF3D7F'])))
     for j in range(7):
         y = 150 + j * 11
         cv.drawRect(R(260, y, 440, y + 2 + j * 1.5), paint(sky_col(y)))
     cv.restore()
     for i, (bh, bw) in enumerate(BUILD):
         bx = -20 + i * 30
-        cv.drawRect(R(bx, 205 - bh, bx + bw, 207), paint('#3A1B6B'))
+        cv.drawRect(R(bx, 205 - bh, bx + bw, 207), paint('#6A0F82'))
         for j in range(int(bh / 16)):
             if (i * 3 + j) % 3:
                 cv.drawRect(R(bx + 6, 205 - bh + 8 + j * 15, bx + 11, 205 - bh + 13 + j * 15),
                             paint('#FF9FD0' if (i + j) % 2 else '#FFD66B', 190))
-    cv.drawRect(R(-20, 205, 720, 420), paint(shader=lin(0, 205, 0, 394, ['#9A3F7E', '#4A1A5A'])))
+    cv.drawRect(R(-20, 205, 720, 420), paint(shader=lin(0, 205, 0, 394, ['#B01AA8', '#4A1090'])))
     for i in range(7):
         y = 214 + i * i * 4.4
-        cv.drawRect(R(-20, y, 720, y + 1.5 + i * .4), paint('#2A1048', 90))
+        cv.drawRect(R(-20, y, 720, y + 1.5 + i * .4), paint('#2A1070', 90))
     # party beams
-    for i, c in enumerate(('#FF4FA3', '#7FC4FF', '#FFD66B')):
+    for i, c in enumerate(('#FF4FA3', '#61E7ED', '#FFD23F')):
         x0 = 130 + i * 220
         x1 = x0 + math.sin(t * 1.6 + i * 2.1) * 170
         cv.drawPath(poly([(x0 - 6, -10), (x0 + 6, -10), (x1 + 50, 340), (x1 - 50, 340)]), paint(c, 34))
@@ -119,10 +121,10 @@ def tv_popout2(cv, t, box, k, content):
     cv.translate(cx, cy + math.sin(t * 1.4) * 3)
     cv.scale(s, s)
     cv.translate(-cx, -cy)
-    glow(cv, cx, cy, (r_ - l) * .95, '#FF9FD0', 80)
+    glow(cv, cx, cy, (r_ - l) * .95, '#FF6FB0', 80)
     cv.drawPath(rrp(l - 6, tp + 12, r_ + 6, b + 28, 22), paint('#05031a', 150, blur=22))
     bz = (r_ - l) * .022
-    shaded(cv, rrp(l - bz, tp - bz, r_ + bz, b + bz, 18), '#14162C', dx=-5, dy=-5)
+    shaded(cv, rrp(l - bz, tp - bz, r_ + bz, b + bz, 18), '#101A78', dx=-5, dy=-5)
     cv.save()
     cv.clipPath(rrp(l, tp, r_, b, 10), skia.ClipOp.kIntersect, True)
     cv.translate(l, tp)
@@ -130,6 +132,7 @@ def tv_popout2(cv, t, box, k, content):
     cv.scale(sc, sc)
     content(cv, t)
     cv.restore()
+    cv.drawPath(poly([(l, tp), (l + (r_ - l) * .34, tp), (l, tp + (b - tp) * .5)]), paint('#FFFFFF', 22))
     cv.restore()
 
 
@@ -159,11 +162,11 @@ def door_angle(t):
 def side_wall(cv, t):
     a = door_angle(t)
     cv.drawPath(poly([(930, -400), (1100, -400), (1100, 1367), (930, 1195)]),
-                paint(shader=lin(930, 0, 1100, 0, ['#1B2058', '#0F1240'])))
-    cv.drawPath(poly([(930, 1195), (1100, 1367)], False), paint('#3A2D6A', stroke=8))
-    cv.drawPath(poly([DP(DU0 - 10, -.04), DP(DU1 + 10, -.04), DP(DU1 + 10, 1), DP(DU0 - 10, 1)]), paint('#3B3F7A'))
+                paint(shader=lin(930, 0, 1100, 0, ['#2A32B8', '#1A2090'])))
+    cv.drawPath(poly([(930, 1195), (1100, 1367)], False), paint('#4A55E0', stroke=8))
+    cv.drawPath(poly([DP(DU0 - 10, -.04), DP(DU1 + 10, -.04), DP(DU1 + 10, 1), DP(DU0 - 10, 1)]), paint('#5560F0'))
     cv.drawPath(poly([DP(DU0, 0), DP(DU1, 0), DP(DU1, 1), DP(DU0, 1)]),
-                paint(shader=lin(0, dtop(DU0), 0, wall_bot(DU1), ['#07041A', '#1B1240'])))
+                paint(shader=lin(0, dtop(DU0), 0, wall_bot(DU1), ['#05063A', '#1A1E76'])))
     if a > 5:
         glow(cv, (DU0 + DU1) / 2, dtop(DU0) + 80, 190, '#FFE9B5', 50 * clamp(a / 78), mid=1)
 
@@ -173,14 +176,14 @@ def door_leaf(cv, t):
     ca = math.cos(math.radians(a))
     xf = DU1 - (DU1 - DU0) * ca
     Pm = lambda u, v: DP(lerp(DU1, xf, u), v)
-    shaded(cv, poly([Pm(0, 0), Pm(1, 0), Pm(1, 1), Pm(0, 1)]), '#B5694F', dx=-(5 * ca + 1), dy=0)
+    shaded(cv, poly([Pm(0, 0), Pm(1, 0), Pm(1, 1), Pm(0, 1)]), '#FF6B4A', dx=-(5 * ca + 1), dy=0)
     for u0, u1, v0, v1 in ((.14, .86, .08, .44), (.14, .86, .54, .92)):
         pp = poly([Pm(u0, v0), Pm(u1, v0), Pm(u1, v1), Pm(u0, v1)])
-        cv.drawPath(pp, paint('#A05A44'))
-        cv.drawPath(pp, paint('#8A4A38', stroke=2))
+        cv.drawPath(pp, paint('#F2553A'))
+        cv.drawPath(pp, paint('#C93E26', stroke=2))
     if ca > .15:
         kx, ky = Pm(.86, .55)
-        cv.drawCircle(kx, ky, 7 * ca + 2, paint('#FFD66B'))
+        cv.drawCircle(kx, ky, 7 * ca + 2, paint('#FFD23F'))
 
 
 def slam_fx(cv, t):
@@ -198,7 +201,7 @@ def slam_fx(cv, t):
     for i in range(7):
         px = 950 + i * 34
         py = wall_bot(px) - 6 - ia * (60 + i % 3 * 20)
-        cv.drawCircle(px, py, 14 + ia * 50, paint('#B8A7D8', 120 * (1 - ia / .6)))
+        cv.drawCircle(px, py, 14 + ia * 50, paint('#C9B8FF', 130 * (1 - ia / .6)))
 
 
 # ------------------------------------------------------------------ girlfriend (stylised after Nikki, see clip 1)
@@ -213,14 +216,14 @@ def girl_back_hair(cv, x, yf, r, lift, tilt):
         hl = skia.Path()
         hl.moveTo(hx + off * r, hy - .6 * r)
         hl.quadTo(hx + (off + .12) * r, hy + .1 * r, hx + off * r * 1.1, hy + 1.4 * r)
-        cv.drawPath(hl, paint('#5A3A3E', 80, stroke=.05 * r))
+        cv.drawPath(hl, paint('#8E86D8', 80, stroke=.05 * r))
     cv.restore()
     cv.save()
     hl = skia.Path()
     for off in (-.45, 0, .45):
         hl.moveTo(hx + off * r, hy + 1.2 * r)
         hl.lineTo(hx + off * r * .9, yf - 2.25 * r)
-    cv.drawPath(hl, paint('#5A3A3E', 70, stroke=.05 * r))
+    cv.drawPath(hl, paint('#8E86D8', 70, stroke=.05 * r))
     cv.restore()
 
 
@@ -314,6 +317,7 @@ def girl(cv, t):
     cv.translate(x, 0)
     cv.scale(sx, 1)
     cv.translate(-x, 0)
+    pill_shadow(cv, x, yf + 6, 230 * s, 30 * s, '#0A0850', 215)
     girl_legs(cv, x, yf, r, ph, walk)
 
     def held(cv_):
@@ -368,7 +372,7 @@ def boy2(cv, t):
     person(cv, 540, NF, NR, BOY, dict(legs=None, arms=boy_arms(dy, jl, jr, sad), face=fc, held=held, hands=False,
                                       tilt=lerp(math.sin(t * 2.6) * 2.2, 4, notice),
                                       lift=math.sin(t * 3) * .012 * jit + .05 * sad - .07 * fl))
-    c = mix('#FF9FD0', '#7FC4FF', .5 + .5 * math.sin(t * 1.7))
+    c = mix(PINK, CYAN, .5 + .5 * math.sin(t * 1.7))
     glow(cv, 540, NF - 3.75 * NR, 1.3 * NR, c, 26, mid=1)
 
 
@@ -376,30 +380,29 @@ def boy2(cv, t):
 def room(cv, t):
     ia = t - (TS + .12)
     rattle = ((1 - ia / .5) ** 2 if 0 <= ia < .5 else 0) * math.sin(t * 60) * 5
-    cv.drawRect(R(-700, -1500, 1800, 1190), paint(shader=lin(0, 300, 0, 1190, ['#0E1238', '#202760'])))
-    ledc = mix('#FF4FA3', '#7A5CFF', .5 + .5 * math.sin(t * 1.1))
-    cv.drawRect(R(-700, 630, 1800, 690), paint(ledc, 60, blur=24))
+    cv.drawRect(R(-700, -1500, 1800, 1190), paint(shader=lin(0, 300, 0, 1190, [NAVY1, '#1F2699'])))
+    ledc = mix(PINK, CYAN, .5 + .5 * math.sin(t * 1.1))
+    cv.drawRect(R(-700, 630, 1800, 690), paint(ledc, 70, blur=24))
     cv.drawRect(R(-700, 653, 1800, 661), paint(ledc))
-    for fx, fy, fw, fh, c in ((40, 770, 120, 150, '#FFC94A'), (190, 800, 100, 90, '#5BC0EB')):
+    for fx, fy, fw, fh in ((40, 770, 120, 150), (190, 800, 100, 90)):      # tone-on-tone frames
         cv.save()
         cv.rotate(rattle, fx + fw / 2, fy)
-        shaded(cv, rrp(fx, fy, fx + fw, fy + fh, 8), '#3B3F7A', dx=-4, dy=-4)
-        cv.drawPath(rrp(fx + 12, fy + 12, fx + fw - 12, fy + fh - 12, 4), paint(c, 200))
-        cv.drawCircle(fx + fw / 2, fy + fh / 2, min(fw, fh) * .18, paint('#ffffff', 130))
+        cv.drawPath(rrp(fx, fy, fx + fw, fy + fh, 10), paint('#2D37BE'))
+        cv.drawPath(rrp(fx + 14, fy + 14, fx + fw - 14, fy + fh - 14, 5), paint('#3945D0'))
         cv.restore()
-    cv.drawRect(R(-700, 1190, 1800, 2300), paint(shader=lin(0, 1190, 0, 1920, ['#2A2052', '#140B2A', '#0A0618'])))
-    cv.drawRect(R(-700, 1186, 1800, 1196), paint('#3A2D6A'))
-    cv.drawOval(R(40, 1270, 800, 1380), paint('#3E2E70'))
-    cv.drawOval(R(70, 1280, 770, 1370), paint('#4A3884', stroke=6))
+    cv.drawRect(R(-700, 1190, 1800, 2300), paint(shader=lin(0, 1190, 0, 1920, ['#2B24B8', '#18127A', '#0E0A55'])))
+    cv.drawRect(R(-700, 1186, 1800, 1196), paint('#4A42D8'))
+    cv.drawOval(R(40, 1270, 800, 1380), paint(MAG))
+    cv.drawOval(R(70, 1280, 770, 1370), paint('#E5199A', stroke=6))
     side_wall(cv, t)
-    c = mix('#FF9FD0', '#7FC4FF', .5 + .5 * math.sin(t * 1.7))
-    glow(cv, 420, 900, 900, c, 30, mid=1)
+    c = mix(PINK, CYAN, .5 + .5 * math.sin(t * 1.7))
+    glow(cv, 420, 900, 900, c, 34, mid=1)
     cv.save()
     cv.translate(SOFA_DX, 0)
-    shaded(cv, rrp(250, 880, 830, 1170, 60), '#6B3E8E', dx=-10, dy=-10)
-    for cx_ in (335, 745):
-        shaded(cv, rrp(cx_ - 72, 915, cx_ + 72, 1080, 40), '#7D4CA0', dx=-6, dy=-6)
+    pill_shadow(cv, 540, 1296, 720, 44, '#7A0058', 235)
+    sofa_back(cv)
     sofa_front(cv)
+    pill_shadow(cv, 540, 1316, 330, 30, '#7A0058', 235)
     boy2(cv, t)
     cv.restore()
     girl(cv, t)
@@ -409,7 +412,9 @@ def room(cv, t):
 
 # ------------------------------------------------------------------ frame
 def draw(cv, t, fi):
-    cv.drawRect(R(0, 0, W, H), paint(shader=lin(0, 0, 0, H, ['#0A0720', '#150E30'])))
+    cv.drawRect(R(0, 0, W, H), paint(shader=lin(0, 0, 0, H, [NAVY0, NAVY1])))
+    halos(cv, 540, 1650, 120, 5, 90, NAVY2, 60)
+    sparkle_field(cv, t, 8, 44, 0, H)
     ia = t - (TS + .12)
     sh = (1 - ia / .45) ** 2 if 0 <= ia < .45 else 0
     cv.save()
@@ -417,11 +422,9 @@ def draw(cv, t, fi):
     room(cv, t)
     tv_popout2(cv, t, (130, 100, 950, 561), prog(t, 0, .45), game_screen2)
     cv.restore()
-    vignette(cv, 140)
-    scrim(cv, 1260, 210)
-    subtitle(cv, t, .4, 4.4, "The game contains {hl:highly sexualised}\ndepictions of women, which are\n{hl:impossible to avoid}", cy=1440)
-    typewriter(cv, t, 4.5, [[("This has placed a ", '#FFFFFF'), ("strain", '#FF6B6B')],
-                                 [("on many relationships", '#FFFFFF')]], 1478, 70)
+    subtitle(cv, t, .4, 4.4, "The game contains {hl:highly sexualised}\ndepictions of women, which are\n{hl:impossible to avoid}", cy=1470)
+    typewriter(cv, t, 4.5, [[("This has placed a ", '#FFFFFF'), ("strain", '#FF6B8A')],
+                                 [("on many relationships", '#FFFFFF')]], 1500, 70)
     fade = 1 - prog(t, 0, .15)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))

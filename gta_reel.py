@@ -1,21 +1,19 @@
 import os, sys
 SK = '/root/.claude/skills/synced/4e0ea4d7-c568-4bbf-ae1d-e23fce685fc3_d1ab2ef0-75cd-4219-be4f-f884141ad564/kurzgesagt-reel'
-sys.path.insert(0, SK + '/scripts')
-sys.path.insert(0, SK + '/examples')
-from kz import *
-from phone_misunderstanding import phone_back, steam, sofa_front
+from kzs import *
+from phone_misunderstanding import phone_back, steam
 
 DUR = 7.0
 NF, NR = 1300, 115
 PHONE_Y = NF - 2.12 * NR
 
 # ------------------------------------------------------------------ cast
-BOY = dict(skin=(238, 190, 160), hair='#3A2418', style='short', top='#E3A83B', pants='#3A4678',
-           shoes='#ECECF4', hoodie=True)
+BOY = dict(skin=(255, 172, 126), hair='#1F2A78', style='short', top='#FFC21A', pants='#3347D0',
+           shoes='#FFFFFF', hoodie=True, brow='#B8431F')
 # girlfriend: stylised after Nikki from Obsession (long dark hair, warm skin, pink top)
-GIRL = dict(skin=(226, 176, 142), hair='#12080A', style='long', top='#E9D6B8', pants='#3A3470',
-            shoes='#F2F2FA', nikki=True)
-CREAM = '#E9D6B8'
+GIRL = dict(skin=(236, 150, 100), hair='#14102E', style='long', top='#FFF0CC', pants='#6B4BE8',
+            shoes='#FFFFFF', nikki=True, brow='#14102E')
+CREAM = '#FFF0CC'
 
 import kz
 
@@ -48,12 +46,12 @@ def nikki_hair_cap(cv, hx, hy, r, hc):
     C.close()
     hair = skia.Op(E, C, skia.PathOp.kDifference_PathOp)
     shaded(cv, hair, hc, dark(hc, .25), dx=-.06 * r, dy=-.08 * r)
-    for sd in (-1, 1):
-        hl = skia.Path()
-        hl.moveTo(hx + sd * .1 * r, hy - 1.1 * r)
-        hl.cubicTo(hx + sd * .3 * r, hy - 1.0 * r, hx + sd * .75 * r, hy - .7 * r, hx + sd * .95 * r, hy - .15 * r)
-        cv.drawPath(hl, paint('#5A3A3E', 75, stroke=.05 * r))
-    cv.drawPath(poly([(hx - .05 * r, hy - 1.15 * r), (hx - .05 * r, hy - .96 * r)], False), paint('#5A3A3E', 130, stroke=.03 * r))
+    hl = skia.Path()
+    hl.moveTo(hx - .82 * r, hy - .5 * r)
+    hl.cubicTo(hx - .74 * r, hy - .86 * r, hx - .48 * r, hy - 1.0 * r, hx - .22 * r, hy - 1.03 * r)
+    cv.drawPath(hl, paint('#FFFFFF', 225, stroke=.07 * r))
+    cv.drawCircle(hx - .02 * r, hy - 1.04 * r, .04 * r, paint('#FFFFFF', 225))
+    cv.drawPath(poly([(hx - .05 * r, hy - 1.15 * r), (hx - .05 * r, hy - .96 * r)], False), paint('#7C74D0', 150, stroke=.03 * r))
     cv.restore()
 
 
@@ -128,7 +126,7 @@ def keyf(t, keys):
 
 
 # ------------------------------------------------------------------ GTA 6 game screen (local 700x394)
-SKY = [(0, (27, 15, 78)), (.35, (122, 42, 138)), (.7, (255, 111, 142)), (1, (255, 179, 107))]
+SKY = [(0, (44, 10, 128)), (.35, (170, 20, 170)), (.7, (255, 64, 120)), (1, (255, 172, 40))]
 
 
 def sky_col(y, h=205):
@@ -152,7 +150,7 @@ def star_path(cx, cy, r):
     return poly(pts)
 
 
-def palm(cv, x, base, h, sway, s, c='#120830'):
+def palm(cv, x, base, h, sway, s, c='#150F66'):
     top = (x + 18 * s * 0 + sway * 6 + 26 * s, base - h)
     p = skia.Path()
     p.moveTo(x, base)
@@ -177,9 +175,10 @@ def game_screen(cv, t, logo=True):
     vx = 350 + tr * 60
     sx = 350 + tr * 25
     glow(cv, sx, 170, 240, '#FF7AA0', 90, mid=1)
+    sunburst(cv, sx, 200, t, '#FFFFFF', 20, 16, 900, .05)
     cv.save()
     cv.clipPath(cp(sx, 150, 82), skia.ClipOp.kIntersect, True)
-    cv.drawRect(R(sx - 90, 60, sx + 90, 240), paint(shader=lin(0, 68, 0, 232, ['#FFE08A', '#FF8E7A', '#FF4F8A'])))
+    cv.drawRect(R(sx - 90, 60, sx + 90, 240), paint(shader=lin(0, 68, 0, 232, ['#FFE45C', '#FF9A3D', '#FF3D7F'])))
     for j in range(7):
         y = 150 + j * 11
         cv.drawRect(R(sx - 90, y, sx + 90, y + 2 + j * 1.5), paint(sky_col(y)))
@@ -187,16 +186,16 @@ def game_screen(cv, t, logo=True):
     # skyline
     for i, (bh, bw) in enumerate(BUILD):
         bx = -20 + i * 30 + tr * 10
-        cv.drawRect(R(bx, 205 - bh, bx + bw, 207), paint('#3A1B6B'))
+        cv.drawRect(R(bx, 205 - bh, bx + bw, 207), paint('#6A0F82'))
         for j in range(int(bh / 16)):
             if (i * 3 + j) % 3:
                 cv.drawRect(R(bx + 6, 205 - bh + 8 + j * 15, bx + 11, 205 - bh + 13 + j * 15),
                             paint('#FF9FD0' if (i + j) % 2 else '#FFD66B', 190))
     # ground and road
-    cv.drawRect(R(-20, 205, 720, 420), paint(shader=lin(0, 205, 0, 394, ['#4A1A6A', '#2A1048'])))
+    cv.drawRect(R(-20, 205, 720, 420), paint(shader=lin(0, 205, 0, 394, ['#9A1AA8', '#4A1090'])))
     bx = 350 - tr * 40
     road = poly([(vx - 12, 205), (vx + 12, 205), (bx + 330, 394), (bx - 330, 394)])
-    cv.drawPath(road, paint(shader=lin(0, 205, 0, 394, ['#3B3560', '#26223F'])))
+    cv.drawPath(road, paint(shader=lin(0, 205, 0, 394, ['#3A2AA0', '#1C1470'])))
     for sd in (-1, 1):
         cv.drawPath(poly([(vx + sd * 12, 205), (bx + sd * 330, 394)], False), paint('#FF9FD0', 200, stroke=3))
     sp = 1.6
@@ -211,18 +210,18 @@ def game_screen(cv, t, logo=True):
     # palms
     palm(cv, 60 + tr * 6, 394, 250, math.sin(t * 1.6), 1.0)
     palm(cv, 650 + tr * 6, 394, 280, math.sin(t * 1.4 + 1), 1.1)
-    palm(cv, 160, 300, 120, math.sin(t * 1.8 + 2), .5, '#1E0E40')
-    palm(cv, 560, 296, 130, math.sin(t * 1.5), .5, '#1E0E40')
+    palm(cv, 160, 300, 120, math.sin(t * 1.8 + 2), .5, '#2A1E8A')
+    palm(cv, 560, 296, 130, math.sin(t * 1.5), .5, '#2A1E8A')
     # car (rear view)
     cx_ = 350 + tr * 45
     cy_ = 372 + math.sin(t * 40) * 1.6
     cv.save()
     cv.rotate(-tr * 5, cx_, cy_)
     cv.drawOval(R(cx_ - 78, cy_ - 4, cx_ + 78, cy_ + 14), paint('#05031a', 150, blur=6))
-    shaded(cv, rrp(cx_ - 46, cy_ - 76, cx_ + 46, cy_ - 38, 14), '#B8343F', dx=-4, dy=-4)
-    cv.drawPath(rrp(cx_ - 36, cy_ - 68, cx_ + 36, cy_ - 44, 9), paint('#241B4A'))
-    shaded(cv, rrp(cx_ - 66, cy_ - 50, cx_ + 66, cy_, 15), '#E5484D', dx=-6, dy=-6)
-    cv.drawPath(rrp(cx_ - 72, cy_ - 54, cx_ + 72, cy_ - 46, 4), paint('#8E2430'))
+    shaded(cv, rrp(cx_ - 46, cy_ - 76, cx_ + 46, cy_ - 38, 14), '#D81E50', dx=-4, dy=-4)
+    cv.drawPath(rrp(cx_ - 36, cy_ - 68, cx_ + 36, cy_ - 44, 9), paint('#2A2FA0'))
+    shaded(cv, rrp(cx_ - 66, cy_ - 50, cx_ + 66, cy_, 15), '#FF4D6D', dx=-6, dy=-6)
+    cv.drawPath(rrp(cx_ - 72, cy_ - 54, cx_ + 72, cy_ - 46, 4), paint('#B01848'))
     for sd in (-1, 1):
         glow(cv, cx_ + sd * 50, cy_ - 24, 40, '#FF3B3B', 150)
         cv.drawPath(rrp(cx_ + sd * 50 - 15, cy_ - 32, cx_ + sd * 50 + 15, cy_ - 16, 5), paint('#FF6B6B'))
@@ -268,10 +267,10 @@ def tv_popout(cv, t, box, k):
     cv.translate(cx, cy + math.sin(t * 1.4) * 3)
     cv.scale(s, s)
     cv.translate(-cx, -cy)
-    glow(cv, cx, cy, (r_ - l) * .95, '#7FC4FF', 85)
+    glow(cv, cx, cy, (r_ - l) * .95, '#61E7ED', 85)
     cv.drawPath(rrp(l - 6, tp + 12, r_ + 6, b + 28, 22), paint('#05031a', 150, blur=22))
     bz = (r_ - l) * .022
-    shaded(cv, rrp(l - bz, tp - bz, r_ + bz, b + bz, 18), '#14162C', dx=-5, dy=-5)
+    shaded(cv, rrp(l - bz, tp - bz, r_ + bz, b + bz, 18), '#101A78', dx=-5, dy=-5)
     scr = rrp(l, tp, r_, b, 10)
     cv.save()
     cv.clipPath(scr, skia.ClipOp.kIntersect, True)
@@ -280,6 +279,7 @@ def tv_popout(cv, t, box, k):
     cv.scale(sc, sc)
     game_screen(cv, t)
     cv.restore()
+    cv.drawPath(poly([(l, tp), (l + (r_ - l) * .34, tp), (l, tp + (b - tp) * .5)]), paint('#FFFFFF', 22))
     cv.restore()
 
 
@@ -292,13 +292,13 @@ def controller(cv, x, y, s, rot, t):
         gx, gy = x + sd * .66 * s, y + .02 * s
         cv.save()
         cv.rotate(-sd * 12, gx, gy)
-        shaded(cv, rrp(gx - .19 * s, gy, gx + .19 * s, gy + .72 * s, .19 * s), '#2C3050', dx=-4, dy=-3)
+        shaded(cv, rrp(gx - .19 * s, gy, gx + .19 * s, gy + .72 * s, .19 * s), '#3F4BE0', dx=-4, dy=-3)
         cv.restore()
-    shaded(cv, rrp(x - .86 * s, y - .22 * s, x + .86 * s, y + .22 * s, .2 * s), '#363B62', dx=-5, dy=-5)
-    cv.drawPath(rrp(x - .3 * s, y - .14 * s, x + .3 * s, y + .12 * s, .08 * s), paint('#2A2E4E'))
+    shaded(cv, rrp(x - .86 * s, y - .22 * s, x + .86 * s, y + .22 * s, .2 * s), '#5B68FF', dx=-5, dy=-5)
+    cv.drawPath(rrp(x - .3 * s, y - .14 * s, x + .3 * s, y + .12 * s, .08 * s), paint('#3340C8'))
     for sd in (-1, 1):
         a_, b_ = sorted((x + sd * .28 * s, x + sd * .78 * s))
-        cv.drawPath(rrp(a_, y - .31 * s, b_, y - .2 * s, .05 * s), paint('#4F5588'))
+        cv.drawPath(rrp(a_, y - .31 * s, b_, y - .2 * s, .05 * s), paint('#B79BFF'))
     cv.restore()
 
 
@@ -358,7 +358,7 @@ def boy_figure(cv, t):
     boy_legs(cv)
     person(cv, 540, NF, NR, BOY, dict(legs=None, arms=boy_arms(0, jl, jr), face=fc, held=held, hands=False,
                                       tilt=tr * 3.5, lift=math.sin(t * 3) * .015))
-    c = mix('#7FC4FF', '#FF8AB0', .5 + .5 * math.sin(t * 1.7))
+    c = mix(CYAN, PINK, .5 + .5 * math.sin(t * 1.7))
     glow(cv, 540, NF - 3.75 * NR, 1.3 * NR, c, 26, mid=1)
 
 
@@ -367,7 +367,7 @@ def boy_notifs(cv, t):
     pul, bz = pulse(t), buzz(t)
     x = px + bz * 4
     n = count_at(t)
-    glow(cv, x, base - 80, 320, '#9FD4FF', 35 + 95 * pul, mid=1)
+    glow(cv, x, base - 80, 320, '#61E7ED', 35 + 95 * pul, mid=1)
     for tt in T:
         a = (t - tt) / .6
         if 0 <= a < 1:
@@ -375,7 +375,7 @@ def boy_notifs(cv, t):
     cv.save()
     cv.rotate(bz * 2.5, x, base)
     cv.drawOval(R(x - 52, base - 6, x + 52, base + 8), paint('#05031a', 130, blur=6))
-    shaded(cv, rrp(x - 44, base - 158, x + 44, base, 14), '#262A44', dx=-4, dy=-4)
+    shaded(cv, rrp(x - 44, base - 158, x + 44, base, 14), '#1A1E76', dx=-4, dy=-4)
     scr = rrp(x - 37, base - 150, x + 37, base - 10, 9)
     cv.drawPath(scr, paint(shader=lin(0, base - 150, 0, base - 10, [mix('#2A3A8A', '#CFEBFF', pul * .8), mix('#6A3A9A', '#9FD4FF', pul * .8)])))
     for i in range(min(n, 4)):
@@ -417,36 +417,56 @@ def boy_notifs(cv, t):
         cv.restore()
 
 
+def sofa_back(cv):
+    shaded(cv, rrp(250, 880, 830, 1170, 60), PURP, dx=-10, dy=-10)
+    for cx_ in (335, 745):
+        shaded(cv, rrp(cx_ - 72, 915, cx_ + 72, 1080, 40), '#B65BE0', dx=-6, dy=-6)
+        gloss_line(cv, cx_ - 50, 945, cx_ - 50, 990, 7)
+        cv.drawCircle(cx_ - 50, 1008, 4, paint('#FFFFFF', 235))
+
+
+def sofa_front(cv):
+    shaded(cv, rrp(255, 1196, 825, 1262, 26), '#B24FDA', dx=-8, dy=-8)
+    gloss_line(cv, 290, 1214, 360, 1214, 7)
+    for x0 in (200, 790):
+        shaded(cv, rrp(x0, 1000, x0 + 90, 1255, 40), '#8A2BB0', dx=-8, dy=-8)
+        gloss_line(cv, x0 + 28, 1032, x0 + 28, 1085, 7)
+    for x_ in (280, 800):
+        cv.drawPath(rrp(x_ - 8, 1252, x_ + 8, 1290, 4), paint('#2A1070'))
+
+
 def boy_scene(cv, t):
-    cv.drawRect(R(-700, -1500, 1800, 1190), paint(shader=lin(0, 300, 0, 1190, ['#0E1238', '#202760'])))
-    ledc = mix('#7A5CFF', '#FF4FA3', .5 + .5 * math.sin(t * 1.1))
-    cv.drawRect(R(-700, 630, 1800, 690), paint(ledc, 60, blur=24))
+    cv.drawRect(R(-700, -1500, 1800, 1190), paint(shader=lin(0, 300, 0, 1190, [NAVY1, '#1F2699'])))
+    ledc = mix(CYAN, PINK, .5 + .5 * math.sin(t * 1.1))
+    cv.drawRect(R(-700, 630, 1800, 690), paint(ledc, 70, blur=24))
     cv.drawRect(R(-700, 653, 1800, 661), paint(ledc))
     # plant
-    shaded(cv, rrp(100, 1110, 170, 1220, 12), '#E9E4F4', dx=-4, dy=-4)
+    shaded(cv, rrp(100, 1110, 170, 1220, 12), '#FF7A59', dx=-4, dy=-4)
+    gloss_line(cv, 116, 1130, 116, 1160, 6)
     for k, (ox, oy, rr_) in enumerate(((-26, -150, 40), (26, -168, 38), (0, -215, 40), (-36, -230, 30), (34, -250, 28))):
-        shaded(cv, cp(135 + ox + math.sin(t * .9 + k) * 2, 1125 + oy * .55, rr_), '#4FB874', dx=-5, dy=-5)
+        shaded(cv, cp(135 + ox + math.sin(t * .9 + k) * 2, 1125 + oy * .55, rr_), GREEN, dx=-5, dy=-5)
     # floor + rug
-    cv.drawRect(R(-700, 1190, 1800, 2300), paint(shader=lin(0, 1190, 0, 1920, ['#2A2052', '#140B2A', '#0A0618'])))
-    cv.drawRect(R(-700, 1186, 1800, 1196), paint('#3A2D6A'))
-    cv.drawOval(R(160, 1270, 920, 1380), paint('#3E2E70'))
-    cv.drawOval(R(190, 1280, 890, 1370), paint('#4A3884', stroke=6))
+    cv.drawRect(R(-700, 1190, 1800, 2300), paint(shader=lin(0, 1190, 0, 1920, ['#2B24B8', '#18127A', '#0E0A55'])))
+    cv.drawRect(R(-700, 1186, 1800, 1196), paint('#4A42D8'))
+    cv.drawOval(R(160, 1270, 920, 1380), paint(MAG))
+    cv.drawOval(R(190, 1280, 890, 1370), paint('#E5199A', stroke=6))
     # TV light wash on the room
-    c = mix('#7FC4FF', '#FF8AB0', .5 + .5 * math.sin(t * 1.7))
-    glow(cv, 540, 900, 900, c, 30, mid=1)
-    # sofa back
-    shaded(cv, rrp(250, 880, 830, 1170, 60), '#6B3E8E', dx=-10, dy=-10)
-    for cx_ in (335, 745):
-        shaded(cv, rrp(cx_ - 72, 915, cx_ + 72, 1080, 40), '#7D4CA0', dx=-6, dy=-6)
+    c = mix(CYAN, PINK, .5 + .5 * math.sin(t * 1.7))
+    glow(cv, 540, 900, 900, c, 34, mid=1)
+    pill_shadow(cv, 540, 1296, 720, 44, '#7A0058', 235)
+    sofa_back(cv)
     sofa_front(cv)          # seat front first, so his legs sit in front of the cushion
+    pill_shadow(cv, 540, 1316, 330, 30, '#7A0058', 235)
     boy_figure(cv, t)
     # coffee table + cans
     for lx in (700, 988):
-        cv.drawPath(rrp(lx - 7, 1326, lx + 7, 1400, 3), paint('#3A2150'))
-    shaded(cv, rrp(660, 1300, 1030, 1332, 10), '#8B5A8E', dx=-6, dy=-5)
-    for cx_, c in ((730, '#E5484D'), (770, '#3FB6A8')):
+        cv.drawPath(rrp(lx - 7, 1326, lx + 7, 1400, 3), paint('#C96A00'))
+    pill_shadow(cv, 845, 1404, 380, 26, '#7A0058', 235)
+    shaded(cv, rrp(660, 1300, 1030, 1332, 10), '#FF9A1F', dx=-6, dy=-5)
+    gloss_line(cv, 690, 1311, 740, 1311, 6)
+    for cx_, c in ((730, '#FF3D5A'), (770, TEAL)):
         shaded(cv, rrp(cx_ - 13, 1258, cx_ + 13, 1303, 5), c, dx=-4, dy=-3)
-        cv.drawPath(rrp(cx_ - 9, 1264, cx_ + 9, 1270, 3), paint('#FFFFFF', 170))
+        cv.drawPath(rrp(cx_ - 9, 1264, cx_ + 9, 1270, 3), paint('#FFFFFF', 200))
     boy_notifs(cv, t)
 
 
@@ -461,9 +481,9 @@ def chat_phone(cv, t, box):
     cv.translate(cx, cy)
     cv.scale(k, k)
     cv.translate(-cx, -cy)
-    glow(cv, cx, cy, 340, '#FF9FC8', 55)
+    glow(cv, cx, cy, 340, '#FF6FB0', 60)
     cv.drawPath(rrp(l - 4, tp + 10, r_ + 4, b + 22, 38), paint('#05031a', 140, blur=18))
-    shaded(cv, rrp(l - 12, tp - 12, r_ + 12, b + 12, 42), '#1B1D33', dx=-4, dy=-4)
+    shaded(cv, rrp(l - 12, tp - 12, r_ + 12, b + 12, 42), '#1A1E76', dx=-4, dy=-4)
     scr = rrp(l, tp, r_, b, 32)
     cv.save()
     cv.clipPath(scr, skia.ClipOp.kIntersect, True)
@@ -504,7 +524,7 @@ def chat_phone(cv, t, box):
         if 0 < a < 1 and t < tt:
             cv.drawPath(rrp(l + 26, b - 44, l + 26 + (r_ - l - 120) * a, b - 32, 6), paint('#9A98B8'))
     cv.restore()
-    cv.drawPath(rrp(cx - 40, tp + 6, cx + 40, tp + 22, 8), paint('#1B1D33'))
+    cv.drawPath(rrp(cx - 40, tp + 6, cx + 40, tp + 22, 8), paint('#1A1E76'))
     cv.restore()
 
 
@@ -569,7 +589,7 @@ def girl_head(cv, x, yf, r, lift, tilt, fc, an, shock=0):
         hl = skia.Path()
         hl.moveTo(hx + sd * .78 * r, hy + .1 * r)
         hl.quadTo(hx + sd * .86 * r, hy + .9 * r, hx + sd * .8 * r, hy + 1.5 * r)
-        cv.drawPath(hl, paint('#5A3A3E', 90, stroke=.05 * r))
+        cv.drawPath(hl, paint('#8E86D8', 120, stroke=.05 * r))
     lx, ly = fc.get('look', (0, 0))
     sq = fc.get('squint', 0)
     for sd in (-1, 1):
@@ -627,42 +647,51 @@ def girl_figure(cv, t):
 
 
 def girl_room(cv, t):
-    cv.drawRect(R(-700, -1500, 1800, 1190), paint(shader=lin(0, 300, 0, 1190, ['#3A1F5C', '#7A3F78'])))
-    cv.drawRect(R(-700, 1190, 1800, 2300), paint(shader=lin(0, 1190, 0, 1700, ['#4A2A5A', '#25123A'])))
-    cv.drawRect(R(-700, 1186, 1800, 1196), paint('#6A3E7A'))
-    cv.drawOval(R(120, 1290, 960, 1400), paint('#8A4A8A'))
-    cv.drawOval(R(150, 1300, 930, 1390), paint('#A55AA0', stroke=6))
+    cv.drawRect(R(-700, -1500, 1800, 1190), paint(YEL))
+    cv.drawRect(R(-700, 1190, 1800, 2300), paint(TEAL))
+    # tone-on-tone props on the wall (like the reference's door, painting and bed)
+    cv.drawPath(rrp(620, 600, 800, 780, 18), paint(YEL_D))
+    cv.drawPath(rrp(646, 626, 774, 754, 10), paint('#FFB300'))
+    cv.drawPath(rrp(-160, 560, 30, 1190, 12), paint(YEL_D))
+    cv.drawPath(rrp(-120, 610, 0, 1140, 8), paint('#FFB300'))
     # wall clock (hands race: time dragging)
-    cx, cy = 150, 790
-    shaded(cv, cp(cx, cy, 56), '#F6EFFF', dx=-5, dy=-5)
-    cv.drawCircle(cx, cy, 56, paint('#8A5A6E', stroke=7))
+    cx, cy = 190, 790
+    cv.drawCircle(cx, cy, 60, paint('#FF6B4A'))
+    cv.drawCircle(cx, cy, 50, paint('#FFFFFF'))
+    gloss_arc(cv, cx, cy, 36, 200, 50, 6, 150)
     for i in range(12):
         a = i * math.pi / 6
-        cv.drawPath(poly([(cx + math.cos(a) * 44, cy + math.sin(a) * 44), (cx + math.cos(a) * 50, cy + math.sin(a) * 50)], False),
-                    paint('#8A88AA', stroke=3))
+        cv.drawPath(poly([(cx + math.cos(a) * 40, cy + math.sin(a) * 40), (cx + math.cos(a) * 46, cy + math.sin(a) * 46)], False),
+                    paint('#9A98C8', stroke=3))
     am = t * 3.2
     ah = am / 12
-    cv.drawPath(poly([(cx, cy), (cx + math.cos(am) * 40, cy + math.sin(am) * 40)], False), paint('#272448', stroke=4))
-    cv.drawPath(poly([(cx, cy), (cx + math.cos(ah) * 26, cy + math.sin(ah) * 26)], False), paint('#272448', stroke=6))
-    cv.drawCircle(cx, cy, 5, paint('#E5484D'))
+    cv.drawPath(poly([(cx, cy), (cx + math.cos(am) * 36, cy + math.sin(am) * 36)], False), paint(NAVY2, stroke=4))
+    cv.drawPath(poly([(cx, cy), (cx + math.cos(ah) * 24, cy + math.sin(ah) * 24)], False), paint(NAVY2, stroke=6))
+    cv.drawCircle(cx, cy, 5, paint('#FF6B4A'))
     # nightstand + lamp
-    glow(cv, 135, 1030, 460, '#FFD28A', 110, mid=1)
-    shaded(cv, rrp(60, 1120, 210, 1296, 14), '#6E4268', dx=-6, dy=-5)
-    cv.drawPath(rrp(80, 1160, 190, 1168, 3), paint('#4A2A44'))
-    shaded(cv, rrp(115, 1062, 155, 1120, 8), '#F4D6A0', dx=-3, dy=-3)
-    shaded(cv, poly([(88, 1000), (182, 1000), (166, 1066), (104, 1066)]), '#FFE2A8', dx=-4, dy=-3)
-    glow(cv, 135, 1040, 90, '#FFF4D6', 160)
+    glow(cv, 140, 1030, 420, '#FFE9A0', 120, mid=1)
+    pill_shadow(cv, 135, 1304, 190, 26, TEAL_D)
+    shaded(cv, rrp(60, 1120, 210, 1296, 14), '#FF9E3D', dx=-6, dy=-5)
+    cv.drawPath(rrp(80, 1160, 190, 1168, 3), paint('#E27A12'))
+    gloss_line(cv, 80, 1140, 80, 1150, 5)
+    shaded(cv, rrp(115, 1062, 155, 1120, 8), '#FFFFFF', dx=-3, dy=-3)
+    shaded(cv, poly([(88, 1000), (182, 1000), (166, 1066), (104, 1066)]), '#FFF6C8', dx=-4, dy=-3)
+    gloss_line(cv, 104, 1012, 110, 1040, 5)
     # headboard + pillows
-    shaded(cv, rrp(240, 850, 840, 1190, 56), '#8A5A6E', dx=-10, dy=-10)
-    shaded(cv, rrp(300, 930, 520, 1080, 50), '#F4E8F2', dx=-6, dy=-6)
-    shaded(cv, rrp(560, 930, 780, 1080, 50), '#FFD9E6', dx=-6, dy=-6)
+    pill_shadow(cv, 540, 1316, 760, 46, TEAL_D)
+    shaded(cv, rrp(240, 850, 840, 1190, 56), '#FF6B4A', dx=-10, dy=-10)
+    gloss_line(cv, 290, 892, 290, 950, 8)
+    cv.drawCircle(290, 972, 5, paint('#FFFFFF', 235))
+    shaded(cv, rrp(300, 930, 520, 1080, 50), '#FFFFFF', dx=-6, dy=-6)
+    shaded(cv, rrp(560, 930, 780, 1080, 50), '#FFB0C8', dx=-6, dy=-6)
 
 
 def girl_front(cv):
     for lx in (230, 850):
-        cv.drawPath(rrp(lx - 10, 1300, lx + 10, 1340, 4), paint('#4A2A44'))
-    shaded(cv, rrp(200, 1186, 880, 1312, 34), '#3FB6A8', dx=-8, dy=-8)
-    cv.drawPath(rrp(214, 1196, 866, 1214, 9), paint('#6FD3C4', 150))
+        cv.drawPath(rrp(lx - 10, 1300, lx + 10, 1340, 4), paint('#4A2A9A'))
+    shaded(cv, rrp(200, 1186, 880, 1312, 34), '#7B4DFF', dx=-8, dy=-8)
+    cv.drawPath(rrp(214, 1196, 866, 1214, 9), paint('#A58BFF', 170))
+    gloss_line(cv, 250, 1250, 330, 1250, 8)
 
 
 def girl_panel(cv, t):
@@ -684,13 +713,15 @@ def girl_panel(cv, t):
 
 
 # ------------------------------------------------------------------ title (letter by letter)
-def typewriter(cv, t, t0, lines, cy, size, cps=32):
+def typewriter(cv, t, t0, lines, cy, size, cps=32, box=True):
     n_show = (t - t0) * cps
     if n_show <= 0:
         return
     f = font('semi', size)
     lh = size * 1.28
     y0 = cy - (len(lines) - 1) * lh / 2
+    if box:
+        boxed_lines(cv, clamp(n_show * .25), cy, len(lines), size)
     idx = 0
     for li, toks in enumerate(lines):
         full = ''.join(tx for tx, _ in toks)
@@ -702,7 +733,6 @@ def typewriter(cv, t, t0, lines, cy, size, cps=32):
                 if a > 0 and ch != ' ':
                     x = x0 + f.measureText(full[:pos])
                     base = y0 + li * lh + (1 - eout(a)) * 16 + size * .35
-                    cv.drawString(ch, x, base + 4, f, paint('#08061a', 170 * a, blur=7))
                     cv.drawString(ch, x, base, f, paint(c, 255 * a))
                 idx += 1
                 pos += 1
@@ -710,7 +740,9 @@ def typewriter(cv, t, t0, lines, cy, size, cps=32):
 
 # ------------------------------------------------------------------ frame
 def draw(cv, t, fi):
-    cv.drawRect(R(0, 0, W, H), paint(shader=lin(0, 0, 0, H, ['#0A0720', '#150E30'])))
+    cv.drawRect(R(0, 0, W, H), paint(shader=lin(0, 0, 0, H, [NAVY0, NAVY1])))
+    halos(cv, 540, 1650, 120, 5, 90, NAVY2, 60)
+    sparkle_field(cv, t, 5, 44, 0, H)
     p = ease(prog(t, SPLIT_A, SPLIT_B))
     ytop = lerp(H + 14, 706, p)
     bb = ytop - 14
@@ -738,12 +770,9 @@ def draw(cv, t, fi):
         cv.translate(0, ytop)
         girl_panel(cv, t)
         cv.restore()
-        cv.drawRect(R(0, ytop - 10, W, ytop - 4), paint('#FFC94A'))
-        glow(cv, W / 2, ytop - 7, 520, '#FFC94A', 28 * p)
-        cv.drawRect(R(0, ytop + 634, W, ytop + 638), paint('#FFC94A', 190))
-    vignette(cv, 140)
-    scrim(cv, 1260, 210)
-    typewriter(cv, t, SPLIT_A, [[("GTA VI is ", '#FFFFFF'), ("killing", '#FF6B6B')], [("relationships", '#FFFFFF')]], 1478, 70)
+        cv.drawRect(R(0, ytop - 10, W, ytop - 4), paint(YEL))
+        cv.drawRect(R(0, ytop + 634, W, ytop + 640), paint(YEL))
+    typewriter(cv, t, SPLIT_A, [[("GTA VI is ", '#FFFFFF'), ("killing", '#FF6B8A')], [("relationships", '#FFFFFF')]], 1500, 70)
     fade = 1 - prog(t, 0, .15)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))

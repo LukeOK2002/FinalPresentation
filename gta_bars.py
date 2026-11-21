@@ -1,24 +1,16 @@
 import os, sys
-SK = '/root/.claude/skills/synced/4e0ea4d7-c568-4bbf-ae1d-e23fce685fc3_d1ab2ef0-75cd-4219-be4f-f884141ad564/kurzgesagt-reel'
-sys.path.insert(0, SK + '/scripts')
-from kz import *
+from kzs import *
 
 DUR = 9.0
 
 BARS = [  # name, score, colour, start, end of grow animation
-    ('GTA 4', 23.2, '#6B7BDA', .7, 2.1),
-    ('GTA 5', 62.5, '#7FC4FF', 2.2, 3.8),
-    ('GTA 6', 87.2, '#FF4FA3', 3.9, 6.0),
+    ('GTA 4', 23.2, '#5B6BFF', .7, 2.1),
+    ('GTA 5', 62.5, '#61E7ED', 2.2, 3.8),
+    ('GTA 6', 87.2, '#FF2D95', 3.9, 6.0),
 ]
-SURF = '#14163A'
-INK_MUTED = '#A9A7C8'
-GOLD = '#FFC94A'
-L, RT, T, BT = 170, 980, 440, 1100
+L, RT, T, BT = 180, 1000, 580, 1180
+PT, PB = 300, 1330
 YMAX = 100.0
-
-
-def A(x):
-    return int(clamp(x, 0, 255))
 
 
 def Y(v):
@@ -48,20 +40,29 @@ def star(cx, cy, r):
 
 
 def draw_chart(cv, t):
-    cv.drawPath(rrp(50, 170, 1030, 1290, 38), paint('#05031a', 120, blur=18))
-    cv.drawPath(rrp(50, 160, 1030, 1280, 38), paint(SURF, 245))
-    cv.drawPath(rrp(50, 160, 1030, 1280, 38), paint('#2B2F66', 255, stroke=2))
-    text(cv, 'Strip Club Realism', 100, 245, font('bold', 66), '#FFFFFF', anchor='l')
-    text(cv, 'Realism score, out of 100', 100, 310, font('med', 30), INK_MUTED, anchor='l')
-    text(cv, 'Illustrative scores', 100, 1246, font('med', 24), '#7C7AA0', anchor='l')
-
-    for v in (25, 50, 75, 100):
-        cv.drawPath(poly([(L, Y(v)), (RT, Y(v))], False), paint('#FFFFFF', 26, stroke=2))
-        text(cv, '%d' % v, L - 16, Y(v), font('med', 26), INK_MUTED, anchor='r')
-    cv.drawPath(poly([(L, BT), (RT, BT)], False), paint('#FFFFFF', 90, stroke=2))
-    text(cv, '0', L - 16, BT, font('med', 26), INK_MUTED, anchor='r')
-
     slot = (RT - L) / 3
+    cx6 = L + slot * 2.5
+    cv.drawRect(R(0, PT, W, PB), paint(PANEL_L))
+    # sunburst behind the winner, clipped to the panel
+    wk = ease(prog(t, 4.2, 6.0))
+    if wk > 0:
+        cv.save()
+        cv.clipRect(R(0, PT, W, PB))
+        sunburst(cv, cx6, 760, t, '#FF3D9A', 30 * wk, 18, 1800, .06)
+        cv.restore()
+    text(cv, 'Strip Club Realism', 70, 150, font('bold', 76), '#FFFFFF', anchor='l')
+    text(cv, 'Realism score, out of 100', 70, 232, font('med', 34), '#C9C6F2', anchor='l')
+    tag(cv, 60, 336, 300, 74, 'Realism score', '#3CCB86', size=34)
+    for v in (25, 50, 75, 100):
+        p = paint('#FFFFFF', 30, stroke=2, cap='butt')
+        p.setPathEffect(skia.DashPathEffect.Make([10, 10], 0))
+        cv.drawPath(poly([(L, Y(v)), (RT, Y(v))], False), p)
+        text(cv, '%d' % v, L - 22, Y(v), font('med', 26), '#AFA9E8', anchor='r')
+    arrow_axis(cv, L, BT, L, T - 80, PERI, 8, 28)
+    arrow_axis(cv, L, BT, RT + 40, BT, PERI, 8, 28)
+    text(cv, 'Score', L + 22, T - 84, font('bold', 34), '#FFFFFF', anchor='l')
+    text(cv, 'Illustrative scores', 60, PB - 26, font('med', 22), '#FFFFFF', 120, anchor='l')
+
     bw = 176
     for i, (name, score, colr, a, b) in enumerate(BARS):
         cx = L + slot * (i + .5)
@@ -71,52 +72,55 @@ def draw_chart(cv, t):
         val = score * min(1.0, hk)
         ytop = Y(score * hk)
         if i == 2 and p > 0:
-            glow(cv, cx, (ytop + BT) / 2, 460, colr, 55 * clamp(p * 1.5), mid=1)
+            glow(cv, cx, (ytop + BT) / 2, 480, colr, 70 * clamp(p * 1.5), mid=1)
         if hk > .004:
-            path = bar_path(x0, x1, ytop, BT - 1, 22)
-            shaded(cv, path, colr, dark(colr, .3), dx=-9, dy=0, hi=(light(colr, .35), 70))
-            cv.drawPath(rrp(x1 - 26, ytop + 24, x1 - 14, BT - 14, 6), paint('#FFFFFF', 0))
-            cv.drawPath(poly([(x0 + 22, ytop + 6), (x1 - 22, ytop + 6)], False), paint('#FFFFFF', 60, stroke=3))
-            size = 54 if i == 2 else 46
-            text(cv, '%.1f' % val, cx, ytop - 34, font('bold', size), '#FFFFFF', A(255 * clamp(p * 4)), shadow=6)
-        text(cv, name, cx, BT + 52, font('bold', 40), '#FFFFFF')
+            path = bar_path(x0, x1, ytop, BT - 2, 24)
+            shaded(cv, path, colr, dark(colr, .3), dx=-12, dy=0)
+            h = BT - ytop
+            if h > 90:                                   # glossy highlight like the reference
+                gloss_line(cv, x0 + 30, ytop + 34, x0 + 30, ytop + 34 + min(h * .3, 120), 11)
+                cv.drawCircle(x0 + 30, ytop + 34 + min(h * .3, 120) + 22, 6, paint('#FFFFFF', 235))
+            size = 58 if i == 2 else 48
+            text(cv, '%.1f' % val, cx, ytop - 36, font('bold', size), '#FFFFFF', A(255 * clamp(p * 4)))
+        text(cv, name, cx, BT + 56, font('bold', 42), '#FFFFFF')
 
-    # "highest" tag + sparkles on the winning bar
-    cx = L + slot * 2.5
+    # "Highest" tag + sparkles on the winning bar
     ytop = Y(BARS[2][1])
     tg = prog(t, 6.0, 6.6)
     if tg > 0:
         k = eback(tg, 1.6)
-        ty = ytop - 108
+        ty = ytop - 118
         cv.save()
-        cv.translate(cx, ty)
+        cv.translate(cx6, ty)
         cv.scale(k, k)
-        cv.translate(-cx, -ty)
-        shaded(cv, rrp(cx - 112, ty - 28, cx + 112, ty + 28, 28), GOLD, dx=-3, dy=-4)
-        cv.drawPath(star(cx - 70, ty, 15), paint('#272448'))
-        text(cv, 'Highest', cx + 14, ty, font('bold', 30), '#272448')
+        cv.translate(-cx6, -ty)
+        tag(cv, cx6 - 140, ty - 32, 280, 64, 'Highest', YEL, size=34, tc='#272448')
+        cv.drawPath(star(cx6 - 90, ty, 16), paint('#272448'))
         cv.restore()
-        for i in range(6):
+        for i in range(5):
             a = (t - 6.0 - i * .07) / .9
             if 0 < a < 1:
-                ang = i * math.pi / 3 + .4
-                r_ = 70 + 110 * eout(a)
-                cv.drawPath(star(cx + math.cos(ang) * r_, ty + math.sin(ang) * r_ * .8, 14 * (1 - a) + 4), paint(GOLD, A(255 * (1 - a))))
+                ang = i * math.pi / 2.5 + .4
+                r_ = 80 + 120 * eout(a)
+                plus(cv, cx6 + math.cos(ang) * r_, ty + math.sin(ang) * r_ * .8, 16 * (1 - a) + 5, '#FFFFFF', A(255 * (1 - a)))
+    if wk > 0:
+        for (dx_, dy_, s_) in ((-150, -200, 18), (150, -140, 14), (-120, 120, 12), (160, 160, 16)):
+            plus(cv, cx6 + dx_, ytop + dy_ + 140, s_ * (.7 + .3 * math.sin(t * 5 + dx_)), '#FFFFFF', A(255 * wk))
 
 
 def draw(cv, t, fi):
-    cv.drawRect(R(0, 0, W, H), paint(shader=lin(0, 0, 0, H, ['#0A0720', '#1A1148', '#0A0720'])))
-    stars(cv, t, ymax=1500, a=.55)
-    k = 1 + .025 * ease(prog(t, 0, DUR))
+    cv.drawRect(R(0, 0, W, H), paint(shader=lin(0, 0, 0, H, [NAVY0, NAVY1])))
+    halos(cv, 540, 1700, 120, 5, 90, NAVY2, 60)
+    sparkle_field(cv, t, 21, 34, 1340, H)
+    sparkle_field(cv, t, 22, 5, 0, 60)
+    k = 1 + .02 * ease(prog(t, 0, DUR))
     cv.save()
-    cv.translate(540, 720)
+    cv.translate(540, 760)
     cv.scale(k, k)
-    cv.translate(-540, -720)
+    cv.translate(-540, -760)
     draw_chart(cv, t)
     cv.restore()
-    vignette(cv, 130)
-    scrim(cv, 1290, 210)
-    subtitle(cv, t, .5, 99, "GTA 6 has the {hl:highest} strip club\nrealism of any games in the franchise\nreleased to date", cy=1450, fade_out=False)
+    subtitle(cv, t, .5, 99, "GTA 6 has the {hl:highest} strip club\nrealism of any games in the franchise\nreleased to date", cy=1490, fade_out=False)
     fade = 1 - prog(t, 0, .3)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))
