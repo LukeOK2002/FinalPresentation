@@ -126,18 +126,28 @@ RIVERS = [
     [(-117.5, 47.0), (-120.0, 46.0), (-123.9, 46.2)],                                                                                         # Columbia
 ]
 LAKES = [([(-87.9, 42.5), (-87.7, 43.4), (-87.9, 44.5), (-87.6, 45.1), (-87.3, 45.7), (-86.2, 45.9), (-85.0, 45.8), (-85.5, 45.2), (-86.2, 44.6), (-86.5, 43.6), (-86.4, 42.4), (-87.0, 41.65), (-87.8, 41.7)])]
-RANGES = {  # lon, lat, size
-    'rockies': [(-113.0, 48.3, 20), (-112.0, 47.0, 22), (-110.8, 45.5, 24), (-110.2, 44.3, 26), (-109.5, 43.0, 22),
-                (-108.2, 41.0, 24), (-106.8, 39.8, 28), (-106.2, 38.5, 26), (-105.8, 37.0, 24), (-106.0, 35.8, 18),
-                (-111.8, 46.2, 16), (-109.4, 44.2, 16), (-107.2, 41.6, 16), (-105.2, 38.0, 16)],
-    'sierra': [(-120.6, 40.0, 16), (-120.0, 38.8, 20), (-119.0, 37.6, 22), (-118.4, 36.5, 20), (-118.0, 35.6, 14)],
-    'cascades': [(-121.7, 48.5, 16), (-121.6, 47.0, 20), (-121.7, 45.4, 18), (-122.0, 43.5, 16), (-122.2, 41.6, 18)],
-    'apps': [(-84.2, 35.6, 12), (-82.8, 36.5, 12), (-81.5, 37.5, 12), (-80.2, 38.6, 12), (-78.8, 39.8, 12),
-             (-77.5, 40.6, 12), (-75.8, 41.3, 12), (-74.2, 42.0, 12)],
+def _cluster(ridge, spread, n_per, seed, smin=.5, smax=1.15):
+    """Scatter several peaks of mixed sizes around each ridge point so ranges read as clusters, not lines."""
+    rng = random.Random(seed)
+    out = []
+    for lon, lat, sz in ridge:
+        for _ in range(n_per):
+            out.append((lon + rng.gauss(0, spread), lat + rng.gauss(0, spread * .6), sz * rng.uniform(smin, smax)))
+    return out
+
+
+RANGES = {
+    'rockies': _cluster([(-113.0, 48.3, 18), (-112.0, 47.0, 20), (-110.8, 45.5, 22), (-110.2, 44.3, 24), (-109.5, 43.0, 22),
+                         (-108.2, 41.0, 22), (-106.8, 39.8, 26), (-106.2, 38.5, 24), (-105.8, 37.0, 22), (-106.0, 35.8, 17)],
+                        .85, 5, 3),
+    'sierra': _cluster([(-120.6, 40.0, 15), (-120.0, 38.8, 18), (-119.0, 37.6, 20), (-118.4, 36.5, 18), (-118.0, 35.6, 13)], .4, 4, 5),
+    'cascades': _cluster([(-121.7, 48.5, 15), (-121.6, 47.0, 18), (-121.7, 45.4, 16), (-122.0, 43.5, 15), (-122.2, 41.6, 16)], .42, 4, 8),
+    'apps': _cluster([(-84.2, 35.6, 11), (-82.8, 36.5, 11), (-81.5, 37.5, 11), (-80.2, 38.6, 11), (-78.8, 39.8, 11),
+                      (-77.5, 40.6, 11), (-75.8, 41.3, 11), (-74.2, 42.0, 11)], .5, 4, 11, .6, 1.1),
 }
-CITIES = [  # name, lon, lat, label dx, dy, anchor
-    ('Houston', -95.4, 29.8, 18, 6, 'l'), ('Dallas', -96.8, 32.8, 0, -34, 'c'), ('Austin', -97.7, 30.3, -18, 8, 'r'),
-    ('New York', -74.0, 40.7, 20, 4, 'l'), ('Los Angeles', -118.2, 34.0, 20, 14, 'l'), ('San Francisco', -122.4, 37.8, 20, 4, 'l')]
+CITIES = [  # name, lon, lat
+    ('Houston', -95.4, 29.8), ('Dallas', -96.8, 32.8), ('Austin', -97.7, 30.3), ('New York', -74.0, 40.7),
+    ('Los Angeles', -118.2, 34.0), ('San Francisco', -122.4, 37.8), ('Chicago', -87.7, 41.95), ('Atlanta', -84.4, 33.75)]
 PUMPJACKS = [(-102.2, 31.7), (-101.0, 32.4), (-103.0, 30.9), (-100.5, 31.3), (-99.0, 29.3), (-97.9, 28.6), (-101.6, 30.6)]
 SOLAR = [(-116.7, 35.0, 1.0), (-119.6, 35.6, .8)]
 MAN_LL = (-75.6, 41.9)
@@ -149,6 +159,20 @@ def region_path(pts):
 
 
 MOUNTAIN_PATHS = {}
+SNOW = [  # lon/lat polygons painted soft-edged inside the land
+    [(-124.3, 49.0), (-95.4, 49.0), (-95.4, 47.5), (-100.0, 47.3), (-104.0, 46.9), (-109.0, 46.6), (-113.0, 46.9),
+     (-117.0, 47.3), (-120.5, 47.9), (-123.6, 48.3)],
+    [(-69.0, 47.5), (-67.8, 47.1), (-67.8, 45.9), (-69.6, 45.6)],
+    [(-92.2, 47.6), (-88.0, 47.6), (-86.5, 46.7), (-90.5, 46.7)],
+    [(-122.2, 48.9), (-120.4, 48.9), (-120.6, 47.2), (-122.0, 47.2)],
+]
+SNOW_PINES = [(-122.8, 48.5), (-121.6, 48.7), (-119.8, 48.5), (-118.2, 48.7), (-116.4, 48.4), (-114.4, 48.7), (-112.4, 48.6), (-110.4, 48.7),
+              (-108.4, 48.5), (-106.4, 48.7), (-104.4, 48.4), (-102.4, 48.7), (-100.4, 48.5), (-98.4, 48.7), (-96.6, 48.4),
+              (-94.0, 48.1), (-91.4, 47.4), (-88.6, 46.9), (-68.9, 46.9), (-69.2, 46.0), (-121.4, 47.7), (-119.2, 47.9)]
+ICE_FLOES = [(-125.9, 48.7), (-126.6, 47.6), (-125.8, 46.9), (-90.2, 48.0), (-88.6, 48.5), (-87.4, 47.8), (-89.4, 47.4)]
+REDWOODS = [(-123.9, 46.5), (-124.0, 45.1), (-123.9, 43.7), (-123.9, 42.3), (-123.6, 41.0)]
+BISON = [(-110.6, 44.7, False), (-110.0, 44.4, True), (-111.0, 44.3, False), (-110.4, 45.1, True)]
+CATTLE = [(-94.7, 45.5, False), (-94.1, 45.2, True), (-94.9, 44.8, True), (-93.5, 44.5, False), (-93.0, 44.9, True)]
 
 
 def mountain(cv, x, y, s, snow=True, rock=('#B98A66', '#8C5F44')):
@@ -161,7 +185,7 @@ def mountain(cv, x, y, s, snow=True, rock=('#B98A66', '#8C5F44')):
                           (x, y - s * .74), (x - s * .1, y - s * .62)]), paint('#FFFFFF'))
 
 
-def city_icon(cv, x, y, s, name, ldx, ldy, anchor):
+def city_icon(cv, x, y, s):
     pill_shadow(cv, x, y + 2, s * 1.6, s * .22, TEAL_D, 255)
     for dx_, w, h, c in ((-.5, .36, 1.0, '#DCE6FF'), (-.1, .32, 1.55, '#F3F7FF'), (.3, .34, .8, '#C9D6FF')):
         shaded(cv, rrp(x + dx_ * s - w * s / 2, y - h * s, x + dx_ * s + w * s / 2, y, s * .05), c, dark('#8FA2E8', .3), dx=-s * .05, dy=0)
@@ -169,11 +193,14 @@ def city_icon(cv, x, y, s, name, ldx, ldy, anchor):
             for wx in (-.08, .08):
                 cv.drawRect(R(x + dx_ * s + wx * s - s * .03, y - h * s + s * .1 + wy * s * .22, x + dx_ * s + wx * s + s * .03, y - h * s + s * .17 + wy * s * .22), paint('#FFC21A'))
     cv.drawPath(poly([(x - .1 * s, y - 1.55 * s), (x - .1 * s, y - 1.85 * s)], False), paint('#F3F7FF', stroke=s * .05))
-    f = font('bold', s * .6)
-    w = f.measureText(name) + s * .5
-    lx = x + ldx - (w if anchor == 'r' else (w / 2 if anchor == 'c' else 0))
-    cv.drawPath(rrp(lx, y + ldy - s * .55, lx + w, y + ldy + s * .3, s * .2), paint('#000000', 175))
-    text(cv, name, lx + w / 2, y + ldy - s * .12, f, '#FFFFFF')
+
+
+def name_tag(cv, x, y, label, size=15, anchor='c'):
+    f = font('bold', size)
+    w = f.measureText(label) + size * .9
+    lx = x - w / 2 if anchor == 'c' else (x if anchor == 'l' else x - w)
+    cv.drawPath(rrp(lx, y - size * .8, lx + w, y + size * .6, size * .3), paint('#000000', 185))
+    text(cv, label, lx + w / 2, y - size * .08, f, '#FFFFFF')
 
 
 def pumpjack(cv, x, y, s, t, ph):
@@ -258,6 +285,140 @@ def flamingo(cv, x, y, s, t, ph, flip=False):
     cv.drawPath(poly([(hx_ + s * .11, hy_ - s * .0), (hx_ + s * .17, hy_ + s * .04), (hx_ + s * .1, hy_ + s * .06)]), paint('#10135A'))
     cv.drawCircle(hx_ + s * .02, hy_ - s * .02, max(.8, s * .018), paint('#10135A'))
     cv.restore()
+
+
+def redwood(cv, x, y, s):
+    pill_shadow(cv, x, y + 1, s * .8, s * .16, '#0F6E56', 255)
+    cv.drawPath(rrp(x - s * .09, y - s * .6, x + s * .09, y, s * .03), paint('#A8452B'))
+    top = y - s * 1.9
+    for i in range(5):
+        by = y - s * .35 - i * s * .3
+        hw = s * (.56 - i * .095)
+        cv.drawPath(poly([(x - hw, by), (x, by - s * .5), (x, by)]), paint('#34B574'))
+        cv.drawPath(poly([(x, by - s * .5), (x + hw, by), (x, by)]), paint('#1F8A5B'))
+    cv.drawPath(poly([(x - s * .06, top + s * .1), (x, top - s * .05), (x + s * .06, top + s * .1)]), paint('#34B574'))
+
+
+def redwood_grove(cv, x, y, s):
+    for dx_, dy_, k in ((-.6, .22, .85), (.65, .16, .8), (0, 0, 1.15)):
+        redwood(cv, x + dx_ * s, y + dy_ * s, s * k)
+
+
+def bison(cv, x, y, s, flip=False):
+    cv.save()
+    if flip:
+        cv.translate(x, 0)
+        cv.scale(-1, 1)
+        cv.translate(-x, 0)
+    pill_shadow(cv, x, y + 1, s * 1.1, s * .16, '#0F6E56', 220)
+    for lx in (-.3, -.1, .2, .38):
+        cv.drawPath(rrp(x + lx * s - s * .045, y - s * .34, x + lx * s + s * .045, y, s * .02), paint('#3E2012'))
+    shaded(cv, op(x - s * .5, y - s * .8, x + s * .42, y - s * .3), '#6B3A22', dark('#6B3A22', .35), dx=-s * .03, dy=-s * .03)
+    shaded(cv, cp(x + s * .22, y - s * .68, s * .3), '#5A2E1A', dark('#5A2E1A', .35), dx=-s * .03, dy=-s * .03)
+    cv.drawCircle(x + s * .5, y - s * .44, s * .2, paint('#3E2012'))
+    cv.drawCircle(x + s * .5, y - s * .38, s * .26, paint('#4A2616', 200))
+    cv.drawPath(poly([(x + s * .6, y - s * .62), (x + s * .66, y - s * .74), (x + s * .62, y - s * .56)]), paint('#F2E6C8'))
+    cv.drawCircle(x + s * .56, y - s * .46, max(.8, s * .025), paint('#F2E6C8'))
+    cv.drawPath(poly([(x - s * .5, y - s * .58), (x - s * .62, y - s * .3)], False), paint('#3E2012', stroke=max(1.2, s * .05)))
+    cv.restore()
+
+
+def cow(cv, x, y, s, flip=False):
+    cv.save()
+    if flip:
+        cv.translate(x, 0)
+        cv.scale(-1, 1)
+        cv.translate(-x, 0)
+    pill_shadow(cv, x, y + 1, s * 1.0, s * .15, '#0F6E56', 220)
+    for lx in (-.28, -.1, .16, .32):
+        cv.drawPath(rrp(x + lx * s - s * .04, y - s * .32, x + lx * s + s * .04, y, s * .02), paint('#E8EAF5'))
+    body = op(x - s * .48, y - s * .72, x + s * .4, y - s * .28)
+    shaded(cv, body, '#FFFFFF', '#CFD3EC', dx=-s * .03, dy=-s * .03)
+    cv.save()
+    cv.clipPath(body, skia.ClipOp.kIntersect, True)
+    cv.drawCircle(x - s * .2, y - s * .55, s * .13, paint('#1D1A3A'))
+    cv.drawCircle(x + s * .15, y - s * .42, s * .1, paint('#1D1A3A'))
+    cv.drawCircle(x - s * .42, y - s * .38, s * .09, paint('#1D1A3A'))
+    cv.restore()
+    cv.drawOval(R(x + s * .3, y - s * .66, x + s * .62, y - s * .36), paint('#FFFFFF'))
+    cv.drawOval(R(x + s * .5, y - s * .5, x + s * .66, y - s * .38), paint('#FFB3C7'))
+    cv.drawCircle(x + s * .46, y - s * .56, max(.7, s * .022), paint('#1D1A3A'))
+    cv.drawOval(R(x + s * .3, y - s * .7, x + s * .4, y - s * .6), paint('#1D1A3A'))
+    cv.drawPath(poly([(x + s * .4, y - s * .68), (x + s * .44, y - s * .78)], False), paint('#F2E6C8', stroke=max(1, s * .04)))
+    cv.drawOval(R(x - s * .08, y - s * .3, x + s * .08, y - s * .22), paint('#FFB3C7'))
+    cv.restore()
+
+
+def kanye(cv, x, y, s):
+    """Flat stylised figure: all-black outfit, bald, sunglasses, light beard."""
+    skin = '#B8683F'
+    pill_shadow(cv, x, y + 1, s * .8, s * .14, TEAL_D, 255)
+    for sd in (-1, 1):
+        cv.drawPath(rrp(x + sd * s * .09 - s * .07, y - s * .55, x + sd * s * .09 + s * .07, y - s * .06, s * .03), paint('#15152B'))
+        cv.drawOval(R(x + sd * s * .1 - s * .1, y - s * .08, x + sd * s * .1 + s * .1, y + s * .01), paint('#0A0A18'))
+    shaded(cv, rrp(x - s * .24, y - s * 1.02, x + s * .24, y - s * .5, s * .08), '#22223C', '#15152B', dx=-s * .03, dy=0)
+    cv.drawPath(poly([(x - s * .25, y - s * .95), (x - s * .32, y - s * .52)], False), paint('#22223C', stroke=s * .11))
+    cv.drawPath(poly([(x + s * .25, y - s * .95), (x + s * .32, y - s * .52)], False), paint('#22223C', stroke=s * .11))
+    for hx in (x - s * .32, x + s * .32):
+        cv.drawCircle(hx, y - s * .5, s * .06, paint(skin))
+    cv.drawPath(poly([(x - s * .12, y - s * .98), (x, y - s * .85), (x + s * .12, y - s * .98)], False), paint('#FFD23F', stroke=max(1, s * .03)))
+    cv.drawCircle(x, y - s * 1.16, s * .18, paint(skin))
+    cv.drawPath(poly([(x - s * .15, y - s * 1.06), (x, y - s * .93), (x + s * .15, y - s * 1.06), (x + s * .1, y - s * 1.0), (x, y - s * .97), (x - s * .1, y - s * 1.0)]), paint('#2A1A12'))
+    cv.drawPath(rrp(x - s * .17, y - s * 1.22, x + s * .17, y - s * 1.12, s * .04), paint('#0A0A18'))
+    gloss_line(cv, x - s * .12, y - s * 1.3, x - s * .02, y - s * 1.32, max(1, s * .03), 220)
+
+
+def carti(cv, x, y, s):
+    """Flat stylised figure: tall, thin, dark outfit, spiky dark hair with pink tips, sunglasses."""
+    skin = '#9A5A3A'
+    pill_shadow(cv, x, y + 1, s * .7, s * .14, TEAL_D, 255)
+    for sd in (-1, 1):
+        cv.drawPath(rrp(x + sd * s * .07 - s * .05, y - s * .62, x + sd * s * .07 + s * .05, y - s * .06, s * .03), paint('#15152B'))
+        cv.drawOval(R(x + sd * s * .09 - s * .09, y - s * .08, x + sd * s * .09 + s * .09, y + s * .01), paint('#E8335B'))
+    shaded(cv, rrp(x - s * .2, y - s * 1.08, x + s * .2, y - s * .56, s * .07), '#1D1A3A', '#15152B', dx=-s * .03, dy=0)
+    cv.drawPath(poly([(x - s * .2, y - s * 1.0), (x - s * .27, y - s * .58)], False), paint('#1D1A3A', stroke=s * .09))
+    cv.drawPath(poly([(x + s * .2, y - s * 1.0), (x + s * .27, y - s * .58)], False), paint('#1D1A3A', stroke=s * .09))
+    for hx in (x - s * .27, x + s * .27):
+        cv.drawCircle(hx, y - s * .56, s * .05, paint(skin))
+    cv.drawPath(poly([(x - s * .1, y - s * 1.02), (x, y - s * .9), (x + s * .1, y - s * 1.02)], False), paint('#FFD23F', stroke=max(1, s * .025)))
+    for k_, (ang, ln) in enumerate(((-110, .42), (-90, .5), (-70, .42), (-130, .34), (-50, .34), (-150, .26), (-30, .26))):
+        a = math.radians(ang)
+        x0, y0 = x + math.cos(a) * s * .12, y - s * 1.3 + math.sin(a) * s * .12
+        x1, y1 = x + math.cos(a) * s * ln, y - s * 1.3 + math.sin(a) * s * ln
+        cv.drawPath(poly([(x0, y0), (x1, y1)], False), paint('#15152B', stroke=max(1.4, s * .06)))
+        cv.drawCircle(x1, y1, max(1, s * .035), paint('#FF4FA0'))
+    cv.drawCircle(x, y - s * 1.2, s * .16, paint(skin))
+    cv.drawPath(rrp(x - s * .15, y - s * 1.25, x + s * .15, y - s * 1.16, s * .04), paint('#15152B'))
+    gloss_line(cv, x - s * .08, y - s * 1.3, x + s * .03, y - s * 1.32, max(1, s * .03), 200)
+
+
+def dennys(cv, x, y, s):
+    pill_shadow(cv, x, y + 1, s * 2.2, s * .2, TEAL_D, 255)
+    shaded(cv, rrp(x - s * .9, y - s * .75, x + s * .7, y, s * .06), '#FFF1C8', dark('#FFF1C8', .3), dx=-s * .04, dy=0)
+    cv.drawPath(rrp(x - s * .96, y - s * .9, x + s * .76, y - s * .7, s * .05), paint('#E8335B'))
+    for wx in (-.7, -.2):
+        cv.drawPath(rrp(x + wx * s, y - s * .55, x + (wx + .38) * s, y - s * .22, s * .04), paint('#61E7ED'))
+    cv.drawPath(rrp(x + s * .3, y - s * .55, x + s * .52, y, s * .03), paint('#8A4A2A'))
+    cv.drawPath(rrp(x + s * .9, y - s * 1.7, x + s * .96, y, s * .02), paint('#4A45A8'))
+    shaded(cv, rrp(x + s * .5, y - s * 2.25, x + s * 1.4, y - s * 1.6, s * .08), '#FFD23F', dark('#FFD23F', .3), dx=-s * .03, dy=-s * .03)
+    text(cv, "Denny's", x + s * .95, y - s * 1.92, font('bold', s * .28), '#E8335B')
+
+
+def pine_snow(cv, x, y, s):
+    cv.drawPath(rrp(x - s * .05, y - s * .25, x + s * .05, y, s * .02), paint('#6B3A22'))
+    for i in range(3):
+        by = y - s * .18 - i * s * .32
+        hw = s * (.42 - i * .1)
+        cv.drawPath(poly([(x - hw, by), (x, by - s * .55), (x + hw, by)]), paint('#1F8A5B'))
+        cv.drawPath(poly([(x - hw * .62, by - s * .2), (x, by - s * .55), (x + hw * .62, by - s * .2), (x + hw * .3, by - s * .13), (x, by - s * .22), (x - hw * .3, by - s * .13)]), paint('#FFFFFF'))
+
+
+def ice_floe(cv, x, y, s, t, ph):
+    bob = math.sin(t * 1.3 + ph) * s * .04
+    cv.drawPath(poly([(x - s * .6, y + bob + s * .1), (x - s * .35, y + bob - s * .12), (x + s * .3, y + bob - s * .15), (x + s * .62, y + bob + s * .08),
+                      (x + s * .3, y + bob + s * .24), (x - s * .3, y + bob + s * .22)]), paint('#9BDDF2'))
+    cv.drawPath(poly([(x - s * .55, y + bob + s * .05), (x - s * .32, y + bob - s * .16), (x + s * .28, y + bob - s * .18), (x + s * .56, y + bob + s * .02),
+                      (x + s * .2, y + bob + s * .08), (x - s * .3, y + bob + s * .08)]), paint('#EAF8FF'))
 
 
 def peach(cv, cx, cy, s):
@@ -349,6 +510,7 @@ def peach_badge(cv, x, y, k):
 # ------------------------------------------------------------------ scene 1: the map
 REGION_PATHS = [(smooth_path(p), c, b) for p, c, b in REGIONS]
 LAKE_PATHS = [smooth_path(p) for p in LAKES]
+SNOW_PATHS = [smooth_path(p) for p in SNOW]
 RIVER_PATHS = []
 for _r in RIVERS:
     _pp = skia.Path()
@@ -374,6 +536,8 @@ def draw_land(cv, t, k, d):
     cv.clipPath(US_PATH, skia.ClipOp.kIntersect, True)
     for path_, c, b in REGION_PATHS:
         cv.drawPath(path_, paint(c, 255, blur=b))
+    for pts_ in SNOW_PATHS:
+        cv.drawPath(pts_, paint('#EAF8FF', 235, blur=9))
     for lon, lat in DUNES:                                   # dune ripples in the deserts
         x_, y_ = proj(lon, lat)
         for q in range(3):
@@ -433,7 +597,7 @@ def scene_map(cv, t):
     fl = ease(prog(t, T_ZOOM0 + .5, T_ZOOM1))
     draw_florida(cv, t, k, d, fl)
     cv.drawPath(poly(BORDER_PTS, False), paint('#0F8E88', 255, stroke=3.2 / k))
-    # mountain ranges (back to front by latitude)
+    # mountain clusters (back to front by latitude)
     peaks = []
     for name, lst in RANGES.items():
         for lon, lat, sz in lst:
@@ -442,7 +606,13 @@ def scene_map(cv, t):
         if name == 'apps':
             mountain(cv, x_, y_, sz, False, ('#7DBB6A', '#5E9A52'))
         else:
-            mountain(cv, x_, y_, sz * .95, True)
+            mountain(cv, x_, y_, sz * .95, sz > 13)
+    for lon, lat in SNOW_PINES:
+        x_, y_ = proj(lon, lat)
+        pine_snow(cv, x_, y_, 15)
+    for lon, lat in REDWOODS:
+        x_, y_ = proj(lon, lat)
+        redwood_grove(cv, x_, y_, 19)
     # icons
     for (lon, lat) in PUMPJACKS:
         x_, y_ = proj(lon, lat)
@@ -450,14 +620,32 @@ def scene_map(cv, t):
     for lon, lat, sc_ in SOLAR:
         x_, y_ = proj(lon, lat)
         solar_farm(cv, x_, y_, 30 * sc_)
-    for nm, lon, lat, ldx, ldy, an in CITIES:
+    for nm, lon, lat in CITIES:
         x_, y_ = proj(lon, lat)
-        city_icon(cv, x_, y_, 21, nm, ldx, ldy, an)
+        city_icon(cv, x_, y_, 21)
+    for lon, lat, fp in BISON:
+        x_, y_ = proj(lon, lat)
+        bison(cv, x_, y_, 28, fp)
+    for lon, lat, fp in CATTLE:
+        x_, y_ = proj(lon, lat)
+        cow(cv, x_, y_, 20, fp)
+    x_, y_ = proj(-88.9, 41.6)
+    kanye(cv, x_, y_, 36)
+    name_tag(cv, x_ - 2, y_ + 16, 'Kanye West', 14, 'r')
+    x_, y_ = proj(-85.6, 33.5)
+    carti(cv, x_, y_, 38)
+    name_tag(cv, x_ - 2, y_ + 16, 'Playboi Carti', 14, 'r')
+    x_, y_ = proj(-83.2, 40.1)
+    dennys(cv, x_, y_, 19)
+    name_tag(cv, x_ + 10, y_ + 18, "Denny's", 14, 'c')
     x_, y_ = proj(*MAN_LL)
     suit_man(cv, x_, y_, 38)
     for lon, lat, ph, fp in sorted(FLAMINGOS, key=lambda f: f[1], reverse=True):
         x_, y_ = proj(lon, lat)
         flamingo(cv, x_, y_, 26, t, ph, fp)
+    for k_, (lon, lat) in enumerate(ICE_FLOES):
+        x_, y_ = proj(lon, lat)
+        ice_floe(cv, x_, y_, 26, t, k_ * 1.3)
     cv.restore()
     cv.restore()
     # labels (screen space)
