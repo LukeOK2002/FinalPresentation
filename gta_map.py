@@ -171,7 +171,7 @@ SNOW_PINES = [(-122.8, 48.5), (-121.6, 48.7), (-119.8, 48.5), (-118.2, 48.7), (-
               (-94.0, 48.1), (-91.4, 47.4), (-88.6, 46.9), (-68.9, 46.9), (-69.2, 46.0), (-121.4, 47.7), (-119.2, 47.9)]
 ICE_FLOES = [(-125.9, 48.7), (-126.6, 47.6), (-125.8, 46.9), (-90.2, 48.0), (-88.6, 48.5), (-87.4, 47.8), (-89.4, 47.4)]
 REDWOODS = [(-123.9, 46.5), (-124.0, 45.1), (-123.9, 43.7), (-123.9, 42.3), (-123.6, 41.0)]
-BISON = [(-110.6, 44.7, False), (-110.0, 44.4, True), (-111.0, 44.3, False), (-110.4, 45.1, True)]
+BISON = [(-103.6, 44.8, False), (-102.9, 44.4, True), (-104.1, 44.3, False), (-103.3, 45.3, True)]
 CATTLE = [(-94.7, 45.5, False), (-94.1, 45.2, True), (-94.9, 44.8, True), (-93.5, 44.5, False), (-93.0, 44.9, True)]
 
 
@@ -350,26 +350,39 @@ def cow(cv, x, y, s, flip=False):
 
 
 def kanye(cv, x, y, s):
-    """Flat stylised figure: all-black outfit, bald, sunglasses, light beard."""
+    """Flat stylised figure: all-black outfit, bald, two eyes, goatee."""
     skin = '#B8683F'
+    beard = '#2A1A12'
     pill_shadow(cv, x, y + 1, s * .8, s * .14, TEAL_D, 255)
     for sd in (-1, 1):
         cv.drawPath(rrp(x + sd * s * .09 - s * .07, y - s * .55, x + sd * s * .09 + s * .07, y - s * .06, s * .03), paint('#15152B'))
         cv.drawOval(R(x + sd * s * .1 - s * .1, y - s * .08, x + sd * s * .1 + s * .1, y + s * .01), paint('#0A0A18'))
-    shaded(cv, rrp(x - s * .24, y - s * 1.02, x + s * .24, y - s * .5, s * .08), '#22223C', '#15152B', dx=-s * .03, dy=0)
-    cv.drawPath(poly([(x - s * .25, y - s * .95), (x - s * .32, y - s * .52)], False), paint('#22223C', stroke=s * .11))
-    cv.drawPath(poly([(x + s * .25, y - s * .95), (x + s * .32, y - s * .52)], False), paint('#22223C', stroke=s * .11))
+    shaded(cv, rrp(x - s * .24, y - s * 1.0, x + s * .24, y - s * .5, s * .08), '#22223C', '#15152B', dx=-s * .03, dy=0)
+    cv.drawPath(poly([(x - s * .25, y - s * .93), (x - s * .32, y - s * .52)], False), paint('#22223C', stroke=s * .11))
+    cv.drawPath(poly([(x + s * .25, y - s * .93), (x + s * .32, y - s * .52)], False), paint('#22223C', stroke=s * .11))
     for hx in (x - s * .32, x + s * .32):
         cv.drawCircle(hx, y - s * .5, s * .06, paint(skin))
-    cv.drawPath(poly([(x - s * .12, y - s * .98), (x, y - s * .85), (x + s * .12, y - s * .98)], False), paint('#FFD23F', stroke=max(1, s * .03)))
-    cv.drawCircle(x, y - s * 1.16, s * .18, paint(skin))
-    cv.drawPath(poly([(x - s * .15, y - s * 1.06), (x, y - s * .93), (x + s * .15, y - s * 1.06), (x + s * .1, y - s * 1.0), (x, y - s * .97), (x - s * .1, y - s * 1.0)]), paint('#2A1A12'))
-    cv.drawPath(rrp(x - s * .17, y - s * 1.22, x + s * .17, y - s * 1.12, s * .04), paint('#0A0A18'))
-    gloss_line(cv, x - s * .12, y - s * 1.3, x - s * .02, y - s * 1.32, max(1, s * .03), 220)
+    cv.drawPath(poly([(x - s * .12, y - s * .96), (x, y - s * .84), (x + s * .12, y - s * .96)], False), paint('#FFD23F', stroke=max(1, s * .03)))
+    hy, hr = y - s * 1.16, s * .2
+    shaded(cv, cp(x, hy, hr), skin, dark(skin, .25), dx=-s * .025, dy=-s * .025)
+    for sd in (-1, 1):                                     # two eyes + brows
+        cv.drawOval(R(x + sd * hr * .42 - hr * .1, hy - hr * .18, x + sd * hr * .42 + hr * .1, hy + hr * .06), paint('#FFFFFF'))
+        cv.drawCircle(x + sd * hr * .42, hy - hr * .06, max(.9, hr * .075), paint(INK))
+        cv.drawPath(poly([(x + sd * hr * .24, hy - hr * .3), (x + sd * hr * .6, hy - hr * .32)], False), paint(beard, stroke=max(1, hr * .09)))
+    cv.save()
+    cv.clipPath(cp(x, hy, hr), skia.ClipOp.kIntersect, True)
+    cv.drawOval(R(x - hr * .34, hy + hr * .38, x + hr * .34, hy + hr * 1.0), paint(beard))                 # goatee
+    mo = skia.Path()
+    mo.moveTo(x - hr * .42, hy + hr * .36)
+    mo.quadTo(x, hy + hr * .2, x + hr * .42, hy + hr * .36)
+    cv.drawPath(mo, paint(beard, stroke=max(1.2, hr * .13)))                                                # moustache
+    cv.drawPath(poly([(x - hr * .14, hy + hr * .5), (x + hr * .14, hy + hr * .5)], False), paint('#7A3A28', stroke=max(.8, hr * .07)))
+    cv.restore()
+    gloss_line(cv, x - s * .12, hy - s * .14, x - s * .03, hy - s * .17, max(1, s * .03), 200)
 
 
 def carti(cv, x, y, s):
-    """Flat stylised figure: tall, thin, dark outfit, spiky dark hair with pink tips, sunglasses."""
+    """Flat stylised figure: tall, thin, dark outfit, long red dreads hanging down, sunglasses."""
     skin = '#9A5A3A'
     pill_shadow(cv, x, y + 1, s * .7, s * .14, TEAL_D, 255)
     for sd in (-1, 1):
@@ -381,15 +394,31 @@ def carti(cv, x, y, s):
     for hx in (x - s * .27, x + s * .27):
         cv.drawCircle(hx, y - s * .56, s * .05, paint(skin))
     cv.drawPath(poly([(x - s * .1, y - s * 1.02), (x, y - s * .9), (x + s * .1, y - s * 1.02)], False), paint('#FFD23F', stroke=max(1, s * .025)))
-    for k_, (ang, ln) in enumerate(((-110, .42), (-90, .5), (-70, .42), (-130, .34), (-50, .34), (-150, .26), (-30, .26))):
-        a = math.radians(ang)
-        x0, y0 = x + math.cos(a) * s * .12, y - s * 1.3 + math.sin(a) * s * .12
-        x1, y1 = x + math.cos(a) * s * ln, y - s * 1.3 + math.sin(a) * s * ln
-        cv.drawPath(poly([(x0, y0), (x1, y1)], False), paint('#15152B', stroke=max(1.4, s * .06)))
-        cv.drawCircle(x1, y1, max(1, s * .035), paint('#FF4FA0'))
-    cv.drawCircle(x, y - s * 1.2, s * .16, paint(skin))
-    cv.drawPath(rrp(x - s * .15, y - s * 1.25, x + s * .15, y - s * 1.16, s * .04), paint('#15152B'))
-    gloss_line(cv, x - s * .08, y - s * 1.3, x + s * .03, y - s * 1.32, max(1, s * .03), 200)
+    hy, hr = y - s * 1.2, s * .16
+    red, red_d = '#E8335B', '#B81A3E'
+    # dreads hanging behind the shoulders, then the head, then the dreads framing the face
+    for k_, off in enumerate((-.2, -.12, .12, .2)):
+        ln = .62 - (k_ % 2) * .08
+        p = skia.Path()
+        p.moveTo(x + off * s * .9, hy - hr * .6)
+        p.quadTo(x + off * s * 1.9 + (-1) ** k_ * s * .02, hy + s * ln * .45, x + off * s * 1.45, hy + s * ln)
+        cv.drawPath(p, paint(red_d, stroke=max(1.8, s * .07)))
+    shaded(cv, cp(x, hy, hr), skin, dark(skin, .25), dx=-s * .02, dy=-s * .02)
+    cv.save()
+    cv.clipPath(cp(x, hy, hr), skia.ClipOp.kIntersect, True)
+    cv.drawRect(R(x - hr * 1.2, hy - hr * 1.3, x + hr * 1.2, hy - hr * .5), paint(red))                       # fringe
+    cv.restore()
+    cv.drawCircle(x, hy - hr * .95, hr * .85, paint(red))                                                     # crown of hair
+    cv.drawRect(R(x - hr * .8, hy - hr * .95, x + hr * .8, hy - hr * .45), paint(red))
+    cv.drawPath(rrp(x - hr * .95, hy - hr * .22, x + hr * .95, hy + hr * .22, hr * .2), paint('#15152B'))     # shades
+    for k_, off in enumerate((-.22, -.15, .15, .22)):
+        ln = .7 - (k_ % 2) * .1
+        p = skia.Path()
+        p.moveTo(x + off * s, hy - hr * .5)
+        p.quadTo(x + off * s * 1.6 + (-1) ** k_ * s * .015, hy + s * ln * .5, x + off * s * 1.3, hy + s * ln)
+        cv.drawPath(p, paint(red, stroke=max(1.8, s * .075)))
+        cv.drawCircle(x + off * s * 1.3, hy + s * ln, max(1, s * .036), paint(red_d))
+    gloss_line(cv, x - hr * .6, hy - hr * 1.15, x - hr * .1, hy - hr * 1.2, max(1, s * .03), 200)
 
 
 def dennys(cv, x, y, s):
