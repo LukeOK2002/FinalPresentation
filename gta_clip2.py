@@ -9,7 +9,7 @@ SOFA_DX = -120                   # sofa group shifted left to leave room for the
 
 # ------------------------------------------------------------------ in-game screen: beach club, dancing character
 def dancer(cv, t, cx, base):
-    """Flat-vector party dancer seen from behind (stylised, no anatomical detail)."""
+    """Flat-vector party dancer seen from behind: hourglass cartoon silhouette, hips bouncing to the beat."""
     sway = math.sin(t * 5.0) * 13
     hop = abs(math.sin(t * 10.0)) * 7
     skin = (214, 154, 110)
@@ -17,6 +17,7 @@ def dancer(cv, t, cx, base):
     hx, hy = cx + sway, base - 112 + hop * .6
     sy = base - 182
     tx = cx + sway * .4
+    wx = lerp(tx, hx, .6)
 
     def limb(pts, w, c):
         p = poly(pts, False)
@@ -26,19 +27,33 @@ def dancer(cv, t, cx, base):
         cv.restore()
         cv.drawPath(p, paint(c, stroke=w))
     for sd in (-1, 1):
-        limb([(hx + sd * 17, hy + 4), (cx + sd * (30 + sd * sway * .15), base - 52), (cx + sd * 22, base - 6)], 19, skin)
+        limb([(hx + sd * 20, hy + 4), (cx + sd * (32 + sd * sway * .15), base - 52), (cx + sd * 22, base - 6)], 21, skin)
         cv.drawOval(R(cx + sd * 22 - 10, base - 9, cx + sd * 22 + 10, base + 3), paint(dark(skin, .12)))
-    shaded(cv, poly([(hx - 20, hy - 8), (hx + 20, hy - 8), (tx + 31, sy), (tx - 31, sy)]), skin, dark(skin, .22), dx=-4, dy=-3)
-    shaded(cv, rrp(hx - 35, hy - 10, hx + 35, hy + 20 - hop * .4, 15), pink, dark(pink, .25), dx=-4, dy=-4)
-    cv.drawPath(poly([(tx - 31, sy + 22), (tx + 31, sy + 22)], False), paint(pink, stroke=5))
-    cv.drawCircle(tx, sy + 22, 5, paint('#FF8AC8'))
+    # arms up
     for sd in (-1, 1):
-        sh = (tx + sd * 30, sy + 4)
-        el = (tx + sd * 50 + sway * .4, sy - 14)
-        hd = (tx + sd * 42 + sway * .7, sy - 56 + math.sin(t * 5 + sd) * 6)
+        sh = (tx + sd * 27, sy + 4)
+        el = (tx + sd * 48 + sway * .4, sy - 12)
+        hd = (tx + sd * 42 + sway * .7, sy - 54 + math.sin(t * 5 + sd) * 6)
         limb([sh, el, hd], 11, skin)
-    cv.drawPath(poly([(tx, sy - 36), (tx - sway * 1.3 + 10, sy + 12)], False), paint(hair, stroke=11))
-    shaded(cv, cp(tx, sy - 26, 17.5), hair, dark(hair, .3), dx=-3, dy=-3)
+    # neck + torso: shoulders, bust, narrow waist, hips
+    shaded(cv, rrp(tx - 7, sy - 18, tx + 7, sy + 4, 4), skin, dark(skin, .22), dx=-2, dy=-1)
+    torso = skia.Path()
+    torso.moveTo(tx - 27, sy - 2)
+    torso.cubicTo(tx - 31, sy + 8, tx - 37, sy + 16, tx - 34, sy + 26)
+    torso.cubicTo(tx - 32, sy + 38, wx - 17, sy + 40, wx - 15, sy + 50)
+    torso.cubicTo(wx - 13, sy + 58, hx - 20, hy - 20, hx - 19, hy - 8)
+    torso.lineTo(hx + 19, hy - 8)
+    torso.cubicTo(hx + 20, hy - 20, wx + 13, sy + 58, wx + 15, sy + 50)
+    torso.cubicTo(wx + 17, sy + 40, tx + 32, sy + 38, tx + 34, sy + 26)
+    torso.cubicTo(tx + 37, sy + 16, tx + 31, sy + 8, tx + 27, sy - 2)
+    torso.close()
+    shaded(cv, torso, skin, dark(skin, .22), dx=-4, dy=-3)
+    shaded(cv, rrp(hx - 40, hy - 14, hx + 40, hy + 22 - hop * .4, 18), pink, dark(pink, .25), dx=-4, dy=-4)
+    cv.drawPath(poly([(tx - 35, sy + 22), (tx + 35, sy + 22)], False), paint(pink, stroke=5))
+    cv.drawCircle(tx, sy + 22, 5, paint('#FF8AC8'))
+    # head (from behind: hair) with swinging ponytail
+    cv.drawPath(poly([(tx, sy - 44), (tx - sway * 1.3 + 12, sy + 8)], False), paint(hair, stroke=11))
+    shaded(cv, cp(tx, sy - 32, 18.5), hair, dark(hair, .3), dx=-3, dy=-3)
 
 
 def game_screen2(cv, t):
@@ -71,7 +86,12 @@ def game_screen2(cv, t):
     palm(cv, 60, 394, 250, math.sin(t * 1.6), 1.0)
     palm(cv, 650, 394, 280, math.sin(t * 1.4 + 1), 1.1)
     glow(cv, 350, 372, 260, '#FF4FA3', 60)
+    cv.save()
+    cv.translate(350, 380)
+    cv.scale(1.5, 1.5)
+    cv.translate(-350, -372)
     dancer(cv, t, 350, 372)
+    cv.restore()
     for i in range(12):
         bx = 40 + (i * 97) % 640
         by = 30 + (i * 53) % 160
@@ -231,16 +251,16 @@ def mix_arms(a, b, k):
 
 
 def girl_state(t):
-    """She walks in from the right-hand door and storms back out the same way, always facing the room."""
+    """She walks in through the right-hand door and storms back out through it, always facing the room."""
     if t < 4.0 or t > 8.7:
         return None
     if t < 5.0:
-        u = ease(prog(t, 4.0, 5.0))
-        return dict(x=lerp(1210, 830, u), yf=lerp(1325, 1345, u), back=False, sx=1, walk=1)
+        p = ease(prog(t, 4.0, 5.0))
+        return dict(x=lerp(1160, 830, p), yf=1274 + 71 * ease(prog(p, .45, 1)), back=False, sx=1, walk=1)
     if t < 7.6:
         return dict(x=830, yf=1345, back=False, sx=1, walk=0)
-    u = ease(prog(t, 7.6, 8.5))
-    return dict(x=lerp(830, 1260, u), yf=lerp(1345, 1325, u), back=False, sx=1, walk=1.4)
+    p = ease(prog(t, 7.6, 8.5))
+    return dict(x=lerp(830, 1170, p), yf=lerp(1345, 1274, ease(prog(p, 0, .5))), back=False, sx=1, walk=1.4)
 
 
 def girl(cv, t):
@@ -283,6 +303,12 @@ def girl(cv, t):
     tilt = -2 * an + (math.sin(ph) * 5 * stomp) + (math.sin(ph) * 2 * (walk and not stomp))
     lift = -abs(math.sin(ph)) * .05 * walk + (.07 * clamp((an - .5) / .4) if t > 6.4 else 0)
     cv.save()
+    xp = 930 + (yf - 1195) / 1.013          # where the side-wall plane sits at her depth
+    if x + .9 * r > xp - 2:                  # past the wall: only visible through the doorway
+        room_side = skia.Path()
+        room_side.addRect(R(-3000, -3000, xp, 3000))
+        opening = poly([DP(DU0, 0), DP(DU1, 0), DP(DU1, 1), DP(DU0, 1)])
+        cv.clipPath(skia.Op(room_side, opening, skia.PathOp.kUnion_PathOp), skia.ClipOp.kIntersect, True)
     if alpha < 1:
         cv.saveLayerAlpha(None, A(255 * alpha))
     cv.translate(x, 0)
@@ -303,7 +329,7 @@ def girl(cv, t):
             girl_head(cv_, x, yf, r, lift, tilt, fc, an, shock)
     person(cv, x, yf, r, GIRL, dict(legs=None, arms=arms, face=fc, held=held, tilt=tilt, lift=lift))
     if not back:
-        st_ = clamp((an - .45) / .25)
+        st_ = clamp((an - .45) / .25) * clamp((1060 - x) / 100)
         if st_ > 0 and t > 6.4:
             steam(cv, t, x, yf - 3.85 * r, r, st_)
         if an > .8 and t > 6.4:
@@ -368,7 +394,6 @@ def room(cv, t):
     side_wall(cv, t)
     c = mix('#FF9FD0', '#7FC4FF', .5 + .5 * math.sin(t * 1.7))
     glow(cv, 420, 900, 900, c, 30, mid=1)
-    door_leaf(cv, t)
     cv.save()
     cv.translate(SOFA_DX, 0)
     shaded(cv, rrp(250, 880, 830, 1170, 60), '#6B3E8E', dx=-10, dy=-10)
@@ -378,6 +403,7 @@ def room(cv, t):
     boy2(cv, t)
     cv.restore()
     girl(cv, t)
+    door_leaf(cv, t)
     slam_fx(cv, t)
 
 
@@ -394,7 +420,7 @@ def draw(cv, t, fi):
     vignette(cv, 140)
     scrim(cv, 1260, 210)
     subtitle(cv, t, .4, 4.4, "The game contains {hl:highly sexualised}\ndepictions of women, which are\n{hl:impossible to avoid}", cy=1440)
-    typewriter(cv, t, TS + .25, [[("This has placed a ", '#FFFFFF'), ("strain", '#FF6B6B')],
+    typewriter(cv, t, 4.5, [[("This has placed a ", '#FFFFFF'), ("strain", '#FF6B6B')],
                                  [("on many relationships", '#FFFFFF')]], 1478, 70)
     fade = 1 - prog(t, 0, .15)
     if fade > 0:
