@@ -5,7 +5,7 @@ sys.path.insert(0, SK + '/examples')
 from kz import *
 from phone_misunderstanding import phone_back, steam, sofa_front
 
-DUR = 15.6
+DUR = 5.2
 NF, NR = 1300, 115
 PHONE_Y = NF - 2.12 * NR
 
@@ -13,15 +13,16 @@ PHONE_Y = NF - 2.12 * NR
 BOY = dict(skin=(238, 190, 160), hair='#3A2418', style='short', top='#E3A83B', pants='#2A2E46',
            shoes='#ECECF4', hoodie=True)
 # girlfriend: stylised after Nikki from Obsession (long dark hair, warm skin, pink top)
-GIRL = dict(skin=(222, 172, 140), hair='#2E1B16', style='long', top='#E8548F', pants='#3A3470',
+GIRL = dict(skin=(226, 176, 142), hair='#12080A', style='long', top='#E9D6B8', pants='#3A3470',
             shoes='#F2F2FA')
+CREAM = '#E9D6B8'
 
 # ------------------------------------------------------------------ story data
-MSG = [("hey, dinner's ready", 2.2), ("babe?", 3.3), ("are you ignoring me", 4.5), ("it's been 3 hours", 5.4),
-       ("HELLO??", 6.2), ("seriously?", 8.1), ("I'm going to bed", 9.9), ("enjoy your game.", 11.9)]
+MSG = [("hey, dinner's ready", .2), ("babe?", .65), ("are you ignoring me", 1.1), ("it's been 3 hours", 1.55),
+       ("HELLO??", 2.0), ("seriously?", 3.0), ("I'm going to bed", 3.6), ("enjoy your game.", 4.2)]
 T = [m[1] for m in MSG]
-CRASH = [4.4, 10.2]
-SPLIT_A, SPLIT_B = 6.3, 7.5
+CRASH = [1.2, 3.8]
+SPLIT_A, SPLIT_B = 2.5, 3.2
 
 
 def A(x):
@@ -45,8 +46,8 @@ def pulse(t):
     s = 0
     for tt in T:
         a = t - tt
-        if 0 <= a < 1.0:
-            s = max(s, (1 - a) ** 2)
+        if 0 <= a < .6:
+            s = max(s, (1 - a / .6) ** 2)
     return s
 
 
@@ -54,8 +55,8 @@ def buzz(t):
     s = 0
     for tt in T:
         a = t - tt
-        if 0 <= a < .55:
-            s = max(s, (1 - a / .55) * math.sin(t * 70))
+        if 0 <= a < .35:
+            s = max(s, (1 - a / .35) * math.sin(t * 70))
     return s
 
 
@@ -195,7 +196,7 @@ def game_screen(cv, t, logo=True):
         cv.drawPath(star_path(566 + i * 28, 34, 12), paint(c, 255 if (on or (i == 3 and fl)) else 90))
     text(cv, '$48,200', 680, 72, font('bold', 24), '#8BE08B', anchor='r', shadow=4)
     if logo:
-        lg = 1 - ein(prog(t, 1.3, 2.0))
+        lg = 1 - ein(prog(t, .55, .95))
         if lg > 0:
             cv.drawRect(R(-20, -20, 720, 420), paint('#12082E', 150 * lg))
             text(cv, 'GTA VI', 356, 186, font('bold', 118), '#B0357A', 255 * lg, track=6)
@@ -249,11 +250,11 @@ def boy_figure(cv, t):
     tr = turn(t)
     crash = None
     for c in CRASH:
-        if 0 <= t - c < 2.0:
+        if 0 <= t - c < 1.4:
             crash = t - c
     if crash is not None and crash < .5:
         fc = dict(eyes='wide', mouth=.2, mopen=.95, look=(0, -.3), brows=((-14, .1), (-14, .1)), blush=.4)
-    elif crash is not None and crash < 1.9:
+    elif crash is not None and crash < 1.3:
         fc = dict(eyes='happy', mouth=.9, mopen=.7 + .15 * math.sin(t * 18), blush=.7)
     else:
         fc = dict(eyes='open', squint=.2, look=(tr * .8, -.3), mouth=.5,
@@ -277,7 +278,7 @@ def boy_notifs(cv, t):
     n = count_at(t)
     glow(cv, x, base - 80, 320, '#9FD4FF', 35 + 95 * pul, mid=1)
     for tt in T:
-        a = (t - tt) / .9
+        a = (t - tt) / .6
         if 0 <= a < 1:
             cv.drawCircle(x, base - 85, 40 + 150 * ease(a), paint('#9FD4FF', 170 * (1 - a), stroke=4))
     cv.save()
@@ -303,8 +304,8 @@ def boy_notifs(cv, t):
     for i in range(nn):
         if t < T[i]:
             continue
-        pop = prog(t, T[i], T[i] + .45)
-        shift = sum(ease(prog(t, T[j], T[j] + .4)) for j in range(i + 1, nn))
+        pop = prog(t, T[i], T[i] + .3)
+        shift = sum(ease(prog(t, T[j], T[j] + .25)) for j in range(i + 1, nn))
         al = clamp(4.0 - shift) * clamp(pop * 3)
         if al <= 0:
             continue
@@ -346,8 +347,8 @@ def boy_scene(cv, t):
     shaded(cv, rrp(250, 880, 830, 1170, 60), '#6B3E8E', dx=-10, dy=-10)
     for cx_ in (335, 745):
         shaded(cv, rrp(cx_ - 72, 915, cx_ + 72, 1080, 40), '#7D4CA0', dx=-6, dy=-6)
+    sofa_front(cv)          # seat front first, so his legs sit in front of the cushion
     boy_figure(cv, t)
-    sofa_front(cv)
     # coffee table + cans
     for lx in (700, 988):
         cv.drawPath(rrp(lx - 7, 1326, lx + 7, 1400, 3), paint('#3A2150'))
@@ -362,7 +363,7 @@ def boy_scene(cv, t):
 def chat_phone(cv, t, box):
     l, tp, r_, b = box
     cx, cy = (l + r_) / 2, (tp + b) / 2
-    k = eback(prog(t, SPLIT_A + .3, SPLIT_A + 1.0), 1.3)
+    k = eback(prog(t, SPLIT_A + .15, SPLIT_A + .6), 1.3)
     if k <= 0:
         return
     cv.save()
@@ -383,8 +384,8 @@ def chat_phone(cv, t, box):
     for i in range(n):
         if t < T[i]:
             continue
-        pop = eback(prog(t, T[i], T[i] + .3), 1.3)
-        off = sum(ease(prog(t, T[j], T[j] + .3)) for j in range(i + 1, n)) * (BH + GAP)
+        pop = eback(prog(t, T[i], T[i] + .2), 1.3)
+        off = sum(ease(prog(t, T[j], T[j] + .2)) for j in range(i + 1, n)) * (BH + GAP)
         yb = base_y - off
         w = font_b.measureText(MSG[i][0]) + 26
         bx1 = r_ - 14
@@ -396,7 +397,7 @@ def chat_phone(cv, t, box):
         text(cv, MSG[i][0], bx1 - w / 2, yb - BH / 2, font_b, '#FFFFFF')
         cv.restore()
         if i == max(j for j in range(n) if t >= T[j]):
-            text(cv, 'Delivered', bx1, yb + 13, font('med', 12), '#8A88AA', A(255 * prog(t, T[i] + .35, T[i] + .6)), anchor='r')
+            text(cv, 'Delivered', bx1, yb + 13, font('med', 12), '#8A88AA', A(255 * prog(t, T[i] + .2, T[i] + .4)), anchor='r')
     cv.drawRect(R(l, tp, r_, tp + 66), paint('#FFFFFF'))
     cv.drawRect(R(l, tp + 66, r_, tp + 68), paint('#E4E2F0'))
     cv.drawCircle(l + 34, tp + 38, 17, paint('#E8B07A'))
@@ -408,7 +409,7 @@ def chat_phone(cv, t, box):
     cv.drawCircle(r_ - 32, b - 38, 19, paint('#E8548F'))
     cv.drawPath(poly([(r_ - 39, b - 46), (r_ - 24, b - 38), (r_ - 39, b - 30)]), paint('#FFFFFF'))
     for tt in T:
-        a = prog(t, tt - 1.1, tt - .05)
+        a = prog(t, tt - .4, tt - .03)
         if 0 < a < 1 and t < tt:
             cv.drawPath(rrp(l + 26, b - 44, l + 26 + (r_ - l - 120) * a, b - 32, 6), paint('#9A98B8'))
     cv.restore()
@@ -418,12 +419,12 @@ def chat_phone(cv, t, box):
 
 def typing_amp(t):
     for tt in T:
-        if tt - 1.1 <= t < tt:
+        if tt - .4 <= t < tt:
             return 1.0
     return .12
 
 
-ANGER = [(6.0, .1), (8.1, .3), (9.9, .58), (11.9, .9), (13.2, 1.0)]
+ANGER = [(2.4, .15), (3.0, .4), (3.6, .66), (4.2, .92), (4.8, 1.0)]
 
 
 def anger_mark(cv, x, y, s):
@@ -434,24 +435,110 @@ def anger_mark(cv, x, y, s):
                    math.degrees(a) + 180 - 55 - 90 + 90, 110, False, paint('#FF4A5A', stroke=6 * s))
 
 
+def girl_overlay(cv, t, fc, an, tilt, lift):
+    """Likeness details drawn over the toolkit's head/torso: hair part + curtain bangs, lashes, pursed-lip chin,
+    off-shoulder cream knit, bare shoulders and a thin gold pendant."""
+    r = NR
+    hx, hy = 540, NF + (-3.85 + lift) * r
+    U = lambda px, py: (540 + px * r, NF + py * r)
+    skin, hc = GIRL['skin'], GIRL['hair']
+    # bare shoulders + collarbones (clipped so they never cover the chin)
+    cv.save()
+    cv.rotate(tilt, hx, hy + 1.1 * r)
+    cv.clipPath(cp(hx, hy, r), skia.ClipOp.kDifference, True)
+    cv.rotate(-tilt, hx, hy + 1.1 * r)
+    shaded(cv, rrp(*U(-.92, -3.02 + lift), *U(.92, -2.45 + lift), .42 * r), skin, dark(skin, .16), dx=-.04 * r, dy=-.05 * r)
+    for sd in (-1, 1):
+        cb = skia.Path()
+        cb.moveTo(*U(sd * .08, -2.74 + lift))
+        cb.quadTo(*U(sd * .26, -2.84 + lift), *U(sd * .5, -2.76 + lift))
+        cv.drawPath(cb, paint(dark(skin, .22), 110, stroke=.03 * r))
+    shaded(cv, rrp(*U(-1.0, -2.64 + lift), *U(1.0, -2.18 + lift), .2 * r), CREAM, dx=-.06 * r, dy=-.07 * r)
+    for yy in (-2.5, -2.36):
+        w_ = skia.Path()
+        w_.moveTo(*U(-.95, yy + lift))
+        w_.cubicTo(*U(-.5, yy - .05 + lift), *U(-.2, yy + .05 + lift), *U(0, yy + lift))
+        w_.cubicTo(*U(.2, yy - .05 + lift), *U(.5, yy + .05 + lift), *U(.95, yy + lift))
+        cv.drawPath(w_, paint(dark(CREAM, .22), 140, stroke=.028 * r))
+    ch = skia.Path()
+    ch.moveTo(*U(-.22, -2.9 + lift))
+    ch.quadTo(*U(0, -2.45 + lift), *U(.22, -2.9 + lift))
+    cv.drawPath(ch, paint('#F0C25A', 230, stroke=.022 * r))
+    shaded(cv, rrp(*U(-.055, -2.6 + lift), *U(.055, -2.47 + lift), .03 * r), '#F0C25A', '#B98A2E', dx=-.015 * r, dy=-.015 * r)
+    cv.restore()
+    # head details (rotate with the head)
+    cv.save()
+    cv.rotate(tilt, hx, hy + 1.1 * r)
+    for sd in (-1, 1):  # front locks over the shoulders, redrawn on top of the knit
+        q = skia.Path()
+        q.moveTo(hx + sd * .78 * r, hy - .55 * r)
+        q.cubicTo(hx + sd * 1.18 * r, hy - .1 * r, hx + sd * 1.12 * r, hy + .9 * r, hx + sd * 1.02 * r, hy + 1.75 * r)
+        q.quadTo(hx + sd * .9 * r, hy + 1.95 * r, hx + sd * .78 * r, hy + 1.7 * r)
+        q.cubicTo(hx + sd * .86 * r, hy + .9 * r, hx + sd * .9 * r, hy + .2 * r, hx + sd * .78 * r, hy - .55 * r)
+        q.close()
+        shaded(cv, q, hc, dark(hc, .25), dx=-.05 * r * sd, dy=-.05 * r)
+        hl = skia.Path()
+        hl.moveTo(hx + sd * .95 * r, hy + .1 * r)
+        hl.quadTo(hx + sd * 1.0 * r, hy + .9 * r, hx + sd * .93 * r, hy + 1.5 * r)
+        cv.drawPath(hl, paint('#5A3A3E', 90, stroke=.05 * r))
+    # curtain bangs: forehead opens in an inverted V from a slightly off-centre part
+    fringe = skia.Path()
+    fringe.addOval(R(hx - 1.3 * r, hy - 1.4 * r, hx + .5 * r, hy - .4 * r))
+    fringe.addOval(R(hx - .3 * r, hy - 1.3 * r, hx + 1.25 * r, hy - .52 * r))
+    tri = skia.Path()
+    tri.moveTo(hx - .05 * r, hy - .78 * r)
+    tri.cubicTo(hx - .18 * r, hy - .68 * r, hx - .42 * r, hy - .6 * r, hx - .55 * r, hy - .44 * r)
+    tri.lineTo(hx + .5 * r, hy - .44 * r)
+    tri.cubicTo(hx + .38 * r, hy - .6 * r, hx + .16 * r, hy - .68 * r, hx - .05 * r, hy - .78 * r)
+    tri.close()
+    gap = skia.Op(tri, fringe, skia.PathOp.kIntersect_PathOp)
+    cv.save()
+    cv.clipPath(cp(hx, hy, r * .995), skia.ClipOp.kIntersect, True)
+    cv.drawPath(gap, paint(skin))
+    cv.drawPath(poly([(hx - .05 * r, hy - 1.08 * r), (hx - .05 * r, hy - .78 * r)], False), paint('#5A3A3E', 120, stroke=.03 * r))
+    cv.restore()
+    # lashes
+    lx, ly = fc.get('look', (0, 0))
+    sq = fc.get('squint', 0)
+    for sd in (-1, 1):
+        cx = hx + sd * .34 * r + lx * .07 * r
+        cy = hy + .06 * r + ly * .07 * r
+        oh = .125 * r * (1 - .45 * sq)
+        lid = skia.Path()
+        lid.moveTo(cx - .12 * r, cy - oh * .35)
+        lid.quadTo(cx, cy - oh * 1.7, cx + .12 * r, cy - oh * .35)
+        cv.drawPath(lid, paint(INK, stroke=.038 * r))
+        cv.drawPath(poly([(cx + sd * .09 * r, cy - oh * .9), (cx + sd * .19 * r, cy - oh * 1.25)], False), paint(INK, stroke=.04 * r))
+    # pursed lip / bunched chin when angry
+    ca = clamp((an - .35) / .3)
+    if ca > 0:
+        lip = skia.Path()
+        lip.moveTo(hx - .16 * r, hy + .47 * r)
+        lip.quadTo(hx, hy + .7 * r, hx + .16 * r, hy + .47 * r)
+        cv.drawPath(lip, paint(INK, A(190 * ca), stroke=.03 * r))
+    cv.restore()
+
+
 def girl_figure(cv, t):
     an = keyf(t, ANGER)
     e = ease(prog(an, .12, .7))
-    ang = lerp(-9, 26, e)
-    rs = lerp(.08, -.04, e)
-    look_y = lerp(.8, -.1, ease(prog(t, 13.3, 13.9)))
-    fc = dict(eyes='open', squint=.35 * an, look=(0, look_y), mouth=lerp(-.05, -.8, an),
-              brows=((ang, rs), (ang, rs)), blush=lerp(.4, 1.5, an),
+    ang = lerp(-9, 28, e)
+    rs = lerp(.08, -.05, e)
+    look_y = lerp(.8, -.1, ease(prog(t, 4.45, 4.8)))
+    fc = dict(eyes='open', squint=.45 * an, look=(0, look_y), mouth=lerp(-.05, -.85, an),
+              brows=((ang, rs), (ang, rs)), blush=lerp(.4, 1.4, an),
               blushc=mix((255, 120, 140), (255, 70, 70), an))
     amp = typing_amp(t)
     jl = math.sin(t * 24) * .05 * amp
     jr = math.sin(t * 24 + 2) * .05 * amp
-    arms = [((-.98, -1.55), (-.38, -2.0 + jl)), ((.98, -1.55), (.38, -2.0 + jr))]
+    arms = [((-.98, -1.45), (-.38, -1.72 + jl)), ((.98, -1.45), (.38, -1.72 + jr))]
+    tilt = math.sin(t * 1.1) * 2 * an - 2 * an
+    lift = math.sin(t * 2.2) * .015
 
     def held(cv_):
-        phone_back(cv_, 540, PHONE_Y, 1.0, .9)
-    person(cv, 540, NF, NR, GIRL, dict(legs='sit', arms=arms, face=fc, held=held,
-                                       tilt=math.sin(t * 1.1) * 2 * an - 2 * an, lift=math.sin(t * 2.2) * .015))
+        girl_overlay(cv_, t, fc, an, tilt, lift)
+        phone_back(cv_, 540, NF - 1.82 * NR, 1.0, .9)
+    person(cv, 540, NF, NR, GIRL, dict(legs='sit', arms=arms, face=fc, held=held, tilt=tilt, lift=lift))
     glow(cv, 540, NF - 3.75 * NR, 1.3 * NR, '#FFB0D0', 26, mid=1)
     st = clamp((an - .45) / .25)
     if st > 0:
@@ -518,6 +605,31 @@ def girl_panel(cv, t):
     cv.restore()
 
 
+# ------------------------------------------------------------------ title (letter by letter)
+def typewriter(cv, t, t0, lines, cy, size, cps=32):
+    n_show = (t - t0) * cps
+    if n_show <= 0:
+        return
+    f = font('semi', size)
+    lh = size * 1.28
+    y0 = cy - (len(lines) - 1) * lh / 2
+    idx = 0
+    for li, toks in enumerate(lines):
+        full = ''.join(tx for tx, _ in toks)
+        x0 = W / 2 - f.measureText(full) / 2
+        pos = 0
+        for tx, c in toks:
+            for ch in tx:
+                a = clamp(n_show - idx)
+                if a > 0 and ch != ' ':
+                    x = x0 + f.measureText(full[:pos])
+                    base = y0 + li * lh + (1 - eout(a)) * 16 + size * .35
+                    cv.drawString(ch, x, base + 4, f, paint('#08061a', 170 * a, blur=7))
+                    cv.drawString(ch, x, base, f, paint(c, 255 * a))
+                idx += 1
+                pos += 1
+
+
 # ------------------------------------------------------------------ frame
 def draw(cv, t, fi):
     cv.drawRect(R(0, 0, W, H), paint(shader=lin(0, 0, 0, H, ['#0A0720', '#150E30'])))
@@ -536,7 +648,7 @@ def draw(cv, t, fi):
     cv.translate(-540, -1300)
     boy_scene(cv, t)
     cv.restore()
-    tvk = prog(t, .4, 1.1)
+    tvk = prog(t, 0, .45)
     full = (130, 100, 950, 561)
     small = (36, 66, 396, 268)
     box = tuple(lerp(a, b, p) for a, b in zip(full, small))
@@ -553,8 +665,8 @@ def draw(cv, t, fi):
         cv.drawRect(R(0, ytop + 634, W, ytop + 638), paint('#FFC94A', 190))
     vignette(cv, 140)
     scrim(cv, 1260, 210)
-    subtitle(cv, t, .6, 99, "GTA 6 is {red:killing}\nrelationships", cy=1478, size=70, fade_out=False)
-    fade = 1 - prog(t, 0, .5)
+    typewriter(cv, t, SPLIT_A, [[("GTA VI is ", '#FFFFFF'), ("killing", '#FF6B6B')], [("relationships", '#FFFFFF')]], 1478, 70)
+    fade = 1 - prog(t, 0, .15)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))
 
