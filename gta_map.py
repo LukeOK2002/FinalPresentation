@@ -1,7 +1,7 @@
 import os, sys
 from kzs import *
 
-DUR = 14.5
+DUR = 15.5
 
 # ------------------------------------------------------------------ geography (lon, lat), simplified
 FL_COAST = [  # Florida: St Marys river mouth -> down the east coast -> up the Gulf coast -> Perdido river
@@ -82,9 +82,10 @@ MIAMI_XY = proj(*MIAMI)
 FOCUS_XY = proj(-81.9, 27.7)
 
 # ------------------------------------------------------------------ scene timing
-T_ZOOM0, T_ZOOM1 = 1.1, 3.8
-T_PIN, T_BADGE = 3.9, 4.35
-T_WIPE0, T_WIPE1 = 6.6, 7.4
+T_ZOOM0, T_ZOOM1 = 2.1, 4.8
+T_PIN, T_BADGE = 4.9, 5.35
+T_WIPE0, T_WIPE1 = 7.6, 8.4
+DT = 1.0                                      # chart runs on its own clock, shifted by DT
 PANEL = (0, 130, W, 1340)
 K_END = 5.2
 SCREEN_FOCUS = (640, 860)          # where Miami lands on screen at full zoom
@@ -106,7 +107,185 @@ def to_screen(p, cam):
     return sx + (p[0] - fx) * k, sy + (p[1] - fy) * k
 
 
-# ------------------------------------------------------------------ pin + peace-sign hand
+# ------------------------------------------------------------------ natural features
+REGIONS = [  # (polygon lon/lat, colour, blur) painted inside the land, soft edged
+    ([(-124.2, 48.4), (-121.4, 48.8), (-121.4, 43.0), (-123.4, 41.4), (-124.3, 43.0)], '#1AA070', 10),                    # Pacific forest
+    ([(-105.0, 48.6), (-96.5, 48.9), (-95.8, 43.0), (-96.2, 37.0), (-97.6, 33.0), (-101.6, 32.0), (-103.6, 36.0), (-105.0, 41.0)], '#8FDB6C', 24),   # Great Plains
+    ([(-90.0, 47.2), (-84.0, 46.2), (-82.0, 41.0), (-79.5, 38.0), (-76.0, 37.0), (-79.5, 34.0), (-85.0, 31.4), (-90.0, 31.0), (-92.2, 35.0), (-92.0, 40.0), (-90.3, 43.5)], '#22B27C', 16),   # Eastern forest
+    ([(-119.6, 41.6), (-116.0, 42.1), (-112.4, 41.2), (-110.9, 39.5), (-112.4, 37.8), (-114.4, 37.0), (-117.4, 37.5), (-119.8, 39.0)], '#E6C970', 12),    # Great Basin
+    ([(-118.0, 36.0), (-115.0, 37.0), (-113.0, 35.5), (-110.0, 34.8), (-107.5, 34.0), (-105.5, 32.0), (-104.0, 30.5), (-106.0, 29.9), (-109.0, 31.2), (-112.5, 31.4), (-114.8, 32.4), (-116.5, 33.5), (-118.3, 34.3)], '#F6D071', 10),   # SW deserts
+    ([(-104.2, 30.0), (-103.0, 33.0), (-101.5, 34.6), (-99.2, 34.0), (-98.2, 31.0), (-99.8, 29.2), (-102.0, 29.5)], '#C9DB68', 14),   # Texas scrub
+    ([(-81.9, 25.2), (-80.4, 25.2), (-80.5, 26.4), (-81.5, 26.3)], '#2FA79A', 6),                                               # Everglades
+]
+DUNES = [(-116.0, 34.6), (-114.0, 33.2), (-111.8, 33.0), (-109.0, 32.5), (-107.0, 32.4), (-113.0, 36.0), (-117.0, 36.2), (-106.0, 33.8)]
+RIVERS = [
+    [(-95.2, 47.3), (-93.0, 45.0), (-91.0, 43.0), (-91.0, 40.0), (-90.0, 38.0), (-89.2, 36.8), (-90.0, 34.0), (-91.2, 32.0), (-90.6, 30.0)],   # Mississippi
+    [(-111.5, 45.8), (-104.0, 47.5), (-100.0, 45.0), (-97.0, 42.5), (-95.8, 40.0), (-90.2, 38.8)],                                             # Missouri
+    [(-80.5, 40.3), (-84.5, 39.1), (-88.0, 37.2), (-89.1, 37.0)],                                                                             # Ohio
+    [(-107.0, 40.5), (-110.0, 38.0), (-111.5, 36.9), (-114.5, 35.5), (-114.7, 32.6)],                                                         # Colorado
+    [(-117.5, 47.0), (-120.0, 46.0), (-123.9, 46.2)],                                                                                         # Columbia
+]
+LAKES = [([(-87.9, 42.5), (-87.7, 43.4), (-87.9, 44.5), (-87.6, 45.1), (-87.3, 45.7), (-86.2, 45.9), (-85.0, 45.8), (-85.5, 45.2), (-86.2, 44.6), (-86.5, 43.6), (-86.4, 42.4), (-87.0, 41.65), (-87.8, 41.7)])]
+RANGES = {  # lon, lat, size
+    'rockies': [(-113.0, 48.3, 20), (-112.0, 47.0, 22), (-110.8, 45.5, 24), (-110.2, 44.3, 26), (-109.5, 43.0, 22),
+                (-108.2, 41.0, 24), (-106.8, 39.8, 28), (-106.2, 38.5, 26), (-105.8, 37.0, 24), (-106.0, 35.8, 18),
+                (-111.8, 46.2, 16), (-109.4, 44.2, 16), (-107.2, 41.6, 16), (-105.2, 38.0, 16)],
+    'sierra': [(-120.6, 40.0, 16), (-120.0, 38.8, 20), (-119.0, 37.6, 22), (-118.4, 36.5, 20), (-118.0, 35.6, 14)],
+    'cascades': [(-121.7, 48.5, 16), (-121.6, 47.0, 20), (-121.7, 45.4, 18), (-122.0, 43.5, 16), (-122.2, 41.6, 18)],
+    'apps': [(-84.2, 35.6, 12), (-82.8, 36.5, 12), (-81.5, 37.5, 12), (-80.2, 38.6, 12), (-78.8, 39.8, 12),
+             (-77.5, 40.6, 12), (-75.8, 41.3, 12), (-74.2, 42.0, 12)],
+}
+CITIES = [  # name, lon, lat, label dx, dy, anchor
+    ('Houston', -95.4, 29.8, 18, 6, 'l'), ('Dallas', -96.8, 32.8, 0, -34, 'c'), ('Austin', -97.7, 30.3, -18, 8, 'r'),
+    ('New York', -74.0, 40.7, 20, 4, 'l'), ('Los Angeles', -118.2, 34.0, 20, 14, 'l'), ('San Francisco', -122.4, 37.8, 20, 4, 'l')]
+PUMPJACKS = [(-102.2, 31.7), (-101.0, 32.4), (-103.0, 30.9), (-100.5, 31.3), (-99.0, 29.3), (-97.9, 28.6), (-101.6, 30.6)]
+SOLAR = [(-116.7, 35.0, 1.0), (-119.6, 35.6, .8)]
+MAN_LL = (-75.6, 41.9)
+FLAMINGOS = [(-81.35, 28.3, 0, False), (-82.0, 27.0, 1.7, True), (-81.3, 26.55, 3.1, False), (-81.55, 25.55, 4.4, True)]
+
+
+def region_path(pts):
+    return smooth_path(pts)
+
+
+MOUNTAIN_PATHS = {}
+
+
+def mountain(cv, x, y, s, snow=True, rock=('#B98A66', '#8C5F44')):
+    """Flat two-faced peak with a snow cap, base at (x, y)."""
+    cv.drawOval(R(x - s * .75, y - s * .12, x + s * .75, y + s * .14), paint('#05031a', 60))
+    cv.drawPath(poly([(x - s * .7, y), (x, y - s * 1.1), (x, y)]), paint(rock[0]))
+    cv.drawPath(poly([(x, y - s * 1.1), (x + s * .7, y), (x, y)]), paint(rock[1]))
+    if snow:
+        cv.drawPath(poly([(x - s * .22, y - s * .72), (x, y - s * 1.1), (x + s * .22, y - s * .72), (x + s * .1, y - s * .62),
+                          (x, y - s * .74), (x - s * .1, y - s * .62)]), paint('#FFFFFF'))
+
+
+def city_icon(cv, x, y, s, name, ldx, ldy, anchor):
+    pill_shadow(cv, x, y + 2, s * 1.6, s * .22, TEAL_D, 255)
+    for dx_, w, h, c in ((-.5, .36, 1.0, '#DCE6FF'), (-.1, .32, 1.55, '#F3F7FF'), (.3, .34, .8, '#C9D6FF')):
+        shaded(cv, rrp(x + dx_ * s - w * s / 2, y - h * s, x + dx_ * s + w * s / 2, y, s * .05), c, dark('#8FA2E8', .3), dx=-s * .05, dy=0)
+        for wy in range(int(h * 4)):
+            for wx in (-.08, .08):
+                cv.drawRect(R(x + dx_ * s + wx * s - s * .03, y - h * s + s * .1 + wy * s * .22, x + dx_ * s + wx * s + s * .03, y - h * s + s * .17 + wy * s * .22), paint('#FFC21A'))
+    cv.drawPath(poly([(x - .1 * s, y - 1.55 * s), (x - .1 * s, y - 1.85 * s)], False), paint('#F3F7FF', stroke=s * .05))
+    f = font('bold', s * .6)
+    w = f.measureText(name) + s * .5
+    lx = x + ldx - (w if anchor == 'r' else (w / 2 if anchor == 'c' else 0))
+    cv.drawPath(rrp(lx, y + ldy - s * .55, lx + w, y + ldy + s * .3, s * .2), paint('#000000', 175))
+    text(cv, name, lx + w / 2, y + ldy - s * .12, f, '#FFFFFF')
+
+
+def pumpjack(cv, x, y, s, t, ph):
+    ang = math.sin(t * 2.4 + ph) * 15
+    pill_shadow(cv, x, y + 1, s * 1.2, s * .2, TEAL_D, 255)
+    cv.drawPath(rrp(x - s * .5, y - s * .16, x + s * .5, y, s * .05), paint(NAVY2))
+    cv.drawPath(poly([(x - s * .13, y - s * .16), (x + s * .13, y - s * .16), (x, y - s * .72)]), paint('#FF6B4A'))
+    cv.save()
+    cv.rotate(ang, x, y - s * .72)
+    cv.drawPath(rrp(x - s * .62, y - s * .8, x + s * .5, y - s * .66, s * .06), paint('#FF6B4A'))
+    cv.drawPath(poly([(x - s * .62, y - s * .84), (x - s * .78, y - s * .62), (x - s * .5, y - s * .62)]), paint(NAVY2))
+    cv.drawCircle(x + s * .5, y - s * .66, s * .13, paint('#FFD23F'))
+    cv.restore()
+    cv.drawPath(poly([(x - s * .68, y - s * .66 + math.sin(math.radians(ang)) * s * .3), (x - s * .68, y - s * .16)], False), paint(NAVY2, stroke=s * .05))
+
+
+def solar_farm(cv, x, y, s):
+    pill_shadow(cv, x, y + 2, s * 2.2, s * .22, TEAL_D, 255)
+    for row in range(2):
+        for col in range(3):
+            px = x + (col - 1) * s * .62 + (row - .5) * s * .12
+            py = y - row * s * .34 - s * .1
+            pts = [(px - s * .26, py), (px + s * .26, py), (px + s * .3, py - s * .26), (px - s * .22, py - s * .26)]
+            cv.drawPath(poly(pts), paint('#2A55D8'))
+            cv.drawPath(poly(pts), paint('#8CB4FF', 150, stroke=max(.8, s * .025)))
+            cv.drawPath(poly([(px - s * .02, py), (px + s * .04, py - s * .26)], False), paint('#8CB4FF', 150, stroke=max(.8, s * .025)))
+            gloss_line(cv, px - s * .18, py - s * .2, px - s * .08, py - s * .2, max(1.2, s * .04), 220)
+    plus(cv, x + s * .9, y - s * .9, s * .22, '#FFFFFF')
+    cv.drawCircle(x + s * .9, y - s * .9, s * .1, paint('#FFD23F'))
+
+
+def suit_man(cv, x, y, s):
+    pill_shadow(cv, x, y + 1, s * .9, s * .16, TEAL_D, 255)
+    for sd in (-1, 1):
+        cv.drawPath(rrp(x + sd * s * .09 - s * .07, y - s * .55, x + sd * s * .09 + s * .07, y - s * .06, s * .03), paint('#10135A'))
+        cv.drawOval(R(x + sd * s * .11 - s * .1, y - s * .08, x + sd * s * .11 + s * .1, y + s * .01), paint('#0A0A33'))
+    shaded(cv, rrp(x - s * .22, y - s * 1.0, x + s * .22, y - s * .5, s * .07), '#1A1E76', dark('#1A1E76', .3), dx=-s * .03, dy=0)
+    cv.drawPath(poly([(x - s * .07, y - s * 1.0), (x + s * .07, y - s * 1.0), (x, y - s * .72)]), paint('#FFFFFF'))
+    cv.drawPath(poly([(x - s * .03, y - s * .94), (x + s * .03, y - s * .94), (x + s * .045, y - s * .7), (x, y - s * .64), (x - s * .045, y - s * .7)]), paint('#E8335B'))
+    cv.drawPath(poly([(x - s * .24, y - s * .95), (x - s * .3, y - s * .55)], False), paint('#1A1E76', stroke=s * .1))
+    cv.drawPath(poly([(x + s * .24, y - s * .95), (x + s * .3, y - s * .52)], False), paint('#1A1E76', stroke=s * .1))
+    cv.drawPath(rrp(x + s * .24, y - s * .5, x + s * .56, y - s * .26, s * .04), paint('#8A4A2A'))
+    cv.drawPath(rrp(x + s * .34, y - s * .55, x + s * .46, y - s * .5, s * .02), paint('#5A2E18'))
+    for hx in (x - s * .3, x + s * .3):
+        cv.drawCircle(hx, y - s * .52, s * .06, paint('#FFAC7E'))
+    cv.drawCircle(x, y - s * 1.14, s * .17, paint('#FFAC7E'))
+    cv.drawPath(poly([(x - s * .17, y - s * 1.2), (x - s * .1, y - s * 1.33), (x + s * .12, y - s * 1.31), (x + s * .17, y - s * 1.18), (x + s * .1, y - s * 1.24), (x - s * .08, y - s * 1.24)]), paint('#2B2B6B'))
+    for ex in (-.06, .06):
+        cv.drawCircle(x + ex * s, y - s * 1.14, s * .02, paint(INK))
+    gloss_line(cv, x - s * .1, y - s * 1.28, x + s * .02, y - s * 1.3, max(1, s * .03), 220)
+
+
+def flamingo(cv, x, y, s, t, ph, flip=False):
+    cv.save()
+    if flip:
+        cv.translate(x, 0)
+        cv.scale(-1, 1)
+        cv.translate(-x, 0)
+    pk, pk_d = '#FF6FA0', '#E8456E'
+    pill_shadow(cv, x, y + 2, s * .8, s * .12, '#0F8E88', 200)
+    cv.drawPath(poly([(x - s * .02, y - s * .52), (x - s * .02, y)], False), paint('#FF8AB0', stroke=max(1.4, s * .04)))
+    leg = skia.Path()
+    leg.moveTo(x + s * .08, y - s * .52)
+    leg.lineTo(x + s * .22, y - s * .34)
+    leg.lineTo(x + s * .08, y - s * .26)
+    cv.drawPath(leg, paint('#FF8AB0', stroke=max(1.4, s * .04)))
+    sway = math.sin(t * 1.8 + ph) * s * .05
+    neck = skia.Path()
+    neck.moveTo(x + s * .18, y - s * .74)
+    neck.cubicTo(x + s * .36, y - s * .82, x + s * .1 + sway, y - s * 1.0, x + s * .28 + sway, y - s * 1.24)
+    cv.drawPath(neck, paint(pk_d, stroke=max(2, s * .12)))
+    cv.drawPath(neck, paint(pk, stroke=max(1.6, s * .09)))
+    shaded(cv, op(x - s * .32, y - s * .8, x + s * .28, y - s * .46), pk, pk_d, dx=-s * .03, dy=-s * .03)
+    cv.drawPath(poly([(x - s * .3, y - s * .66), (x - s * .5, y - s * .6), (x - s * .3, y - s * .54)]), paint(pk_d))
+    wing = skia.Path()
+    wing.moveTo(x - s * .22, y - s * .68)
+    wing.quadTo(x - s * .02, y - s * .52, x + s * .16, y - s * .66)
+    cv.drawPath(wing, paint('#FFB3CE', stroke=max(1.2, s * .05)))
+    hx_, hy_ = x + s * .28 + sway, y - s * 1.26
+    cv.drawCircle(hx_, hy_, s * .075, paint(pk))
+    cv.drawPath(poly([(hx_ + s * .05, hy_ - s * .03), (hx_ + s * .17, hy_ + s * .04), (hx_ + s * .05, hy_ + s * .06)]), paint('#FFC9DA'))
+    cv.drawPath(poly([(hx_ + s * .11, hy_ - s * .0), (hx_ + s * .17, hy_ + s * .04), (hx_ + s * .1, hy_ + s * .06)]), paint('#10135A'))
+    cv.drawCircle(hx_ + s * .02, hy_ - s * .02, max(.8, s * .018), paint('#10135A'))
+    cv.restore()
+
+
+def peach(cv, cx, cy, s):
+    """Flat peach emoji: round fruit, soft blush, cleft, leaf."""
+    body = skia.Path()
+    body.addCircle(cx - .1 * s, cy + .04 * s, .44 * s)
+    body.addCircle(cx + .1 * s, cy + .04 * s, .44 * s)
+    cv.drawPath(body, paint('#FF8A65'))
+    cv.save()
+    cv.clipPath(body, skia.ClipOp.kIntersect, True)
+    cv.drawCircle(cx + .3 * s, cy + .3 * s, .5 * s, paint('#FF5C7A', 200))
+    cv.drawCircle(cx - .32 * s, cy - .3 * s, .3 * s, paint('#FFB08A', 160))
+    cv.restore()
+    cleft = skia.Path()
+    cleft.moveTo(cx - .01 * s, cy - .4 * s)
+    cleft.quadTo(cx + .1 * s, cy + .05 * s, cx - .01 * s, cy + .46 * s)
+    cv.drawPath(cleft, paint('#D93F5A', stroke=.055 * s))
+    leaf = skia.Path()
+    leaf.moveTo(cx + .02 * s, cy - .42 * s)
+    leaf.quadTo(cx + .2 * s, cy - .74 * s, cx + .5 * s, cy - .6 * s)
+    leaf.quadTo(cx + .32 * s, cy - .36 * s, cx + .02 * s, cy - .42 * s)
+    cv.drawPath(leaf, paint('#3FB866'))
+    cv.drawPath(poly([(cx + .06 * s, cy - .44 * s), (cx + .38 * s, cy - .56 * s)], False), paint('#2C9A52', stroke=.03 * s))
+    cv.drawPath(poly([(cx - .01 * s, cy - .4 * s), (cx - .05 * s, cy - .58 * s)], False), paint('#7A4A2A', stroke=.06 * s))
+    gloss_arc(cv, cx - .1 * s, cy + .02 * s, .32 * s, 205, 50, .06 * s)
+
+
+# ------------------------------------------------------------------ pin + peach badge
 def peace_hand(cv, cx, cy, s):
     sk = '#FFC21A'
     sh = dark(sk, .3)
@@ -151,8 +330,8 @@ def map_pin(cv, x, y, k, t):
     cv.restore()
 
 
-def peace_badge(cv, x, y, k):
-    """Round white badge with the peace-sign emoji, attached to the pin head."""
+def peach_badge(cv, x, y, k):
+    """Round white badge with the peach emoji, attached to the pin head."""
     if k <= 0:
         return
     cv.save()
@@ -163,11 +342,69 @@ def peace_badge(cv, x, y, k):
     cv.drawCircle(x, y + 5, 72, paint('#05031a', 90, blur=8))
     cv.drawCircle(x, y, 68, paint('#FFFFFF'))
     cv.drawCircle(x, y, 68, paint('#E8335B', stroke=6))
-    peace_hand(cv, x, y + 8, 62)
+    peach(cv, x, y + 4, 92)
     cv.restore()
 
 
 # ------------------------------------------------------------------ scene 1: the map
+REGION_PATHS = [(smooth_path(p), c, b) for p, c, b in REGIONS]
+LAKE_PATHS = [smooth_path(p) for p in LAKES]
+RIVER_PATHS = []
+for _r in RIVERS:
+    _pp = skia.Path()
+    for _i, _p in enumerate(_r):
+        _x, _y = proj(*_p)
+        (_pp.moveTo if _i == 0 else _pp.lineTo)(_x, _y)
+    RIVER_PATHS.append(_pp)
+OKEE = proj(-80.85, 26.95)
+
+
+def draw_land(cv, t, k, d):
+    for path_, c, sc_ in ((CUBA_PATH, TEAL, TEAL_D), (US_PATH, '#46D39A', '#1E9A78')):
+        cv.save()
+        cv.translate(0, d)
+        cv.drawPath(path_, paint(sc_))
+        cv.restore()
+        cv.drawPath(path_, paint(c))
+    for (lon, lat), rx, ry in BAHAMAS:
+        bx, by = proj(lon, lat)
+        cv.drawOval(R(bx - rx * .42, by - ry * .42 + d, bx + rx * .42, by + ry * .42 + d), paint(TEAL_D))
+        cv.drawOval(R(bx - rx * .42, by - ry * .42, bx + rx * .42, by + ry * .42), paint(TEAL))
+    cv.save()
+    cv.clipPath(US_PATH, skia.ClipOp.kIntersect, True)
+    for path_, c, b in REGION_PATHS:
+        cv.drawPath(path_, paint(c, 255, blur=b))
+    for lon, lat in DUNES:                                   # dune ripples in the deserts
+        x_, y_ = proj(lon, lat)
+        for q in range(3):
+            p = skia.Path()
+            p.moveTo(x_ - 12 + q * 5, y_ + q * 6)
+            p.quadTo(x_ - 4 + q * 5, y_ - 6 + q * 6, x_ + 6 + q * 5, y_ + q * 6)
+            cv.drawPath(p, paint('#D9A441', 200, stroke=2.2 / max(1, k * .5)))
+    for lp in LAKE_PATHS:
+        cv.drawPath(lp, paint('#1C4BC8'))
+        cv.drawPath(lp, paint('#61E7ED', 150, stroke=2.4 / max(1, k * .6)))
+    for rp in RIVER_PATHS:
+        cv.drawPath(rp, paint('#4FD6F0', 255, stroke=3.0 / max(1, k * .6)))
+    cv.restore()
+
+
+def draw_florida(cv, t, k, d, fl):
+    cv.save()
+    cv.translate(0, d)
+    cv.drawPath(FL_PATH, paint('#1E9A78', A(255 * fl)))
+    cv.restore()
+    cv.drawPath(FL_PATH, paint('#3FD07A', A(255 * fl)))
+    cv.save()
+    cv.clipPath(FL_PATH, skia.ClipOp.kIntersect, True)
+    cv.drawPath(FL_PATH, paint('#FFE29A', A(255 * fl), stroke=13 / k))                       # beach rim
+    cv.drawPath(smooth_path(REGIONS[-1][0]), paint('#2FA79A', A(255 * fl), blur=7))
+    ox, oy = OKEE
+    cv.drawOval(R(ox - 9, oy - 7, ox + 9, oy + 7), paint('#1C4BC8', A(255 * fl)))
+    cv.restore()
+    cv.drawPath(FL_PATH, paint('#FFD23F', A(255 * fl), stroke=3.2 / k))
+
+
 def scene_map(cv, t):
     cv.save()
     cv.clipRect(R(*PANEL))
@@ -192,40 +429,53 @@ def scene_map(cv, t):
     cv.translate(MAP_CX, MAP_CY)
     cv.scale(pop, pop)
     cv.translate(-MAP_CX, -MAP_CY)
-    for path_, c, sc_ in ((CUBA_PATH, TEAL, TEAL_D), (US_PATH, TEAL, TEAL_D)):
-        cv.save()
-        cv.translate(0, d)
-        cv.drawPath(path_, paint(sc_))
-        cv.restore()
-        cv.drawPath(path_, paint(c))
-    for (lon, lat), rx, ry in BAHAMAS:
-        bx, by = proj(lon, lat)
-        cv.drawOval(R(bx - rx * .42, by - ry * .42 + d, bx + rx * .42, by + ry * .42 + d), paint(TEAL_D))
-        cv.drawOval(R(bx - rx * .42, by - ry * .42, bx + rx * .42, by + ry * .42), paint(TEAL))
-    # Florida highlights as the camera arrives
-    fl = ease(prog(t, T_ZOOM0 + .3, T_ZOOM1))
-    cv.save()
-    cv.translate(0, d)
-    cv.drawPath(FL_PATH, paint(YEL_DD, A(255 * fl)))
-    cv.restore()
-    cv.drawPath(FL_PATH, paint(YEL, A(255 * fl)))
-    cv.restore()
+    draw_land(cv, t, k, d)
+    fl = ease(prog(t, T_ZOOM0 + .5, T_ZOOM1))
+    draw_florida(cv, t, k, d, fl)
     cv.drawPath(poly(BORDER_PTS, False), paint('#0F8E88', 255, stroke=3.2 / k))
+    # mountain ranges (back to front by latitude)
+    peaks = []
+    for name, lst in RANGES.items():
+        for lon, lat, sz in lst:
+            peaks.append((proj(lon, lat), sz, name))
+    for (x_, y_), sz, name in sorted(peaks, key=lambda p: p[0][1]):
+        if name == 'apps':
+            mountain(cv, x_, y_, sz, False, ('#7DBB6A', '#5E9A52'))
+        else:
+            mountain(cv, x_, y_, sz * .95, True)
+    # icons
+    for (lon, lat) in PUMPJACKS:
+        x_, y_ = proj(lon, lat)
+        pumpjack(cv, x_, y_, 19, t, lon)
+    for lon, lat, sc_ in SOLAR:
+        x_, y_ = proj(lon, lat)
+        solar_farm(cv, x_, y_, 30 * sc_)
+    for nm, lon, lat, ldx, ldy, an in CITIES:
+        x_, y_ = proj(lon, lat)
+        city_icon(cv, x_, y_, 21, nm, ldx, ldy, an)
+    x_, y_ = proj(*MAN_LL)
+    suit_man(cv, x_, y_, 38)
+    for lon, lat, ph, fp in sorted(FLAMINGOS, key=lambda f: f[1], reverse=True):
+        x_, y_ = proj(lon, lat)
+        flamingo(cv, x_, y_, 26, t, ph, fp)
+    cv.restore()
     cv.restore()
     # labels (screen space)
-    la = ease(prog(t, 3.0, 3.6))
+    la = ease(prog(t, T_ZOOM1 - .8, T_ZOOM1 - .2))
     if la > 0:
         for s_, lon, lat in (('GULF OF MEXICO', -83.75, 26.2), ('ATLANTIC OCEAN', -78.0, 29.3)):
             x_, y_ = to_screen(proj(lon, lat), cam)
             text(cv, s_, x_, y_, font('semi', 24), '#BFE9FF', A(180 * la), track=4)
-        x_, y_ = to_screen(proj(-82.2, 28.1), cam)
-        text(cv, 'FLORIDA', x_, y_, font('bold', 40), '#7A4A00', A(255 * la), track=8)
-    # pin + peace badge at Miami
+        x_, y_ = to_screen(proj(-82.6, 29.6), cam)
+        w = font('bold', 38).measureText('FLORIDA') + 36
+        cv.drawPath(rrp(x_ - w / 2, y_ - 30, x_ + w / 2, y_ + 30, 14), paint('#000000', A(175 * la)))
+        text(cv, 'FLORIDA', x_, y_, font('bold', 38), '#FFFFFF', A(255 * la), track=6)
+    # pin + peach badge at Miami
     mx, my = to_screen(MIAMI_XY, cam)
     pk = eback(prog(t, T_PIN, T_PIN + .5), 1.7)
     map_pin(cv, mx, my, pk, t)
     bk = eback(prog(t, T_BADGE, T_BADGE + .5), 1.7)
-    peace_badge(cv, mx + 150, my - 250, bk)
+    peach_badge(cv, mx + 150, my - 250, bk)
     if pk > .5:
         w = font('bold', 30).measureText('Miami') + 30
         a = ease(prog(t, T_PIN + .2, T_PIN + .6))
@@ -353,12 +603,12 @@ def draw(cv, t, fi):
         if wipe < 1:
             cv.save()
             cv.clipPath(cp(cx_, cy_, 2300 * ease(wipe)), skia.ClipOp.kIntersect, True)
-        scene_chart(cv, t)
+        scene_chart(cv, t - DT)
         if wipe < 1:
             cv.restore()
             cv.drawCircle(cx_, cy_, 2300 * ease(wipe), paint(YEL, 230, stroke=12))
-    subtitle(cv, t, 1.2, 6.3, "The game's setting is based on Miami,\nthe {hl:BBL capital} of America", cy=1480)
-    subtitle(cv, t, 7.0, 99, "As such, there are more characters\nwith BBLs than any other game\nin the series", cy=1490, fade_out=False)
+    subtitle(cv, t, 1.2, 7.3, "The game's setting is based on Miami,\nthe {hl:BBL capital} of America", cy=1480)
+    subtitle(cv, t, 8.0, 99, "As such, there are more characters\nwith BBLs than any other game\nin the series", cy=1490, fade_out=False)
     fade = 1 - prog(t, 0, .3)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))
