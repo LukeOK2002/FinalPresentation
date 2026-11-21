@@ -145,6 +145,13 @@ RANGES = {
     'apps': _cluster([(-84.2, 35.6, 11), (-82.8, 36.5, 11), (-81.5, 37.5, 11), (-80.2, 38.6, 11), (-78.8, 39.8, 11),
                       (-77.5, 40.6, 11), (-75.8, 41.3, 11), (-74.2, 42.0, 11)], .5, 4, 11, .6, 1.1),
 }
+def _land(lon, lat, r=0):
+    x, y = proj(lon, lat)
+    return all(US_PATH.contains(x + dx_, y + dy_) for dx_, dy_ in ((0, 0), (-r, 0), (r, 0), (0, -r * .6)))
+
+
+RANGES = {k: [p for p in v if _land(p[0], p[1], p[2] * .75)] for k, v in RANGES.items()}
+
 CITIES = [  # name, lon, lat
     ('Houston', -95.4, 29.8), ('Dallas', -96.8, 32.8), ('Austin', -97.7, 30.3), ('New York', -74.0, 40.7),
     ('Los Angeles', -118.2, 34.0), ('San Francisco', -122.4, 37.8), ('Chicago', -87.7, 41.95), ('Atlanta', -84.4, 33.75)]
@@ -170,8 +177,9 @@ SNOW_PINES = [(-122.8, 48.5), (-121.6, 48.7), (-119.8, 48.5), (-118.2, 48.7), (-
               (-108.4, 48.5), (-106.4, 48.7), (-104.4, 48.4), (-102.4, 48.7), (-100.4, 48.5), (-98.4, 48.7), (-96.6, 48.4),
               (-94.0, 48.1), (-91.4, 47.4), (-88.6, 46.9), (-68.9, 46.9), (-69.2, 46.0), (-121.4, 47.7), (-119.2, 47.9)]
 ICE_FLOES = [(-125.9, 48.7), (-126.6, 47.6), (-125.8, 46.9), (-90.2, 48.0), (-88.6, 48.5), (-87.4, 47.8), (-89.4, 47.4)]
-REDWOODS = [(-123.9, 46.5), (-124.0, 45.1), (-123.9, 43.7), (-123.9, 42.3), (-123.6, 41.0)]
+REDWOODS = [(-123.4, 46.5), (-123.5, 45.1), (-123.4, 43.7), (-123.4, 42.3), (-123.2, 41.0)]
 BISON = [(-104.3, 45.9, False), (-101.3, 45.1, True), (-103.7, 43.2, False), (-100.5, 42.6, True)]
+SNOW_PINES = [p for p in SNOW_PINES if _land(p[0], p[1], 9)]
 CATTLE = [(-94.7, 45.5, False), (-94.1, 45.2, True), (-94.9, 44.8, True), (-93.5, 44.5, False), (-93.0, 44.9, True)]
 
 
@@ -448,17 +456,22 @@ def trump(cv, x, y, s):
         cv.drawOval(R(x + sd * hr * .42 - hr * .09, hy - hr * .16, x + sd * hr * .42 + hr * .09, hy + hr * .06), paint('#FFFFFF'))
         cv.drawCircle(x + sd * hr * .42, hy - hr * .05, max(.9, hr * .07), paint(INK))
     cv.drawPath(poly([(x - hr * .2, hy + hr * .46), (x + hr * .2, hy + hr * .46)], False), paint('#A8452B', stroke=max(.9, hr * .08)))
-    q = skia.Path()
-    q.moveTo(x - hr * 1.0, hy - hr * .1)
-    q.cubicTo(x - hr * 1.3, hy - hr * 1.7, x + hr * .3, hy - hr * 2.0, x + hr * 1.75, hy - hr * 1.25)
-    q.cubicTo(x + hr * 1.1, hy - hr * 1.2, x + hr * .75, hy - hr * .85, x + hr * .65, hy - hr * .6)
-    q.cubicTo(x + hr * .1, hy - hr * .8, x - hr * .6, hy - hr * .6, x - hr * 1.0, hy - hr * .1)
+    q = skia.Path()                                        # side-swept fringe combed across the forehead
+    q.moveTo(x - hr * 1.02, hy - hr * .02)
+    q.cubicTo(x - hr * 1.3, hy - hr * 1.5, x + hr * .6, hy - hr * 1.9, x + hr * 1.18, hy - hr * .9)
+    q.lineTo(x + hr * 1.02, hy - hr * .05)
+    q.cubicTo(x + hr * .55, hy - hr * .72, x - hr * .05, hy - hr * .5, x - hr * .6, hy - hr * .28)
+    q.cubicTo(x - hr * .82, hy - hr * .22, x - hr * .95, hy - hr * .12, x - hr * 1.02, hy - hr * .02)
     q.close()
     shaded(cv, q, hair, dark(hair, .25), dx=-s * .02, dy=-s * .02)
     qh = skia.Path()
-    qh.moveTo(x - hr * .6, hy - hr * 1.05)
-    qh.quadTo(x + hr * .2, hy - hr * 1.6, x + hr * 1.2, hy - hr * 1.25)
-    cv.drawPath(qh, paint('#FFFFFF', 200, stroke=max(1, hr * .12)))
+    qh.moveTo(x + hr * .95, hy - hr * .55)
+    qh.cubicTo(x + hr * .4, hy - hr * 1.05, x - hr * .3, hy - hr * .95, x - hr * .7, hy - hr * .5)
+    cv.drawPath(qh, paint('#FFF6C8', 230, stroke=max(1, hr * .11)))
+    qh2 = skia.Path()
+    qh2.moveTo(x - hr * .5, hy - hr * 1.3)
+    qh2.quadTo(x + hr * .3, hy - hr * 1.7, x + hr * .9, hy - hr * 1.2)
+    cv.drawPath(qh2, paint('#FFFFFF', 190, stroke=max(1, hr * .1)))
 
 
 def dennys(cv, x, y, s):
