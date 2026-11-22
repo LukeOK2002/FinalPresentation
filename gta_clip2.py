@@ -1,6 +1,7 @@
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from gta_reel import *   # kz toolkit + shared cast, props and helpers from clip 1
+from gta_bars import word_caption
 
 DUR = 12.0
 TS = 8.85                       # door slam begins
@@ -423,8 +424,8 @@ def draw(cv, t, fi):
     tv_popout2(cv, t, (130, 100, 950, 561), prog(t, 0, .45), game_screen2)
     cv.restore()
     subtitle(cv, t, .4, 4.4, "The game contains {hl:highly sexualised}\ndepictions of women, which are\n{hl:impossible to avoid}", cy=1470)
-    typewriter(cv, t, 4.5, [[("This has placed a ", '#FFFFFF'), ("strain", '#FF6B8A')],
-                                 [("on many relationships", '#FFFFFF')]], 1500, 70)
+    word_caption(cv, t, 4.5, .3, [[('This', '#FFFFFF'), ('has', '#FFFFFF'), ('placed', '#FFFFFF'), ('a', '#FFFFFF'), ('strain', '#FF6B8A')],
+                                  [('on', '#FFFFFF'), ('many', '#FFFFFF'), ('relationships', '#FFFFFF')]], cy=1500, size=62)
     fade = 1 - prog(t, 0, .15)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))
