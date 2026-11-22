@@ -1,5 +1,6 @@
 import os, sys
 from kzs import *
+from gta_bars import word_caption
 
 DUR = 15.5
 
@@ -876,8 +877,18 @@ def draw(cv, t, fi):
         if wipe < 1:
             cv.restore()
             cv.drawCircle(cx_, cy_, 2300 * ease(wipe), paint(YEL, 230, stroke=12))
-    subtitle(cv, t, 1.2, 7.3, "The game's setting is based on Miami,\nthe {hl:BBL capital} of America", cy=1480)
-    subtitle(cv, t, 8.0, 99, "As such, there are more characters\nwith BBLs than any other game\nin the series", cy=1490, fade_out=False)
+    w_, g_ = '#FFFFFF', '#FFD23F'
+    if t < 7.3:                                                     # first caption fades out before the wipe
+        fo = 1 - ein(prog(t, 7.0, 7.3))
+        cv.saveLayerAlpha(None, A(255 * fo))
+        word_caption(cv, t, 1.2, .3, [
+            [('The', w_), ("game's", w_), ('setting', w_), ('is', w_), ('based', w_), ('on', w_), ('Miami,', w_)],
+            [('the', w_), ('BBL', g_), ('capital', g_), ('of', w_), ('America', w_)]], cy=1500)
+        cv.restore()
+    word_caption(cv, t, 8.0, .3, [
+        [('As', w_), ('such,', w_), ('there', w_), ('are', w_), ('more', w_), ('characters', w_)],
+        [('with', w_), ('BBLs', w_), ('than', w_), ('any', w_), ('other', w_), ('game', w_)],
+        [('in', w_), ('the', w_), ('series', w_)]], cy=1520)
     fade = 1 - prog(t, 0, .3)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))

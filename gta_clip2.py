@@ -423,7 +423,14 @@ def draw(cv, t, fi):
     room(cv, t)
     tv_popout2(cv, t, (130, 100, 950, 561), prog(t, 0, .45), game_screen2)
     cv.restore()
-    subtitle(cv, t, .4, 4.4, "The game contains {hl:highly sexualised}\ndepictions of women, which are\n{hl:impossible to avoid}", cy=1470)
+    if t < 4.4:                                                     # first caption: word by word, fades before the second
+        w_, g_ = '#FFFFFF', '#FFD23F'
+        cv.saveLayerAlpha(None, A(255 * (1 - ein(prog(t, 4.1, 4.4)))))
+        word_caption(cv, t, .4, .25, [
+            [('The', w_), ('game', w_), ('contains', w_), ('highly', g_), ('sexualised', g_)],
+            [('depictions', w_), ('of', w_), ('women,', w_), ('which', w_), ('are', w_)],
+            [('impossible', g_), ('to', g_), ('avoid', g_)]], cy=1520)
+        cv.restore()
     word_caption(cv, t, 4.5, .3, [[('This', '#FFFFFF'), ('has', '#FFFFFF'), ('placed', '#FFFFFF'), ('a', '#FFFFFF'), ('strain', '#FF6B8A')],
                                   [('on', '#FFFFFF'), ('many', '#FFFFFF'), ('relationships', '#FFFFFF')]], cy=1500, size=62)
     fade = 1 - prog(t, 0, .15)
