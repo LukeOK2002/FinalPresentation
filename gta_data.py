@@ -1,5 +1,7 @@
 import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from kzs import *
+from gta_bars import word_caption
 
 DUR = 5.0
 SPEED = 2.2          # chart animation runs 2.2x faster than its original 11 s timeline
@@ -109,7 +111,7 @@ def draw_chart(cv, t):
     if rel > 0:
         cv.drawRect(R(x0, PT, x0 + (W - x0) * rel, PB), paint(PANEL_R))
     text(cv, 'Mentions of \u201cbreakup\u201d', 70, 150, font('bold', 70), '#FFFFFF', anchor='l')
-    text(cv, 'Twitter (X), mentions per day', 70, 228, font('med', 34), '#C9C6F2', anchor='l')
+    text(cv, 'X (Twitter), mentions per day', 70, 228, font('med', 34), '#C9C6F2', anchor='l')
     tag(cv, 60, 336, 330, 74, 'Before release', '#3CCB86')
     if rel > 0:
         k = eback(prog(t, 5.0, 5.55), 1.6)
@@ -202,7 +204,12 @@ def draw(cv, t, fi):
     cv.translate(-540, -760)
     draw_chart(cv, min(t * SPEED, 10.0))
     cv.restore()
-    subtitle(cv, t, .25, 99, "Mentions of break ups on Twitter (X)\nhave spiked by {red:2.3 times}", cy=1480, fade_out=False)
+    W_, R_ = '#FFFFFF', '#FF6B8A'
+    word_caption(cv, t, .25, .22, [
+        [('Mentions', W_), ('of', W_), ('breakups', W_), ('on', W_), ('X', W_), ('(Twitter)', W_)],
+        [('have', W_), ('spiked', W_), ('by', W_), ('2.3', R_), ('times', R_)],
+        [('after', W_), ('the', W_), ("game's", W_), ('release', W_)],
+    ], cy=1510)
     fade = 1 - prog(t, 0, .15)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))
