@@ -116,10 +116,10 @@ CAPTION_WORDS = [
 ]
 
 
-def word_caption(cv, t, t0, step, lines, cy=1490, size=52):
+def word_caption(cv, t, t0, step, lines, cy=1502, size=52):
     """Boxed caption that appears one word at a time."""
     f = font('semi', size)
-    lh = size * 1.34
+    lh = size * 1.92
     y0 = cy - (len(lines) - 1) * lh / 2
     idx = 0
     for li, words in enumerate(lines):
@@ -129,7 +129,7 @@ def word_caption(cv, t, t0, step, lines, cy=1490, size=52):
         y = y0 + li * lh
         ba = eout(prog(t, t0 + idx * step, t0 + idx * step + .25))
         if ba > 0:
-            cv.drawPath(rrp(x0 - 26, y - size * .72, x0 + wtot + 26, y + size * .58, 14), paint('#000000', A(185 * ba)))
+            cv.drawPath(rrp(x0 - 34, y - size * .95, x0 + wtot + 34, y + size * .82, 18), paint('#000000', A(185 * ba)))
         for wi, (w, c) in enumerate(words):
             ts = t0 + idx * step
             a = eout(prog(t, ts, ts + .25))
