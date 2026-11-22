@@ -2,10 +2,16 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from kzs import *
 from gta_reel import BOY, boy_legs, boy_arms, boy_hands, controller, sofa_back, sofa_front, NF, NR
+from gta_bars import word_caption
 
 DUR = 13.0
 SCENE_BOTTOM = 1340
-CAPTION = "Men are spending more time on chores\nin {hl:the game} than in {hl:real life}"
+_W, _G = '#FFFFFF', '#FFD23F'
+CAPTION_WORDS = [
+    [('Men', _W), ('are', _W), ('spending', _W), ('more', _W), ('time', _W), ('on', _W), ('chores', _W)],
+    [('in', _W), ('the', _G), ('game', _G), ('than', _W), ('in', _W), ('real', _G), ('life', _G)],
+]
+CAP_T0, CAP_STEP = .3, .265          # 14 words: last one fully in at 4.0 s
 DEEP = '#00B3B0'                                  # floor shadow
 TV_FULL = (-30, 290, 1110, 931)                   # game fills the frame at the start
 TV_POP = (90, 70, 990, 576)                       # floating pop-out once the room is revealed
@@ -129,14 +135,14 @@ def jason_scene(cv, t):
 
 
 def tv_box(t):
-    z = ease(prog(t, 2.8, 4.8))
+    z = ease(prog(t, 2.0, 3.3))
     return tuple(lerp(a, b, z) for a, b in zip(TV_FULL, TV_POP))
 
 
 def tv_popout(cv, t):
     l, tp, r_, b = tv_box(t)
     cx, cy = (l + r_) / 2, (tp + b) / 2
-    bob = math.sin(t * 1.4) * 3 * ease(prog(t, 4.4, 5.0))
+    bob = math.sin(t * 1.4) * 3 * ease(prog(t, 3.3, 4.0))
     cv.save()
     cv.translate(0, bob)
     glow(cv, cx, cy, (r_ - l) * .9, '#7FFFA0', 80)
@@ -325,7 +331,7 @@ def door_cat(cv, t):
     for sx in (-30, 0, 30):
         cv.drawPath(poly([(1040 + sx, 930), (1050 + sx, 1120)], False), paint('#FFD2BF', stroke=5))
     cat(cv, 1044, 1192, 110, t)
-    k = ease(prog(t, 8.6, 9.1))
+    k = ease(prog(t, 4.4, 4.9))
     if k > 0:
         pulse = 1 + .06 * math.sin(t * 8)
         cv.save()
@@ -369,8 +375,8 @@ def room(cv, t):
 
 # ================================================================== camera + frame
 def camera(t):
-    z1 = ease(prog(t, 2.8, 4.8))
-    z2 = ease(prog(t, 5.6, 8.2))
+    z1 = ease(prog(t, 2.0, 3.3))          # pull out: starts at 2 s ...
+    z2 = ease(prog(t, 2.5, 4.0))          # ... whole room revealed by 4 s
     k = lerp(lerp(1.9, 1.25, z1), .75, z2)
     fx = lerp(540, 440, z2)
     fy = lerp(lerp(985, 1000, z1), 860, z2)
@@ -394,7 +400,7 @@ def draw(cv, t, fi):
     tv_popout(cv, t)
     cv.restore()
     cv.drawRect(R(0, SCENE_BOTTOM, W, SCENE_BOTTOM + 8), paint(YEL))
-    subtitle(cv, t, .5, 99, CAPTION, cy=1500, fade_out=False)
+    word_caption(cv, t, CAP_T0, CAP_STEP, CAPTION_WORDS, cy=1500)
     fade = 1 - prog(t, 0, .3)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))
