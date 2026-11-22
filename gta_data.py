@@ -185,11 +185,6 @@ def draw_chart(cv, t):
         w = font('semi', 30).measureText('more mentions after release') + 28
         label_box(cv, cx_ - w / 2, cy_ + 124, 'more mentions after release', 30)
         cv.restore()
-        ax = X(-6)
-        ya, yb = Y(MEAN_PRE), Y(MEAN_POST)
-        al = A(255 * prog(t, 9.0, 9.4))
-        cv.drawPath(poly([(ax, ya - 6), (ax, yb + 10)], False), paint('#FFFFFF', al, stroke=7))
-        cv.drawPath(poly([(ax - 17, yb + 30), (ax, yb + 6), (ax + 17, yb + 30)], False), paint('#FFFFFF', al, stroke=7))
 
 
 def draw(cv, t, fi):
