@@ -120,7 +120,7 @@ def draw(cv, t, fi):
     cv.translate(-540, -760)
     draw_chart(cv, t)
     cv.restore()
-    subtitle(cv, t, .5, 99, "GTA has the {hl:highest} strip club realism\nof any of the game released\nin the series to date", cy=1490, fade_out=False)
+    subtitle(cv, t, .5, 99, "GTA 6 has the {hl:highest} strip club realism\nof any of the games released\nin the series to date", cy=1490, fade_out=False)
     fade = 1 - prog(t, 0, .3)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))

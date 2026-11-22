@@ -1,7 +1,7 @@
 import os, sys
 from kzs import *
 
-DUR = 13.0
+DUR = 15.0
 GOLD = '#FFD23F'
 PINK = '#FF3D9A'
 WHITE = '#FFFFFF'
@@ -21,7 +21,7 @@ TITLE_LINES = [
     [('has', WHITE), ('released', WHITE), ('a', WHITE), ('statement', WHITE)],
 ]
 TITLE_Y = [345, 430, 515]
-T0, TSTEP = .5, .3
+T0, TSTEP = .5, .45          # word cadence slowed by 50%
 
 
 def title_words():
@@ -51,12 +51,12 @@ Q_LINES = [
     ['caring', 'relationship,', 'free'],
     ['from', 'outside', 'interference.'],
 ]
-SENT_START = [5.0, 6.95]            # reveal start of sentence 1 and 2
-QSTEP = .15
+SENT_START = [6.2, 9.1]            # reveal start of sentence 1 and 2
+QSTEP = .225
 # highlight phrases: list of (word-index ranges per line), colour, start time
 HL_PHRASES = [
-    ([(0, 3, 5), (1, 0, 5)], GOLD, 7.3),          # "not value" + "GTA 6 more than you."
-    ([(2, 3, 5), (3, 0, 2)], '#61E7ED', 9.0),          # "honest and" + "caring relationship,"
+    ([(0, 3, 5), (1, 0, 5)], GOLD, 9.2),          # "not value" + "GTA 6 more than you."
+    ([(2, 3, 5), (3, 0, 2)], '#61E7ED', 11.9),          # "honest and" + "caring relationship,"
 ]
 
 
@@ -95,7 +95,7 @@ def word_index(li, wi):
 
 def draw_scene(cv, t):
     # ---- title
-    dim = 1 - .25 * ease(prog(t, 4.6, 5.4))
+    dim = 1 - .25 * ease(prog(t, 5.8, 6.6))
     for w, c, x, y, ts in TITLE_W:
         a = eout(prog(t, ts, ts + .3))
         if a <= 0:
@@ -107,7 +107,7 @@ def draw_scene(cv, t):
         cv.drawPath(poly([(540 - 150 * rule, 585), (540 + 150 * rule, 585)], False), paint(GOLD, 220, stroke=5))
 
     # ---- quote card
-    ck = prog(t, 4.5, 5.2)
+    ck = prog(t, 5.7, 6.4)
     if ck > 0:
         l, tp, r_, b = CARD
         cx, cy = (l + r_) / 2, (tp + b) / 2
@@ -147,7 +147,7 @@ def draw_scene(cv, t):
         text(cv, w, x, y + (1 - a) * 16, f, NAVY_TXT, A(255 * a), anchor='l', shadow=0)
 
     # ---- attribution
-    at = ease(prog(t, 9.9, 10.5))
+    at = ease(prog(t, 12.8, 13.4))
     if at > 0:
         cv.drawPath(poly([(Q_X, 1318), (Q_X + 70 * at, 1318)], False), paint(YEL, 255, stroke=5))
         text(cv, 'Wives and Girlfriends Association of America', Q_X, 1366 + (1 - at) * 10, font('semi', 30), '#4A45A8', A(255 * at), anchor='l')
