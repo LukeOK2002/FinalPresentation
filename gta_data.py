@@ -1,7 +1,8 @@
 import os, sys
 from kzs import *
 
-DUR = 11.0
+DUR = 5.0
+SPEED = 2.2          # chart animation runs 2.2x faster than its original 11 s timeline
 
 
 # ------------------------------------------------------------------ simulated, noisy "sampled" data
@@ -108,7 +109,7 @@ def draw_chart(cv, t):
     if rel > 0:
         cv.drawRect(R(x0, PT, x0 + (W - x0) * rel, PB), paint(PANEL_R))
     text(cv, 'Mentions of \u201cbreakup\u201d', 70, 150, font('bold', 70), '#FFFFFF', anchor='l')
-    text(cv, 'Twitter, mentions per day', 70, 228, font('med', 34), '#C9C6F2', anchor='l')
+    text(cv, 'Twitter (X), mentions per day', 70, 228, font('med', 34), '#C9C6F2', anchor='l')
     tag(cv, 60, 336, 330, 74, 'Before release', '#3CCB86')
     if rel > 0:
         k = eback(prog(t, 5.0, 5.55), 1.6)
@@ -199,11 +200,10 @@ def draw(cv, t, fi):
     cv.translate(540, 760)
     cv.scale(k, k)
     cv.translate(-540, -760)
-    draw_chart(cv, t)
+    draw_chart(cv, min(t * SPEED, 10.0))
     cv.restore()
-    subtitle(cv, t, .5, 4.9, "Mentions of \u201cbreakup\u201d on Twitter,\nthe weeks before {hl:GTA VI}", cy=1480)
-    subtitle(cv, t, 5.2, 99, "After release, mentions\njump {red:2.3\u00d7}", cy=1480, fade_out=False)
-    fade = 1 - prog(t, 0, .3)
+    subtitle(cv, t, .25, 99, "Mentions of break ups on Twitter (X)\nhave spiked by {red:2.3 times}", cy=1480, fade_out=False)
+    fade = 1 - prog(t, 0, .15)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))
 
