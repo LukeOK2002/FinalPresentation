@@ -5,7 +5,7 @@ from gta_reel import BOY, boy_legs, boy_arms, boy_hands, controller, sofa_back, 
 
 DUR = 13.0
 SCENE_BOTTOM = 1340
-CAPTION = "Men are spending more time on\nchores in {hl:game} than in {hl:real life}"
+CAPTION = "Men are spending more time on chores\nin {hl:the game} than in {hl:real life}"
 DEEP = '#00B3B0'                                  # floor shadow
 TV_FULL = (-30, 290, 1110, 931)                   # game fills the frame at the start
 TV_POP = (90, 70, 990, 576)                       # floating pop-out once the room is revealed

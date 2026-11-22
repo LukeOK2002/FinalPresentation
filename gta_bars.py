@@ -108,6 +108,37 @@ def draw_chart(cv, t):
             plus(cv, cx6 + dx_, ytop + dy_ + 140, s_ * (.7 + .3 * math.sin(t * 5 + dx_)), '#FFFFFF', A(255 * wk))
 
 
+CAPTION_WORDS = [
+    [('GTA', '#FFFFFF'), ('6', '#FFFFFF'), ('has', '#FFFFFF'), ('the', '#FFFFFF'), ('highest', '#FFD23F'),
+     ('strip', '#FFFFFF'), ('club', '#FFFFFF'), ('realism', '#FFFFFF')],
+    [('of', '#FFFFFF'), ('any', '#FFFFFF'), ('game', '#FFFFFF'), ('released', '#FFFFFF')],
+    [('in', '#FFFFFF'), ('the', '#FFFFFF'), ('series', '#FFFFFF'), ('to', '#FFFFFF'), ('date', '#FFFFFF')],
+]
+
+
+def word_caption(cv, t, t0, step, lines, cy=1490, size=52):
+    """Boxed caption that appears one word at a time."""
+    f = font('semi', size)
+    lh = size * 1.34
+    y0 = cy - (len(lines) - 1) * lh / 2
+    idx = 0
+    for li, words in enumerate(lines):
+        full = ' '.join(w for w, _ in words)
+        wtot = f.measureText(full)
+        x0 = W / 2 - wtot / 2
+        y = y0 + li * lh
+        ba = eout(prog(t, t0 + idx * step, t0 + idx * step + .25))
+        if ba > 0:
+            cv.drawPath(rrp(x0 - 26, y - size * .72, x0 + wtot + 26, y + size * .58, 14), paint('#000000', A(185 * ba)))
+        for wi, (w, c) in enumerate(words):
+            ts = t0 + idx * step
+            a = eout(prog(t, ts, ts + .25))
+            if a > 0:
+                pre = ' '.join(ww for ww, _ in words[:wi]) + (' ' if wi else '')
+                cv.drawString(w, x0 + f.measureText(pre), y + size * .35 + (1 - a) * 12, f, paint(c, A(255 * a)))
+            idx += 1
+
+
 def draw(cv, t, fi):
     cv.drawRect(R(0, 0, W, H), paint(shader=lin(0, 0, 0, H, [NAVY0, NAVY1])))
     halos(cv, 540, 1700, 120, 5, 90, NAVY2, 60)
@@ -120,7 +151,7 @@ def draw(cv, t, fi):
     cv.translate(-540, -760)
     draw_chart(cv, t)
     cv.restore()
-    subtitle(cv, t, .5, 99, "GTA 6 has the {hl:highest} strip club realism\nof any of the games released\nin the series to date", cy=1490, fade_out=False)
+    word_caption(cv, t, .5, .3, CAPTION_WORDS)
     fade = 1 - prog(t, 0, .3)
     if fade > 0:
         cv.drawRect(R(0, 0, W, H), paint('#000000', 255 * fade))
